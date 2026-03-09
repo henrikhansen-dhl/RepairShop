@@ -1,0 +1,24 @@
+{% load i18n %}
+<h2>{% trans "Repair Work Orders" %}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% trans "Create Work Order" %}</button>
+</form>
+
+<hr>
+<h3>{% trans "Existing Work Orders" %}</h3>
+<ul>
+    {% for order in work_orders %}
+        <li>
+            <strong>#{{ order.id }}</strong> - {{ order.description|truncatechars:60 }}<br>
+            {% trans "Status" %}: {{ order.get_status_display }}<br>
+            {% trans "Assigned to" %}: {{ order.assigned_to }}<br>
+            {% trans "Created by" %}: {{ order.created_by }}<br>
+            {% trans "Shop" %}: {{ order.shop.shop_name }}
+        </li>
+    {% empty %}
+        <li>{% trans "No work orders yet." %}</li>
+    {% endfor %}
+</ul>

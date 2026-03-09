@@ -35,11 +35,13 @@ from .views import (
     toggle_shop_active,
     view_reports,
 )
+from shops.views_workorder import work_order_list_create
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", landing_page, name="landing"),
     path("shop/", shop_dashboard, name="shop_dashboard"),
+    path("shop/workorders/", work_order_list_create, name="work_order_list_create"),
     path("shop/repairs/new/", create_repair_order, name="create_repair_order"),
     path("shop/inspections/schedule/", schedule_inspection, name="schedule_inspection"),
     path("shop/inventory/", manage_inventory, name="manage_inventory"),

@@ -112,6 +112,63 @@ class ShopMasterData(models.Model):
         return self.legal_name or self.shop.shop_name
 
 
+class RepairWorkOrder(models.Model):
+    STATUS_NEW = "new"
+    STATUS_ASSIGNED = "assigned"
+    STATUS_IN_PROGRESS = "in_progress"
+    STATUS_COMPLETED = "completed"
+    STATUS_CANCELLED = "cancelled"
+    STATUS_CHOICES = [
+        (STATUS_NEW, "New"),
+        (STATUS_ASSIGNED, "Assigned"),
+        (STATUS_IN_PROGRESS, "In Progress"),
+        (STATUS_COMPLETED, "Completed"),
+        (STATUS_CANCELLED, "Cancelled"),
+    ]
+
+    shop = models.ForeignKey(
+        ShopProfile,
+        on_delete=models.CASCADE,
+        related_name="work_orders",
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="created_work_orders",
+    )
+    assigned_to = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="assigned_work_orders",
+    )
+    description = models.TextField()
+    status = models.CharField(max_length=24, choices=STATUS_CHOICES, default=STATUS_NEW)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "repair_work_order"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"WorkOrder #{self.id} ({self.status})"
+
+    def assign(self, user):
+        self.assigned_to = user
+        self.status = self.STATUS_ASSIGNED
+        self.save()
+
+    def complete(self):
+        self.status = self.STATUS_COMPLETED
+        self.save()
+
+    def cancel(self):
+        self.status = self.STATUS_CANCELLED
+        self.save()
+
 class Customer(models.Model):
     shop = models.ForeignKey(
         ShopProfile,
