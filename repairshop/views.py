@@ -153,17 +153,29 @@ def shop_dashboard(request):
     return render(request, "shop_dashboard.html", {"shop_context": shop_context})
 
 
+from shops.forms import RepairWorkOrderForm
+from shops.models import RepairWorkOrder
+
 @require_shop_right("can_create_repair_order")
 def create_repair_order(request):
-    return render(
-        request,
-        "shop_operation.html",
-        {
-            "title": _("Create Repair Order"),
-            "description": _("This is where you create and dispatch repair orders."),
-            "shop_name": request.current_shop.shop_name,
-        },
-    )
+    user = request.user
+    shop = getattr(request, "current_shop", None)
+    work_orders = RepairWorkOrder.objects.filter(shop=shop)
+    form = RepairWorkOrderForm(user=user, initial={"shop": shop})
+    if request.method == "POST":
+        form = RepairWorkOrderForm(request.POST, user=user)
+        if form.is_valid():
+            work_order = form.save(commit=False)
+            work_order.created_by = user
+            work_order.shop = shop
+            work_order.save()
+            return redirect("create_repair_order")
+    return render(request, "work_order_list_create.html", {
+        "form": form,
+        "work_orders": work_orders,
+        "shop_name": shop.shop_name if shop else "",
+        "current_shop_logo_url": getattr(shop, "company_logo", None).url if getattr(shop, "company_logo", None) else None,
+    })
 
 
 @require_shop_right("can_create_repair_order")
