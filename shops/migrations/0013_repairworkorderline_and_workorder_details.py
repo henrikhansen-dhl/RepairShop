@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import migrations, models
 
@@ -6,8 +5,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("shops", "0011_shopuseraccess_preferred_language"),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ("shops", "0012_repairworkorder"),
     ]
 
     operations = [
