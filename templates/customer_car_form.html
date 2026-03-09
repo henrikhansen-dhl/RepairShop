@@ -40,6 +40,7 @@
     {% trans "Vehicle data loaded. Review and save the car." as msg_vehicle_loaded %}
     {% trans "Lookup request failed. Please try again." as msg_lookup_request_failed %}
     <main class="wrap">
+        <a class="btn btn-light" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
         {% if current_shop_logo_url %}
             <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
         {% endif %}

@@ -68,6 +68,7 @@
     {% load i18n %}
     <main class="wrap">
         <div class="toolbar">
+                <a class="btn btn-light" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
             <button class="btn btn-primary" onclick="window.print()">{% trans "Print" %}</button>
             <a class="btn btn-light" href="{% url 'customer_detail' customer.id %}">{% trans "Back to Customer" %}</a>
             <span>{% trans "Format:" %} <b>{{ format_preset.name }}</b></span>

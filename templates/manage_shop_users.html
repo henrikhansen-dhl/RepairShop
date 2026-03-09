@@ -167,7 +167,7 @@
                 {% if request.user.is_staff %}
                     <a class="btn btn-soft" href="{% url 'shop_list' %}">{% trans "Back to Shops" %}</a>
                 {% else %}
-                    <a class="btn btn-soft" href="{% url 'shop_dashboard' %}">{% trans "Back to My Shop" %}</a>
+                        <a class="btn btn-soft" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
                 {% endif %}
             </div>
         </header>

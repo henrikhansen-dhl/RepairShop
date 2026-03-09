@@ -45,6 +45,7 @@
                 {% endif %}
             </div>
             <div>
+                <a class="btn btn-light" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
                 <a class="btn btn-light" href="{% url 'customer_list' %}">{% trans "Back to Customers" %}</a>
                 <a class="btn btn-light" href="{% url 'customer_edit' customer.id %}">{% trans "Edit Customer" %}</a>
                 <a class="btn btn-light" href="{% url 'invoice_create' %}?customer={{ customer.id }}">{% trans "Invoice Customer" %}</a>

@@ -105,7 +105,10 @@
                     <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
                 {% endif %}
             </div>
-            <a class="btn btn-soft" href="{% url 'manage_shop_users' shop.pk %}">{% trans "Back to Users" %}</a>
+            <div style="display:flex; gap:.45rem; flex-wrap:wrap;">
+                <a class="btn btn-soft" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
+                <a class="btn btn-soft" href="{% url 'manage_shop_users' shop.pk %}">{% trans "Back to Users" %}</a>
+            </div>
         </header>
 
         <form method="post">
