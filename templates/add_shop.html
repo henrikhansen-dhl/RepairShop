@@ -192,7 +192,7 @@
             </div>
             <div class="toolbar">
                 <a class="btn btn-soft" href="{% url 'shop_list' %}">{% trans "Manage Shops" %}</a>
-                <a class="btn" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
+                {% include "includes/back_to_dashboard_button.html" with button_class="btn" %}
             </div>
         </header>
 

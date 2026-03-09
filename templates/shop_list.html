@@ -115,7 +115,7 @@
             <h1>{% trans "Manage Shops" %}</h1>
             <div class="actions">
                 <a class="btn" href="{% url 'add_shop' %}">{% trans "Add New Shop" %}</a>
-                <a class="btn btn-soft" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
+                {% include "includes/back_to_dashboard_button.html" %}
             </div>
         </header>
 

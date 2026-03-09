@@ -21,7 +21,7 @@
 <body>
     {% load i18n %}
     <main class="wrap">
-        <a class="btn btn-soft" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
+        {% include "includes/back_to_dashboard_button.html" %}
         <h1>{% trans "Email Invoice" %} {{ invoice.invoice_number }}</h1>
         <div>{% trans "Customer:" %} <b>{{ invoice.customer.full_name }}</b></div>
         {% if current_shop_logo_url %}

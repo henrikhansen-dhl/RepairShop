@@ -151,7 +151,7 @@
 </head>
 <body>
     <main class="wrap">
-        <a class="btn" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
+        {% include "includes/back_to_dashboard_button.html" with button_class="btn" %}
         <h1>{{ title }}</h1>
         <p><b>{% trans "Shop:" %}</b> {{ shop_name }}</p>
         {% if current_shop_logo_url %}

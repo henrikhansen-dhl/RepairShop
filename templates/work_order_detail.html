@@ -41,7 +41,7 @@
                 {% endif %}
             </div>
             <div>
-                <a class="btn btn-soft" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
+                {% include "includes/back_to_dashboard_button.html" %}
                 <a class="btn btn-soft" href="{% url 'create_repair_order' %}">{% trans "Back to Work Orders" %}</a>
                 {% if work_order.invoice %}
                     <a class="btn btn-soft" href="{% url 'invoice_detail' work_order.invoice.id %}">{% trans "Open Invoice" %}</a>

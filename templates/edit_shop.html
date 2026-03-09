@@ -134,7 +134,7 @@
         <header class="top">
             <h1>{% blocktrans with shop_name=shop.shop_name %}Edit {{ shop_name }}{% endblocktrans %}</h1>
             <div style="display:flex; gap:.45rem; flex-wrap:wrap;">
-                <a class="btn btn-soft" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
+                {% include "includes/back_to_dashboard_button.html" %}
                 <a class="btn btn-soft" href="{% url 'manage_shop_users' shop.pk %}">{% trans "Users & Rights" %}</a>
                 <a class="btn btn-soft" href="{% url 'shop_list' %}">{% trans "Back to Shop List" %}</a>
             </div>

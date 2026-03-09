@@ -33,7 +33,7 @@
                 {% endif %}
             </div>
             <div>
-                <a class="btn btn-light" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
+                {% include "includes/back_to_dashboard_button.html" with button_class="btn btn-light" %}
                 <a class="btn btn-primary" href="{% url 'customer_create' %}">{% trans "Add Customer" %}</a>
             </div>
         </header>

@@ -26,7 +26,7 @@
     {% load i18n %}
     <main class="wrap">
         <div class="toolbar">
-                <a class="btn" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
+            {% include "includes/back_to_dashboard_button.html" with button_class="btn" %}
             <button class="btn" onclick="window.print()">{% trans "Print / Save PDF" %}</button>
         </div>
 
