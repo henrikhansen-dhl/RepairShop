@@ -29,20 +29,21 @@ from .views import (
     landing_page,
     manage_shop_users,
     manage_inventory,
+    repair_work_order_detail,
     schedule_inspection,
     shop_dashboard,
     shop_list,
     toggle_shop_active,
     view_reports,
 )
-from shops.views_workorder import work_order_list_create
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", landing_page, name="landing"),
     path("shop/", shop_dashboard, name="shop_dashboard"),
-    path("shop/workorders/", work_order_list_create, name="work_order_list_create"),
+    path("shop/workorders/", create_repair_order, name="work_order_list_create"),
     path("shop/repairs/new/", create_repair_order, name="create_repair_order"),
+    path("shop/repairs/<int:work_order_id>/", repair_work_order_detail, name="repair_work_order_detail"),
     path("shop/inspections/schedule/", schedule_inspection, name="schedule_inspection"),
     path("shop/inventory/", manage_inventory, name="manage_inventory"),
     path("shop/reports/", view_reports, name="view_reports"),

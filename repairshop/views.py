@@ -29,6 +29,7 @@ from shops.forms import (
     InvoiceEmailForm,
     InvoiceLineForm,
     InvoicePriceItemForm,
+    RepairWorkOrderLineForm,
     RepairWorkOrderForm,
     ShopMasterDataForm,
     ShopEditForm,
@@ -36,7 +37,7 @@ from shops.forms import (
     ShopUserAccessCreateForm,
     ShopUserAccessEditForm,
 )
-from shops.models import Customer, CustomerCar, Invoice, InvoiceLine, InvoicePriceItem, RepairWorkOrder, ShopMasterData, ShopProfile, ShopUserAccess
+from shops.models import Customer, CustomerCar, Invoice, InvoiceLine, InvoicePriceItem, RepairWorkOrder, RepairWorkOrderLine, ShopMasterData, ShopProfile, ShopUserAccess
 
 
 PLATE_REGEX = re.compile(r"^[A-Z]{2}\d{5}$")
@@ -158,7 +159,24 @@ def shop_dashboard(request):
 def create_repair_order(request):
     user = request.user
     shop = getattr(request, "current_shop", None)
-    work_orders = RepairWorkOrder.objects.filter(shop=shop)
+    if not shop:
+        return HttpResponseForbidden("Repair orders are available for shop users only.")
+
+    initial = {}
+    customer_id = request.GET.get("customer")
+    car_id = request.GET.get("car")
+    if customer_id:
+        initial["customer"] = customer_id
+    if car_id:
+        initial["car"] = car_id
+
+    work_orders = (
+        RepairWorkOrder.objects.filter(shop=shop)
+        .select_related("customer", "car", "assigned_to", "invoice")
+        .prefetch_related("service_lines")
+        .order_by("-created_at")
+    )
+
     form = RepairWorkOrderForm(user=user, shop=shop)
     if request.method == "POST":
         form = RepairWorkOrderForm(request.POST, user=user, shop=shop)
@@ -167,14 +185,168 @@ def create_repair_order(request):
             work_order.created_by = user
             work_order.shop = shop
             work_order.save()
-            return redirect("create_repair_order")
+            messages.success(request, f"Work order #{work_order.pk} created.")
+            return redirect("repair_work_order_detail", work_order_id=work_order.pk)
+    else:
+        form = RepairWorkOrderForm(user=user, shop=shop, initial=initial)
+
+    customer_cars = list(
+        CustomerCar.objects.filter(customer__shop=shop)
+        .select_related("customer")
+        .order_by("customer__full_name", "make", "model")
+        .values("id", "customer_id", "make", "model", "year", "plate_number")
+    )
+
     return render(request, "work_order_list_create.html", {
         "form": form,
         "work_orders": work_orders,
         "title": _("Create Repair Order"),
         "description": _("This is where you create and dispatch repair orders."),
+        "shop": shop,
         "shop_name": shop.shop_name if shop else "",
+        "customer_cars_json": customer_cars,
     })
+
+
+@require_shop_right("can_create_repair_order")
+def repair_work_order_detail(request, work_order_id):
+    shop = getattr(request, "current_shop", None)
+    if not shop:
+        return HttpResponseForbidden("Repair orders are available for shop users only.")
+
+    work_order = get_object_or_404(
+        RepairWorkOrder.objects.select_related("customer", "car", "assigned_to", "created_by", "invoice"),
+        pk=work_order_id,
+        shop=shop,
+    )
+
+    header_form = RepairWorkOrderForm(user=request.user, shop=shop, instance=work_order)
+    line_form = RepairWorkOrderLineForm(shop)
+    transition_map = {
+        RepairWorkOrder.STATUS_NEW: [RepairWorkOrder.STATUS_ASSIGNED, RepairWorkOrder.STATUS_CANCELLED],
+        RepairWorkOrder.STATUS_ASSIGNED: [RepairWorkOrder.STATUS_IN_PROGRESS, RepairWorkOrder.STATUS_CANCELLED],
+        RepairWorkOrder.STATUS_IN_PROGRESS: [RepairWorkOrder.STATUS_READY, RepairWorkOrder.STATUS_CANCELLED],
+        RepairWorkOrder.STATUS_READY: [RepairWorkOrder.STATUS_COMPLETED, RepairWorkOrder.STATUS_IN_PROGRESS, RepairWorkOrder.STATUS_CANCELLED],
+        RepairWorkOrder.STATUS_COMPLETED: [],
+        RepairWorkOrder.STATUS_CANCELLED: [RepairWorkOrder.STATUS_NEW],
+    }
+
+    if request.method == "POST":
+        action = request.POST.get("action", "").strip()
+
+        if action == "change_status":
+            target_status = request.POST.get("target_status", "").strip()
+            allowed_targets = transition_map.get(work_order.status, [])
+            if target_status not in allowed_targets:
+                messages.error(request, "Invalid status transition.")
+                return redirect("repair_work_order_detail", work_order_id=work_order.pk)
+
+            if target_status == RepairWorkOrder.STATUS_READY and not work_order.service_lines.exists():
+                messages.error(request, "Add at least one line before marking the work order ready.")
+                return redirect("repair_work_order_detail", work_order_id=work_order.pk)
+
+            work_order.status = target_status
+            work_order.save(update_fields=["status", "updated_at"])
+            messages.success(request, f"Work order status changed to '{work_order.get_status_display()}'.")
+            return redirect("repair_work_order_detail", work_order_id=work_order.pk)
+
+        if action == "update_work_order":
+            header_form = RepairWorkOrderForm(request.POST, user=request.user, shop=shop, instance=work_order)
+            if header_form.is_valid():
+                updated_work_order = header_form.save(commit=False)
+                updated_work_order.shop = shop
+                updated_work_order.save()
+                messages.success(request, f"Work order #{work_order.pk} updated.")
+                return redirect("repair_work_order_detail", work_order_id=work_order.pk)
+
+        if action == "add_line":
+            line_form = RepairWorkOrderLineForm(shop, request.POST)
+            if line_form.is_valid():
+                line = line_form.save(commit=False)
+                line.work_order = work_order
+                if line.price_item:
+                    if not line.description:
+                        line.description = line.price_item.description
+                    if line.unit_price in (None, ""):
+                        line.unit_price = line.price_item.unit_price
+                    if line.vat_percent in (None, ""):
+                        line.vat_percent = line.price_item.vat_percent
+                line.save()
+                messages.success(request, "Service line added.")
+                return redirect("repair_work_order_detail", work_order_id=work_order.pk)
+
+        if action == "delete_line":
+            line_id = request.POST.get("line_id", "").strip()
+            line = get_object_or_404(RepairWorkOrderLine, pk=line_id, work_order=work_order)
+            line.delete()
+            messages.success(request, "Service line removed.")
+            return redirect("repair_work_order_detail", work_order_id=work_order.pk)
+
+        if action == "create_invoice":
+            if work_order.invoice_id:
+                messages.success(request, f"Invoice '{work_order.invoice.invoice_number}' already exists for this work order.")
+                return redirect("invoice_detail", invoice_id=work_order.invoice_id)
+
+            if not work_order.customer_id:
+                messages.error(request, "Select a customer before creating an invoice.")
+                return redirect("repair_work_order_detail", work_order_id=work_order.pk)
+
+            service_lines = list(work_order.service_lines.select_related("price_item").all())
+            if not service_lines:
+                messages.error(request, "Add at least one service line before creating an invoice.")
+                return redirect("repair_work_order_detail", work_order_id=work_order.pk)
+
+            invoice = Invoice.objects.create(
+                shop=shop,
+                customer=work_order.customer,
+                car=work_order.car,
+                issue_date=timezone.localdate(),
+                notes=(f"Work order #{work_order.pk}\n\n{work_order.technician_notes}".strip()),
+            )
+
+            for service_line in service_lines:
+                InvoiceLine.objects.create(
+                    invoice=invoice,
+                    price_item=service_line.price_item,
+                    description=service_line.description,
+                    quantity=service_line.quantity,
+                    unit_price=service_line.unit_price,
+                    vat_percent=service_line.vat_percent,
+                )
+
+            work_order.invoice = invoice
+            work_order.save(update_fields=["invoice", "updated_at"])
+            messages.success(request, f"Invoice '{invoice.invoice_number}' created from work order #{work_order.pk}.")
+            return redirect("invoice_detail", invoice_id=invoice.pk)
+
+    lines = work_order.service_lines.select_related("price_item").all()
+    service_lines = [line for line in lines if line.line_type == RepairWorkOrderLine.TYPE_SERVICE]
+    part_lines = [line for line in lines if line.line_type == RepairWorkOrderLine.TYPE_PART]
+    customer_cars = list(
+        CustomerCar.objects.filter(customer__shop=shop)
+        .select_related("customer")
+        .order_by("customer__full_name", "make", "model")
+        .values("id", "customer_id", "make", "model", "year", "plate_number")
+    )
+
+    return render(
+        request,
+        "work_order_detail.html",
+        {
+            "shop": shop,
+            "work_order": work_order,
+            "header_form": header_form,
+            "line_form": line_form,
+            "lines": lines,
+            "service_lines": service_lines,
+            "part_lines": part_lines,
+            "available_status_targets": [
+                {"value": status, "label": dict(RepairWorkOrder.STATUS_CHOICES).get(status, status)}
+                for status in transition_map.get(work_order.status, [])
+            ],
+            "customer_cars_json": customer_cars,
+        },
+    )
 
 
 @require_shop_right("can_create_repair_order")

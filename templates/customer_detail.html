@@ -48,6 +48,7 @@
                 <a class="btn btn-light" href="{% url 'customer_list' %}">{% trans "Back to Customers" %}</a>
                 <a class="btn btn-light" href="{% url 'customer_edit' customer.id %}">{% trans "Edit Customer" %}</a>
                 <a class="btn btn-light" href="{% url 'invoice_create' %}?customer={{ customer.id }}">{% trans "Invoice Customer" %}</a>
+                <a class="btn btn-light" href="{% url 'create_repair_order' %}?customer={{ customer.id }}">{% trans "Create Work Order" %}</a>
                 <a class="btn btn-primary" href="{% url 'customer_car_create' customer.id %}">{% trans "Add Car" %}</a>
                 <form class="inline" method="post" action="{% url 'customer_delete' customer.id %}">
                     {% csrf_token %}
@@ -113,6 +114,7 @@
                             <p>{{ car.notes|default:"" }}</p>
                             <a class="btn btn-light" href="{% url 'customer_car_edit' customer.id car.id %}">{% trans "Edit Car" %}</a>
                             <a class="btn btn-light" href="{% url 'invoice_create' %}?customer={{ customer.id }}&car={{ car.id }}">{% trans "Invoice This Car" %}</a>
+                            <a class="btn btn-light" href="{% url 'create_repair_order' %}?customer={{ customer.id }}&car={{ car.id }}">{% trans "Create Work Order" %}</a>
                             {% if car.tire_hotel_enabled %}
                                 <a class="btn btn-light" href="{% url 'customer_car_print_labels' customer.id car.id %}?format=a4_2x7&count={{ car.tire_label_count }}" target="_blank">{% trans "Print Tire Labels" %}</a>
                                 <a class="btn btn-light" href="{% url 'customer_car_print_labels' customer.id car.id %}?format=a4_2x7&count=14" target="_blank">{% trans "Print A4 2x7" %}</a>

@@ -1,0 +1,250 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% trans "Work Order" %} #{{ work_order.id }} | {{ shop.shop_name }}</title>
+    <style>
+        body { margin: 0; background: #f5fbff; color: #14283f; font-family: "Segoe UI", sans-serif; }
+        .wrap { width: min(1140px, 96vw); margin: 1.2rem auto; }
+        .top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .6rem; }
+        .grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: .9rem; }
+        .card { margin-top: .9rem; background: #fff; border: 1px solid #d8e8f6; border-radius: 12px; padding: .9rem; }
+        .btn { display: inline-block; text-decoration: none; border: 0; border-radius: 9px; padding: .48rem .8rem; font-weight: 700; cursor: pointer; }
+        .btn-main { background: #0f7e93; color: #fff; }
+        .btn-soft { background: #e9f4ff; color: #1c4f75; }
+        .row { margin-bottom: .68rem; }
+        label { display: block; font-weight: 700; margin-bottom: .2rem; }
+        input, select, textarea { width: 100%; border: 1px solid #b9cfe4; border-radius: 8px; padding: .48rem .58rem; font: inherit; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border-bottom: 1px solid #e5eef8; text-align: left; padding: .5rem; vertical-align: top; }
+        .totals { background: #f7fbff; border: 1px solid #dbeaf8; border-radius: 10px; padding: .7rem; margin-top: .7rem; }
+        .totals p { margin: .25rem 0; }
+        .errors { color: #8b1d1d; font-size: .88rem; margin-top: .24rem; }
+        .message { background: #e9fce9; border: 1px solid #bde4bd; border-radius: 8px; padding: .55rem .65rem; margin-top: .7rem; }
+        .shop-logo { max-height: 56px; width: auto; display: block; margin-top: .4rem; border: 1px solid #d8e8f6; border-radius: 8px; background: #fff; padding: .2rem; }
+        .muted { color: #60758c; }
+        @media (max-width: 920px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    {% trans "Delete this service line?" as confirm_delete_service_line %}
+    <main class="wrap">
+        <header class="top">
+            <div>
+                <h1 style="margin:.1rem 0;">{% trans "Work Order" %} #{{ work_order.id }}</h1>
+                <div>{% trans "Customer:" %} <b>{{ work_order.customer.full_name|default:"-" }}</b></div>
+                <div>{% trans "Status:" %} <b>{{ work_order.get_status_display }}</b></div>
+                {% if current_shop_logo_url %}
+                    <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
+                {% endif %}
+            </div>
+            <div>
+                <a class="btn btn-soft" href="{% url 'create_repair_order' %}">{% trans "Back to Work Orders" %}</a>
+                {% if work_order.invoice %}
+                    <a class="btn btn-soft" href="{% url 'invoice_detail' work_order.invoice.id %}">{% trans "Open Invoice" %}</a>
+                {% endif %}
+            </div>
+        </header>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if available_status_targets %}
+            <section class="card">
+                <h2 style="margin:.1rem 0 .5rem;">{% trans "Status Actions" %}</h2>
+                <div style="display:flex; gap:.5rem; flex-wrap:wrap;">
+                    {% for status in available_status_targets %}
+                        <form method="post" style="margin:0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="change_status">
+                            <input type="hidden" name="target_status" value="{{ status.value }}">
+                            <button class="btn btn-soft" type="submit">{% trans "Set" %} {{ status.label }}</button>
+                        </form>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        <section class="grid">
+            <article class="card">
+                <h2 style="margin:.1rem 0 .5rem;">{% trans "Work Order Details" %}</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_work_order">
+                    {% for field in header_form %}
+                        <div class="row">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
+                        </div>
+                    {% endfor %}
+                    <button class="btn btn-main" type="submit">{% trans "Update Work Order" %}</button>
+                </form>
+            </article>
+
+            <article class="card">
+                <h2 style="margin:.1rem 0 .5rem;">{% trans "Add Service Line" %}</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="add_line">
+                    {% for field in line_form %}
+                        <div class="row">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
+                        </div>
+                    {% endfor %}
+                    <button class="btn btn-main" type="submit">{% trans "Add Service Line" %}</button>
+                </form>
+
+                <div class="totals">
+                    <p><b>{% trans "Services:" %}</b> {{ work_order.service_total|floatformat:2 }}</p>
+                    <p><b>{% trans "Parts:" %}</b> {{ work_order.part_total|floatformat:2 }}</p>
+                    <p><b>{% trans "Subtotal:" %}</b> {{ work_order.subtotal|floatformat:2 }}</p>
+                    <p><b>{% trans "VAT Total:" %}</b> {{ work_order.vat_total|floatformat:2 }}</p>
+                </div>
+
+                {% if not work_order.invoice %}
+                    <form method="post" style="margin-top:.8rem;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="create_invoice">
+                        <button class="btn btn-soft" type="submit">{% trans "Create Invoice From Work Order" %}</button>
+                    </form>
+                {% endif %}
+            </article>
+        </section>
+
+        <section class="card">
+            <h2 style="margin:.1rem 0 .5rem;">{% trans "Service Lines" %}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{% trans "Description" %}</th>
+                        <th>{% trans "Qty" %}</th>
+                        <th>{% trans "Unit Price" %}</th>
+                        <th>{% trans "VAT %" %}</th>
+                        <th>{% trans "Line Total" %}</th>
+                        <th>VAT</th>
+                        <th>{% trans "Action" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for line in service_lines %}
+                        <tr>
+                            <td>{{ line.description }}</td>
+                            <td>{{ line.quantity }}</td>
+                            <td>{{ line.unit_price|floatformat:2 }}</td>
+                            <td>{{ line.vat_percent|floatformat:2 }}</td>
+                            <td>{{ line.line_total|floatformat:2 }}</td>
+                            <td>{{ line.vat_amount|floatformat:2 }}</td>
+                            <td>
+                                <form method="post" style="margin:0;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="delete_line">
+                                    <input type="hidden" name="line_id" value="{{ line.id }}">
+                                    <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_service_line|escapejs }}');">{% trans "Delete" %}</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="7">{% trans "No service lines added yet." %}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="card">
+            <h2 style="margin:.1rem 0 .5rem;">{% trans "Part Lines" %}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{% trans "Description" %}</th>
+                        <th>{% trans "Qty" %}</th>
+                        <th>{% trans "Unit Price" %}</th>
+                        <th>{% trans "VAT %" %}</th>
+                        <th>{% trans "Line Total" %}</th>
+                        <th>VAT</th>
+                        <th>{% trans "Action" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for line in part_lines %}
+                        <tr>
+                            <td>{{ line.description }}</td>
+                            <td>{{ line.quantity }}</td>
+                            <td>{{ line.unit_price|floatformat:2 }}</td>
+                            <td>{{ line.vat_percent|floatformat:2 }}</td>
+                            <td>{{ line.line_total|floatformat:2 }}</td>
+                            <td>{{ line.vat_amount|floatformat:2 }}</td>
+                            <td>
+                                <form method="post" style="margin:0;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="delete_line">
+                                    <input type="hidden" name="line_id" value="{{ line.id }}">
+                                    <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_service_line|escapejs }}');">{% trans "Delete" %}</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="7">{% trans "No part lines added yet." %}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    {{ customer_cars_json|json_script:"customer-cars-data" }}
+    <script>
+        (function () {
+            const customerSelect = document.getElementById("id_customer");
+            const carSelect = document.getElementById("id_car");
+            if (!customerSelect || !carSelect) {
+                return;
+            }
+
+            const cars = JSON.parse(document.getElementById("customer-cars-data").textContent || "[]");
+            const initialCarValue = carSelect.value;
+
+            function carLabel(car) {
+                const year = car.year ? `${car.year} ` : "";
+                const plate = car.plate_number ? ` [${car.plate_number}]` : "";
+                return `${year}${car.make} ${car.model}${plate}`.trim();
+            }
+
+            function refillCars() {
+                const selectedCustomer = customerSelect.value;
+                const prev = carSelect.value;
+
+                carSelect.innerHTML = "";
+                const emptyOption = document.createElement("option");
+                emptyOption.value = "";
+                emptyOption.textContent = "---------";
+                carSelect.appendChild(emptyOption);
+
+                cars
+                    .filter((car) => String(car.customer_id) === String(selectedCustomer))
+                    .forEach((car) => {
+                        const option = document.createElement("option");
+                        option.value = String(car.id);
+                        option.textContent = carLabel(car);
+                        carSelect.appendChild(option);
+                    });
+
+                if (prev && [...carSelect.options].some((o) => o.value === prev)) {
+                    carSelect.value = prev;
+                } else if (initialCarValue && [...carSelect.options].some((o) => o.value === initialCarValue)) {
+                    carSelect.value = initialCarValue;
+                }
+            }
+
+            customerSelect.addEventListener("change", refillCars);
+            refillCars();
+        })();
+    </script>
+</body>
+</html>

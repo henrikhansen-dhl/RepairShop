@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 import secrets
 import string
 
-from .models import Customer, CustomerCar, Invoice, InvoiceLine, InvoicePriceItem, ShopMasterData, ShopProfile, ShopUserAccess, RepairWorkOrder
+from .models import Customer, CustomerCar, Invoice, InvoiceLine, InvoicePriceItem, RepairWorkOrder, RepairWorkOrderLine, ShopMasterData, ShopProfile, ShopUserAccess
 
 
 def generate_strong_password(length: int = 14) -> str:
@@ -109,13 +109,20 @@ class ShopOnboardingForm(forms.Form):
 class RepairWorkOrderForm(forms.ModelForm):
     class Meta:
         model = RepairWorkOrder
-        fields = ["description", "assigned_to", "status"]
+        fields = ["customer", "car", "description", "technician_notes", "assigned_to", "priority", "due_date", "status"]
         widgets = {
             "description": forms.Textarea(attrs={"rows": 5}),
+            "technician_notes": forms.Textarea(attrs={"rows": 5}),
+            "due_date": forms.DateInput(attrs={"type": "date"}),
         }
         labels = {
+            "customer": _("Customer"),
+            "car": _("Car"),
             "description": _("Description"),
+            "technician_notes": _("Mechanic notes"),
             "assigned_to": _("Assigned to"),
+            "priority": _("Priority"),
+            "due_date": _("Due date"),
             "status": _("Status"),
         }
 
@@ -126,6 +133,10 @@ class RepairWorkOrderForm(forms.ModelForm):
         accessible_users = get_user_model().objects.none()
 
         if shop is not None:
+            self.fields["customer"].queryset = Customer.objects.filter(shop=shop).order_by("full_name")
+            car_queryset = CustomerCar.objects.filter(customer__shop=shop).select_related("customer").order_by(
+                "customer__full_name", "make", "model"
+            )
             accessible_users = get_user_model().objects.filter(
                 shop_accesses__shop=shop,
                 shop_accesses__is_active=True,
@@ -135,14 +146,86 @@ class RepairWorkOrderForm(forms.ModelForm):
                 user_accesses__user=user,
                 user_accesses__is_active=True,
             )
+            self.fields["customer"].queryset = Customer.objects.filter(shop__in=accessible_shops).order_by("full_name")
+            car_queryset = CustomerCar.objects.filter(customer__shop__in=accessible_shops).select_related("customer").order_by(
+                "customer__full_name", "make", "model"
+            )
             accessible_users = get_user_model().objects.filter(
                 shop_accesses__shop__in=accessible_shops,
                 shop_accesses__is_active=True,
             ).order_by("username").distinct()
 
+        else:
+            self.fields["customer"].queryset = Customer.objects.none()
+            car_queryset = CustomerCar.objects.none()
+
+        selected_customer_id = None
+        if self.is_bound:
+            selected_customer_id = self.data.get("customer") or None
+        elif self.instance.pk and self.instance.customer_id:
+            selected_customer_id = str(self.instance.customer_id)
+        elif self.initial.get("customer"):
+            selected_customer_id = str(self.initial.get("customer"))
+
+        if selected_customer_id:
+            car_queryset = car_queryset.filter(customer_id=selected_customer_id)
+
+        self.fields["car"].queryset = car_queryset
         self.fields["assigned_to"].queryset = accessible_users
         self.fields["assigned_to"].required = False
         self.fields["status"].initial = RepairWorkOrder.STATUS_NEW
+
+    def clean(self):
+        cleaned_data = super().clean()
+        customer = cleaned_data.get("customer")
+        car = cleaned_data.get("car")
+        if customer and car and car.customer_id != customer.pk:
+            self.add_error("car", _("Selected car does not belong to the chosen customer."))
+        return cleaned_data
+
+
+class RepairWorkOrderLineForm(forms.ModelForm):
+    class Meta:
+        model = RepairWorkOrderLine
+        fields = ["line_type", "price_item", "description", "quantity", "unit_price", "vat_percent"]
+        labels = {
+            "line_type": _("Line type"),
+            "price_item": _("Price item"),
+            "description": _("Service description"),
+            "quantity": _("Quantity"),
+            "unit_price": _("Unit price"),
+            "vat_percent": _("VAT %"),
+        }
+
+    def __init__(self, shop: ShopProfile, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.shop = shop
+        self.fields["price_item"].queryset = InvoicePriceItem.objects.filter(shop=shop, is_active=True).order_by(
+            "item_type", "description"
+        )
+        self.fields["description"].required = False
+        self.fields["unit_price"].required = False
+        self.fields["vat_percent"].required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+        price_item = cleaned_data.get("price_item")
+        if price_item:
+            cleaned_data["line_type"] = price_item.item_type
+            if not cleaned_data.get("description"):
+                cleaned_data["description"] = price_item.description
+            if cleaned_data.get("unit_price") in (None, ""):
+                cleaned_data["unit_price"] = price_item.unit_price
+            if cleaned_data.get("vat_percent") in (None, ""):
+                cleaned_data["vat_percent"] = price_item.vat_percent
+        else:
+            if not cleaned_data.get("description"):
+                self.add_error("description", _("Enter a description or choose a price item."))
+            if cleaned_data.get("unit_price") in (None, ""):
+                self.add_error("unit_price", _("Enter a unit price or choose a price item."))
+            if cleaned_data.get("vat_percent") in (None, ""):
+                cleaned_data["vat_percent"] = 25
+        return cleaned_data
 
 
 class ShopEditForm(forms.ModelForm):

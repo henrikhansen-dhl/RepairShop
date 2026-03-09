@@ -113,15 +113,28 @@ class ShopMasterData(models.Model):
 
 
 class RepairWorkOrder(models.Model):
+    PRIORITY_LOW = "low"
+    PRIORITY_NORMAL = "normal"
+    PRIORITY_HIGH = "high"
+    PRIORITY_URGENT = "urgent"
+    PRIORITY_CHOICES = [
+        (PRIORITY_LOW, "Low"),
+        (PRIORITY_NORMAL, "Normal"),
+        (PRIORITY_HIGH, "High"),
+        (PRIORITY_URGENT, "Urgent"),
+    ]
+
     STATUS_NEW = "new"
     STATUS_ASSIGNED = "assigned"
     STATUS_IN_PROGRESS = "in_progress"
+    STATUS_READY = "ready"
     STATUS_COMPLETED = "completed"
     STATUS_CANCELLED = "cancelled"
     STATUS_CHOICES = [
         (STATUS_NEW, "New"),
         (STATUS_ASSIGNED, "Assigned"),
         (STATUS_IN_PROGRESS, "In Progress"),
+        (STATUS_READY, "Ready for Invoice"),
         (STATUS_COMPLETED, "Completed"),
         (STATUS_CANCELLED, "Cancelled"),
     ]
@@ -130,6 +143,20 @@ class RepairWorkOrder(models.Model):
         ShopProfile,
         on_delete=models.CASCADE,
         related_name="work_orders",
+    )
+    customer = models.ForeignKey(
+        "Customer",
+        on_delete=models.PROTECT,
+        related_name="work_orders",
+        null=True,
+        blank=True,
+    )
+    car = models.ForeignKey(
+        "CustomerCar",
+        on_delete=models.SET_NULL,
+        related_name="work_orders",
+        null=True,
+        blank=True,
     )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -145,7 +172,17 @@ class RepairWorkOrder(models.Model):
         related_name="assigned_work_orders",
     )
     description = models.TextField()
+    technician_notes = models.TextField(blank=True)
+    priority = models.CharField(max_length=16, choices=PRIORITY_CHOICES, default=PRIORITY_NORMAL)
+    due_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=24, choices=STATUS_CHOICES, default=STATUS_NEW)
+    invoice = models.OneToOneField(
+        "Invoice",
+        on_delete=models.SET_NULL,
+        related_name="work_order",
+        null=True,
+        blank=True,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -168,6 +205,66 @@ class RepairWorkOrder(models.Model):
     def cancel(self):
         self.status = self.STATUS_CANCELLED
         self.save()
+
+    @property
+    def subtotal(self):
+        return sum((line.line_total for line in self.service_lines.all()), 0)
+
+    @property
+    def vat_total(self):
+        return sum((line.vat_amount for line in self.service_lines.all()), 0)
+
+    @property
+    def service_total(self):
+        return sum((line.line_total for line in self.service_lines.filter(line_type=RepairWorkOrderLine.TYPE_SERVICE)), 0)
+
+    @property
+    def part_total(self):
+        return sum((line.line_total for line in self.service_lines.filter(line_type=RepairWorkOrderLine.TYPE_PART)), 0)
+
+
+class RepairWorkOrderLine(models.Model):
+    TYPE_SERVICE = "service"
+    TYPE_PART = "part"
+    TYPE_CHOICES = [
+        (TYPE_SERVICE, "Service"),
+        (TYPE_PART, "Part"),
+    ]
+
+    work_order = models.ForeignKey(
+        RepairWorkOrder,
+        on_delete=models.CASCADE,
+        related_name="service_lines",
+    )
+    price_item = models.ForeignKey(
+        "InvoicePriceItem",
+        on_delete=models.SET_NULL,
+        related_name="work_order_lines",
+        null=True,
+        blank=True,
+    )
+    line_type = models.CharField(max_length=16, choices=TYPE_CHOICES, default=TYPE_SERVICE)
+    description = models.CharField(max_length=255)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2, default=1, validators=[MinValueValidator(0.01)])
+    unit_price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    vat_percent = models.DecimalField(max_digits=5, decimal_places=2, default=25)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "repair_work_order_line"
+        ordering = ["id"]
+
+    def __str__(self) -> str:
+        return self.description
+
+    @property
+    def line_total(self):
+        return self.quantity * self.unit_price
+
+    @property
+    def vat_amount(self):
+        return self.line_total * (self.vat_percent / 100)
 
 class Customer(models.Model):
     shop = models.ForeignKey(
