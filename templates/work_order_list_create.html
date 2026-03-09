@@ -1,24 +1,87 @@
-{% load i18n %}
-<h2>{% trans "Repair Work Orders" %}</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RepairShop | {% trans "Create Repair Order" %}</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: #12243a;
+            background: linear-gradient(160deg, #f8fffc, #ebf3ff);
+            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+            padding: 1.2rem;
+        }
+        .wrap {
+            width: min(840px, 100%);
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #d6e6f5;
+            border-radius: 14px;
+            padding: 1rem;
+            box-shadow: 0 12px 30px rgba(8, 25, 42, 0.1);
+        }
+        .btn {
+            display: inline-block;
+            border: 0;
+            background: #0f7e93;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 9px;
+            padding: .55rem .85rem;
+            font-weight: 700;
+        }
+        .note {
+            margin-top: .8rem;
+            border: 1px solid #d7e7f6;
+            border-radius: 10px;
+            background: #f5fbff;
+            padding: .75rem;
+        }
+        .shop-logo { max-height: 58px; width: auto; display: block; margin: .5rem 0; border: 1px solid #d7e7f6; border-radius: 8px; background: #fff; padding: .2rem; }
+        .workorder-list { margin-top: 2rem; }
+        .workorder-card {
+            border: 1px solid #d7e7f6;
+            border-radius: 10px;
+            background: #f8fbff;
+            margin-bottom: 1.2rem;
+            padding: 1rem;
+        }
+        .workorder-card strong { font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    {% load i18n %}
+    <main class="wrap">
+        <a class="btn" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
+        <h1>{% trans "Create Repair Order" %}</h1>
+        <p><b>{% trans "Shop:" %}</b> {{ shop_name }}</p>
+        {% if current_shop_logo_url %}
+            <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop_name }} logo">
+        {% endif %}
+        <p>{% trans "This is where you create and dispatch repair orders." %}</p>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">{% trans "Create Work Order" %}</button>
-</form>
+        <form method="post" style="margin-bottom:2rem;">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn" type="submit">{% trans "Create Work Order" %}</button>
+        </form>
 
-<hr>
-<h3>{% trans "Existing Work Orders" %}</h3>
-<ul>
-    {% for order in work_orders %}
-        <li>
-            <strong>#{{ order.id }}</strong> - {{ order.description|truncatechars:60 }}<br>
-            {% trans "Status" %}: {{ order.get_status_display }}<br>
-            {% trans "Assigned to" %}: {{ order.assigned_to }}<br>
-            {% trans "Created by" %}: {{ order.created_by }}<br>
-            {% trans "Shop" %}: {{ order.shop.shop_name }}
-        </li>
-    {% empty %}
-        <li>{% trans "No work orders yet." %}</li>
-    {% endfor %}
-</ul>
+        <section class="workorder-list">
+            <h3>{% trans "Existing Work Orders" %}</h3>
+            {% for order in work_orders %}
+                <div class="workorder-card">
+                    <strong>#{{ order.id }}</strong> - {{ order.description|linebreaksbr|truncatechars:60 }}<br>
+                    <b>{% trans "Status" %}:</b> {{ order.get_status_display }}<br>
+                    <b>{% trans "Assigned to" %}:</b> {{ order.assigned_to }}<br>
+                    <b>{% trans "Created by" %}:</b> {{ order.created_by }}<br>
+                    <b>{% trans "Created" %}:</b> {{ order.created_at|date:"SHORT_DATETIME_FORMAT" }}
+                </div>
+            {% empty %}
+                <div class="note">{% trans "No work orders yet." %}</div>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>
