@@ -39,6 +39,7 @@ DEBUG = env_bool("DJANGO_DEBUG", default=True)
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -158,6 +159,63 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "shop_dashboard"
 LOGOUT_REDIRECT_URL = "landing"
 
+JAZZMIN_SETTINGS = {
+    "site_title": "RepairShop Admin",
+    "site_header": "RepairShop",
+    "site_brand": "RepairShop Admin",
+    "site_logo_classes": "img-circle",
+    "welcome_sign": "RepairShop administration",
+    "copyright": "RepairShop",
+    "search_model": [
+        "auth.User",
+        "shops.ShopProfile",
+        "shops.ShopUserAccess",
+        "shops.Customer",
+        "shops.Invoice",
+        "shops.RepairWorkOrder",
+    ],
+    "topmenu_links": [
+        {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"model": "auth.User"},
+        {"app": "shops"},
+    ],
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "shops.ShopProfile": "fas fa-store",
+        "shops.ShopUserAccess": "fas fa-user-shield",
+        "shops.ShopMasterData": "fas fa-id-card",
+        "shops.Customer": "fas fa-address-book",
+        "shops.CustomerCar": "fas fa-car",
+        "shops.Invoice": "fas fa-file-invoice-dollar",
+        "shops.InvoiceLine": "fas fa-receipt",
+        "shops.InvoicePriceItem": "fas fa-tags",
+        "shops.InvoiceNumberSeries": "fas fa-hashtag",
+        "shops.RepairWorkOrder": "fas fa-screwdriver-wrench",
+        "shops.RepairWorkOrderLine": "fas fa-list-check",
+    },
+    "navigation_expanded": True,
+    "show_sidebar": True,
+    "theme": "flatly",
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",
+    "dark_mode_theme": "flatly",
+    "navbar": "navbar-white navbar-light",
+    "accent": "accent-info",
+    "sidebar": "sidebar-light-info",
+    "brand_colour": "navbar-info",
+    "button_classes": {
+        "primary": "btn-info",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-outline-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success",
+    },
+}
+
 LANGUAGE_CODE = "en"
 LANGUAGES = [
     ("en", "English"),
@@ -170,6 +228,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

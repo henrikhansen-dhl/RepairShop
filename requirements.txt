@@ -1,5 +1,6 @@
 asgiref==3.11.1
 Django==6.0.3
+django-jazzmin==3.0.1
 mysqlclient==2.2.8
 Pillow==11.2.1
 qrcode==8.2
