@@ -130,7 +130,7 @@ class ShopOnboardingForm(forms.Form):
 class RepairWorkOrderForm(forms.ModelForm):
     class Meta:
         model = RepairWorkOrder
-        fields = ["customer", "car", "description", "technician_notes", "assigned_to", "priority", "due_date", "status"]
+        fields = ["customer", "car", "description", "technician_notes", "assigned_to", "priority", "due_date"]
         widgets = {
             "description": forms.Textarea(attrs={"rows": 5}),
             "technician_notes": forms.Textarea(attrs={"rows": 5}),
@@ -144,7 +144,6 @@ class RepairWorkOrderForm(forms.ModelForm):
             "assigned_to": _("Assigned to"),
             "priority": _("Priority"),
             "due_date": _("Due date"),
-            "status": _("Status"),
         }
 
     def __init__(self, *args, **kwargs):
@@ -194,7 +193,6 @@ class RepairWorkOrderForm(forms.ModelForm):
         self.fields["car"].queryset = car_queryset
         self.fields["assigned_to"].queryset = accessible_users
         self.fields["assigned_to"].required = False
-        self.fields["status"].initial = RepairWorkOrder.STATUS_NEW
 
     def clean(self):
         cleaned_data = super().clean()
@@ -203,6 +201,22 @@ class RepairWorkOrderForm(forms.ModelForm):
         if customer and car and car.customer_id != customer.pk:
             self.add_error("car", _("Selected car does not belong to the chosen customer."))
         return cleaned_data
+
+    def save(self, commit=True):
+        work_order = super().save(commit=False)
+        if work_order.pk:
+            if work_order.assigned_to and work_order.status == RepairWorkOrder.STATUS_NEW:
+                work_order.status = RepairWorkOrder.STATUS_ASSIGNED
+            elif not work_order.assigned_to and work_order.status == RepairWorkOrder.STATUS_ASSIGNED:
+                work_order.status = RepairWorkOrder.STATUS_NEW
+        else:
+            work_order.status = (
+                RepairWorkOrder.STATUS_ASSIGNED if work_order.assigned_to else RepairWorkOrder.STATUS_NEW
+            )
+
+        if commit:
+            work_order.save()
+        return work_order
 
 
 class RepairWorkOrderLineForm(forms.ModelForm):

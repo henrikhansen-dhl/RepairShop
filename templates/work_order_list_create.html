@@ -289,6 +289,7 @@
 
         <section class="section">
             <h2>{% trans "New Work Order" %}</h2>
+            <div class="note" style="margin-bottom: 1rem;">{% trans "Status is managed from the work-order detail page after creation." %}</div>
             <form method="post">
                 {% csrf_token %}
                 {{ form.non_field_errors }}
