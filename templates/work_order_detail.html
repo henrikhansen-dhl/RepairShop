@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-    {% trans "Delete this service line?" as confirm_delete_service_line %}
+    {% trans "Delete this line item?" as confirm_delete_line_item %}
     <main class="wrap">
         <header class="top">
             <div>
@@ -89,7 +89,7 @@
             </article>
 
             <article class="card">
-                <h2 style="margin:.1rem 0 .5rem;">{% trans "Add Service Line" %}</h2>
+                <h2 style="margin:.1rem 0 .5rem;">{% trans "Add Line Item" %}</h2>
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="add_line">
@@ -100,7 +100,7 @@
                             {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
                         </div>
                     {% endfor %}
-                    <button class="btn btn-main" type="submit">{% trans "Add Service Line" %}</button>
+                    <button class="btn btn-main" type="submit">{% trans "Add Line Item" %}</button>
                 </form>
 
                 <div class="totals">
@@ -148,7 +148,7 @@
                                     {% csrf_token %}
                                     <input type="hidden" name="action" value="delete_line">
                                     <input type="hidden" name="line_id" value="{{ line.id }}">
-                                    <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_service_line|escapejs }}');">{% trans "Delete" %}</button>
+                                    <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_line_item|escapejs }}');">{% trans "Delete" %}</button>
                                 </form>
                             </td>
                         </tr>
@@ -187,7 +187,7 @@
                                     {% csrf_token %}
                                     <input type="hidden" name="action" value="delete_line">
                                     <input type="hidden" name="line_id" value="{{ line.id }}">
-                                    <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_service_line|escapejs }}');">{% trans "Delete" %}</button>
+                                    <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_line_item|escapejs }}');">{% trans "Delete" %}</button>
                                 </form>
                             </td>
                         </tr>

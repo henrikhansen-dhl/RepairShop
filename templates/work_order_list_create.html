@@ -244,7 +244,7 @@
                     <div><b>{% trans "Due date" %}:</b> {{ order.due_date|default:"-" }}</div>
                     <div><b>{% trans "Status" %}:</b> {{ order.get_status_display }}</div>
                     <div><b>{% trans "Assigned to" %}:</b> {{ order.assigned_to|default:unassigned_label }}</div>
-                    <div><b>{% trans "Service lines" %}:</b> {{ order.service_lines.count }}</div>
+                    <div><b>{% trans "Line items" %}:</b> {{ order.service_lines.count }}</div>
                     {% if order.invoice %}
                         <div><b>{% trans "Invoice" %}:</b> {{ order.invoice.invoice_number }}</div>
                     {% endif %}

@@ -242,7 +242,7 @@ def repair_work_order_detail(request, work_order_id):
                 return redirect("repair_work_order_detail", work_order_id=work_order.pk)
 
             if target_status == RepairWorkOrder.STATUS_READY and not work_order.service_lines.exists():
-                messages.error(request, "Add at least one line before marking the work order ready.")
+                messages.error(request, "Add at least one line item before marking the work order ready.")
                 return redirect("repair_work_order_detail", work_order_id=work_order.pk)
 
             work_order.status = target_status
@@ -272,14 +272,14 @@ def repair_work_order_detail(request, work_order_id):
                     if line.vat_percent in (None, ""):
                         line.vat_percent = line.price_item.vat_percent
                 line.save()
-                messages.success(request, "Service line added.")
+                messages.success(request, "Line item added.")
                 return redirect("repair_work_order_detail", work_order_id=work_order.pk)
 
         if action == "delete_line":
             line_id = request.POST.get("line_id", "").strip()
             line = get_object_or_404(RepairWorkOrderLine, pk=line_id, work_order=work_order)
             line.delete()
-            messages.success(request, "Service line removed.")
+            messages.success(request, "Line item removed.")
             return redirect("repair_work_order_detail", work_order_id=work_order.pk)
 
         if action == "create_invoice":
@@ -291,9 +291,9 @@ def repair_work_order_detail(request, work_order_id):
                 messages.error(request, "Select a customer before creating an invoice.")
                 return redirect("repair_work_order_detail", work_order_id=work_order.pk)
 
-            service_lines = list(work_order.service_lines.select_related("price_item").all())
-            if not service_lines:
-                messages.error(request, "Add at least one service line before creating an invoice.")
+            work_order_lines = list(work_order.service_lines.select_related("price_item").all())
+            if not work_order_lines:
+                messages.error(request, "Add at least one line item before creating an invoice.")
                 return redirect("repair_work_order_detail", work_order_id=work_order.pk)
 
             invoice = Invoice.objects.create(
@@ -304,14 +304,14 @@ def repair_work_order_detail(request, work_order_id):
                 notes=(f"Work order #{work_order.pk}\n\n{work_order.technician_notes}".strip()),
             )
 
-            for service_line in service_lines:
+            for work_order_line in work_order_lines:
                 InvoiceLine.objects.create(
                     invoice=invoice,
-                    price_item=service_line.price_item,
-                    description=service_line.description,
-                    quantity=service_line.quantity,
-                    unit_price=service_line.unit_price,
-                    vat_percent=service_line.vat_percent,
+                    price_item=work_order_line.price_item,
+                    description=work_order_line.description,
+                    quantity=work_order_line.quantity,
+                    unit_price=work_order_line.unit_price,
+                    vat_percent=work_order_line.vat_percent,
                 )
 
             work_order.invoice = invoice

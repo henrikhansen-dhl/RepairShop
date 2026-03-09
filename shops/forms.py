@@ -191,7 +191,7 @@ class RepairWorkOrderLineForm(forms.ModelForm):
         labels = {
             "line_type": _("Line type"),
             "price_item": _("Price item"),
-            "description": _("Service description"),
+            "description": _("Line description"),
             "quantity": _("Quantity"),
             "unit_price": _("Unit price"),
             "vat_percent": _("VAT %"),
