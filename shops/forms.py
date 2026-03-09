@@ -10,6 +10,27 @@ import string
 from .models import Customer, CustomerCar, Invoice, InvoiceLine, InvoicePriceItem, RepairWorkOrder, RepairWorkOrderLine, ShopMasterData, ShopProfile, ShopUserAccess
 
 
+class WorkOrderPriceItemSelect(forms.Select):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.item_type_by_value = {}
+
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        option = super().create_option(name, value, label, selected, index, subindex=subindex, attrs=attrs)
+        value_key = str(option.get("value") or "")
+        item_type = self.item_type_by_value.get(value_key)
+        if item_type:
+            option.setdefault("attrs", {})["data-item-type"] = item_type
+        return option
+
+
+class WorkOrderPriceItemChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        type_label = _("Service") if obj.item_type == InvoicePriceItem.TYPE_SERVICE else _("Part")
+        code_text = f"{obj.code} - " if obj.code else ""
+        return f"[{type_label}] {code_text}{obj.description}"
+
+
 def generate_strong_password(length: int = 14) -> str:
     alphabet = string.ascii_letters + string.digits + "!@#$%^&*"
     return "".join(secrets.choice(alphabet) for _ in range(length))
@@ -188,6 +209,9 @@ class RepairWorkOrderLineForm(forms.ModelForm):
     class Meta:
         model = RepairWorkOrderLine
         fields = ["line_type", "price_item", "description", "quantity", "unit_price", "vat_percent"]
+        widgets = {
+            "line_type": forms.Select(attrs={"class": "line-type-select"}),
+        }
         labels = {
             "line_type": _("Line type"),
             "price_item": _("Price item"),
@@ -200,9 +224,18 @@ class RepairWorkOrderLineForm(forms.ModelForm):
     def __init__(self, shop: ShopProfile, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.shop = shop
-        self.fields["price_item"].queryset = InvoicePriceItem.objects.filter(shop=shop, is_active=True).order_by(
+        price_items = InvoicePriceItem.objects.filter(shop=shop, is_active=True).order_by(
             "item_type", "description"
         )
+        widget = WorkOrderPriceItemSelect()
+        widget.item_type_by_value = {str(item.pk): item.item_type for item in price_items}
+        self.fields["price_item"] = WorkOrderPriceItemChoiceField(
+            queryset=price_items,
+            required=False,
+            label=_("Price item"),
+            widget=widget,
+        )
+        self.fields["price_item"].empty_label = _("Choose a price item")
         self.fields["description"].required = False
         self.fields["unit_price"].required = False
         self.fields["vat_percent"].required = False

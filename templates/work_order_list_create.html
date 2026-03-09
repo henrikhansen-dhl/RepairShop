@@ -67,9 +67,65 @@
             margin: 0 0 1rem;
         }
 
+        .intro {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .intro-copy {
+            max-width: 620px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            margin-bottom: .5rem;
+            border-radius: 999px;
+            padding: .2rem .55rem;
+            font-size: .76rem;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #0f7e93;
+            background: #e7f7fb;
+        }
+
+        .chip-row {
+            display: flex;
+            gap: .45rem;
+            flex-wrap: wrap;
+            margin-top: .55rem;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: .26rem .6rem;
+            font-size: .82rem;
+            font-weight: 700;
+        }
+
+        .chip-info {
+            background: #ebf5ff;
+            color: #1b537d;
+        }
+
+        .chip-warn {
+            background: #fff3dc;
+            color: #8b5a00;
+        }
+
         .form-grid {
             display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 1rem;
+        }
+
+        .field-wide {
+            grid-column: 1 / -1;
         }
 
         .field {
@@ -137,6 +193,56 @@
             padding: 1rem;
         }
 
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            gap: .8rem;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .badge-row {
+            display: flex;
+            gap: .45rem;
+            flex-wrap: wrap;
+            margin-top: .45rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: .24rem .58rem;
+            font-size: .8rem;
+            font-weight: 700;
+        }
+
+        .badge-status {
+            background: #e7f4ff;
+            color: #1f5a86;
+        }
+
+        .badge-priority {
+            background: #fff2d9;
+            color: #875500;
+        }
+
+        .badge-invoice {
+            background: #eaf8ea;
+            color: #2b6e33;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: .55rem .8rem;
+            margin-top: .75rem;
+        }
+
+        .meta-grid div {
+            min-width: 0;
+        }
+
         .muted {
             color: #5a718a;
         }
@@ -147,17 +253,33 @@
             flex-wrap: wrap;
             margin-top: .8rem;
         }
+
+        @media (max-width: 720px) {
+            .form-grid,
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <main class="wrap">
         {% include "includes/back_to_dashboard_button.html" with button_class="btn" %}
-        <h1>{{ title }}</h1>
-        <p><b>{% trans "Shop:" %}</b> {{ shop_name }}</p>
-        {% if current_shop_logo_url %}
-            <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop_name }} logo">
-        {% endif %}
-        <p>{{ description }}</p>
+        <div class="intro">
+            <div class="intro-copy">
+                <span class="eyebrow">{% trans "Workshop Queue" %}</span>
+                <h1>{{ title }}</h1>
+                <p><b>{% trans "Shop:" %}</b> {{ shop_name }}</p>
+                <p>{{ description }}</p>
+                <div class="chip-row">
+                    <span class="chip chip-info">{% trans "Track services and parts in one work order" %}</span>
+                    <span class="chip chip-warn">{% trans "Ready for invoice after at least one line item" %}</span>
+                </div>
+            </div>
+            {% if current_shop_logo_url %}
+                <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop_name }} logo">
+            {% endif %}
+        </div>
 
         {% if messages %}
             {% for message in messages %}
@@ -190,7 +312,7 @@
                         {{ form.description }}
                     </div>
 
-                    <div class="field">
+                    <div class="field field-wide">
                         <label for="{{ form.technician_notes.id_for_label }}">{{ form.technician_notes.label }}</label>
                         {{ form.technician_notes.errors }}
                         {{ form.technician_notes }}
@@ -232,24 +354,35 @@
             <h3>{% trans "Existing Work Orders" %}</h3>
             {% for order in work_orders %}
                 <div class="workorder-card">
-                    <strong>#{{ order.id }}</strong>
-                    {% if order.customer %}
-                        <div><b>{% trans "Customer" %}:</b> {{ order.customer.full_name }}</div>
-                    {% endif %}
-                    {% if order.car %}
-                        <div><b>{% trans "Car" %}:</b> {{ order.car }}</div>
-                    {% endif %}
+                    <div class="card-head">
+                        <div>
+                            <strong>#{{ order.id }}</strong>
+                            <div class="badge-row">
+                                <span class="badge badge-status">{{ order.get_status_display }}</span>
+                                <span class="badge badge-priority">{{ order.get_priority_display }}</span>
+                                {% if order.invoice %}
+                                    <span class="badge badge-invoice">{% trans "Invoice ready" %}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="muted"><b>{% trans "Created" %}:</b> {{ order.created_at|date:"SHORT_DATETIME_FORMAT" }}</div>
+                    </div>
                     <div style="margin: .55rem 0;">{{ order.description|linebreaksbr }}</div>
-                    <div><b>{% trans "Priority" %}:</b> {{ order.get_priority_display }}</div>
-                    <div><b>{% trans "Due date" %}:</b> {{ order.due_date|default:"-" }}</div>
-                    <div><b>{% trans "Status" %}:</b> {{ order.get_status_display }}</div>
-                    <div><b>{% trans "Assigned to" %}:</b> {{ order.assigned_to|default:unassigned_label }}</div>
-                    <div><b>{% trans "Line items" %}:</b> {{ order.service_lines.count }}</div>
-                    {% if order.invoice %}
-                        <div><b>{% trans "Invoice" %}:</b> {{ order.invoice.invoice_number }}</div>
-                    {% endif %}
-                    <div><b>{% trans "Created by" %}:</b> {{ order.created_by }}</div>
-                    <div class="muted"><b>{% trans "Created" %}:</b> {{ order.created_at|date:"SHORT_DATETIME_FORMAT" }}</div>
+                    <div class="meta-grid">
+                        {% if order.customer %}
+                            <div><b>{% trans "Customer" %}:</b> {{ order.customer.full_name }}</div>
+                        {% endif %}
+                        {% if order.car %}
+                            <div><b>{% trans "Car" %}:</b> {{ order.car }}</div>
+                        {% endif %}
+                        <div><b>{% trans "Due date" %}:</b> {{ order.due_date|default:"-" }}</div>
+                        <div><b>{% trans "Assigned to" %}:</b> {{ order.assigned_to|default:unassigned_label }}</div>
+                        <div><b>{% trans "Line items" %}:</b> {{ order.service_lines.count }}</div>
+                        {% if order.invoice %}
+                            <div><b>{% trans "Invoice" %}:</b> {{ order.invoice.invoice_number }}</div>
+                        {% endif %}
+                        <div><b>{% trans "Created by" %}:</b> {{ order.created_by }}</div>
+                    </div>
                     <div class="card-actions">
                         <a class="btn btn-secondary" href="{% url 'repair_work_order_detail' order.id %}">{% trans "Open Work Order" %}</a>
                         {% if order.invoice %}

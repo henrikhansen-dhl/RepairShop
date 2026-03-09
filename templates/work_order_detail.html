@@ -8,12 +8,13 @@
     <style>
         body { margin: 0; background: #f5fbff; color: #14283f; font-family: "Segoe UI", sans-serif; }
         .wrap { width: min(1140px, 96vw); margin: 1.2rem auto; }
-        .top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .6rem; }
+        .top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: .8rem; }
         .grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: .9rem; }
         .card { margin-top: .9rem; background: #fff; border: 1px solid #d8e8f6; border-radius: 12px; padding: .9rem; }
         .btn { display: inline-block; text-decoration: none; border: 0; border-radius: 9px; padding: .48rem .8rem; font-weight: 700; cursor: pointer; }
         .btn-main { background: #0f7e93; color: #fff; }
         .btn-soft { background: #e9f4ff; color: #1c4f75; }
+        .button-row { display: flex; gap: .5rem; flex-wrap: wrap; }
         .row { margin-bottom: .68rem; }
         label { display: block; font-weight: 700; margin-bottom: .2rem; }
         input, select, textarea { width: 100%; border: 1px solid #b9cfe4; border-radius: 8px; padding: .48rem .58rem; font: inherit; box-sizing: border-box; }
@@ -21,26 +22,61 @@
         th, td { border-bottom: 1px solid #e5eef8; text-align: left; padding: .5rem; vertical-align: top; }
         .totals { background: #f7fbff; border: 1px solid #dbeaf8; border-radius: 10px; padding: .7rem; margin-top: .7rem; }
         .totals p { margin: .25rem 0; }
+        .summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; margin-top: .9rem; }
+        .summary-card { background: linear-gradient(180deg, #f8fcff, #eef7ff); border: 1px solid #d8e8f6; border-radius: 12px; padding: .75rem; }
+        .summary-card .label { display: block; margin-bottom: .18rem; color: #60758c; font-size: .85rem; font-weight: 700; }
+        .summary-card strong { font-size: 1.05rem; }
+        .pill-row { display: flex; gap: .45rem; flex-wrap: wrap; margin-top: .45rem; }
+        .pill { display: inline-flex; align-items: center; border-radius: 999px; padding: .28rem .62rem; font-size: .84rem; font-weight: 700; }
+        .pill-status { background: #e8f6ff; color: #17587d; }
+        .pill-priority { background: #fff3dc; color: #8b5a00; }
+        .pill-due { background: #eef7ea; color: #306b2f; }
+        .line-item-card[data-tone="service"] { border-color: #cbe7f1; box-shadow: inset 0 0 0 1px rgba(15, 126, 147, 0.04); }
+        .line-item-card[data-tone="part"] { border-color: #e8dcc0; box-shadow: inset 0 0 0 1px rgba(168, 118, 30, 0.04); }
+        .line-item-head { display: flex; justify-content: space-between; gap: .8rem; align-items: start; flex-wrap: wrap; margin-bottom: .6rem; }
+        .line-item-head p { margin: .2rem 0 0; color: #5d7389; }
+        .line-type-chip-row { display: flex; gap: .45rem; flex-wrap: wrap; }
+        .line-type-chip { border-radius: 999px; padding: .28rem .62rem; font-size: .82rem; font-weight: 700; background: #edf4fb; color: #31536e; }
+        .line-type-chip.active-service { background: #dff4f8; color: #0d6f82; }
+        .line-type-chip.active-part { background: #fff0d8; color: #8b5a00; }
+        .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: .8rem; flex-wrap: wrap; }
+        .section-head p { margin: 0; color: #60758c; }
+        .table-card.service-table { border-color: #cbe7f1; }
+        .table-card.part-table { border-color: #e8dcc0; }
         .errors { color: #8b1d1d; font-size: .88rem; margin-top: .24rem; }
         .message { background: #e9fce9; border: 1px solid #bde4bd; border-radius: 8px; padding: .55rem .65rem; margin-top: .7rem; }
         .shop-logo { max-height: 56px; width: auto; display: block; margin-top: .4rem; border: 1px solid #d8e8f6; border-radius: 8px; background: #fff; padding: .2rem; }
         .muted { color: #60758c; }
-        @media (max-width: 920px) { .grid { grid-template-columns: 1fr; } }
+        @media (max-width: 920px) {
+            .grid { grid-template-columns: 1fr; }
+            .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 640px) {
+            .summary-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
     {% trans "Delete this line item?" as confirm_delete_line_item %}
+    {% trans "Add labor, diagnostics, or workshop tasks here." as line_hint_service %}
+    {% trans "Add spare parts, materials, or consumables here." as line_hint_part %}
+    {% trans "Service" as label_service %}
+    {% trans "Part" as label_part %}
     <main class="wrap">
         <header class="top">
             <div>
                 <h1 style="margin:.1rem 0;">{% trans "Work Order" %} #{{ work_order.id }}</h1>
                 <div>{% trans "Customer:" %} <b>{{ work_order.customer.full_name|default:"-" }}</b></div>
-                <div>{% trans "Status:" %} <b>{{ work_order.get_status_display }}</b></div>
+                <div class="pill-row">
+                    <span class="pill pill-status">{% trans "Status" %}: {{ work_order.get_status_display }}</span>
+                    <span class="pill pill-priority">{% trans "Priority" %}: {{ work_order.get_priority_display }}</span>
+                    <span class="pill pill-due">{% trans "Due" %}: {{ work_order.due_date|default:"-" }}</span>
+                </div>
                 {% if current_shop_logo_url %}
                     <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
                 {% endif %}
             </div>
-            <div>
+            <div class="button-row">
                 {% include "includes/back_to_dashboard_button.html" %}
                 <a class="btn btn-soft" href="{% url 'create_repair_order' %}">{% trans "Back to Work Orders" %}</a>
                 {% if work_order.invoice %}
@@ -48,6 +84,25 @@
                 {% endif %}
             </div>
         </header>
+
+        <section class="summary-grid">
+            <div class="summary-card">
+                <span class="label">{% trans "Customer" %}</span>
+                <strong>{{ work_order.customer.full_name|default:"-" }}</strong>
+            </div>
+            <div class="summary-card">
+                <span class="label">{% trans "Vehicle" %}</span>
+                <strong>{{ work_order.car|default:"-" }}</strong>
+            </div>
+            <div class="summary-card">
+                <span class="label">{% trans "Assigned to" %}</span>
+                <strong>{{ work_order.assigned_to|default:"-" }}</strong>
+            </div>
+            <div class="summary-card">
+                <span class="label">{% trans "Invoice" %}</span>
+                <strong>{% if work_order.invoice %}{{ work_order.invoice.invoice_number }}{% else %}-{% endif %}</strong>
+            </div>
+        </section>
 
         {% if messages %}
             {% for message in messages %}
@@ -88,8 +143,17 @@
                 </form>
             </article>
 
-            <article class="card">
-                <h2 style="margin:.1rem 0 .5rem;">{% trans "Add Line Item" %}</h2>
+            <article class="card line-item-card" id="line-item-card" data-tone="{{ line_form.line_type.value|default:'service' }}">
+                <div class="line-item-head">
+                    <div>
+                        <h2 id="line-item-title" style="margin:.1rem 0 .25rem;">{% trans "Add Service Item" %}</h2>
+                        <p id="line-item-hint">{% trans "Add labor, diagnostics, or workshop tasks here." %}</p>
+                    </div>
+                    <div class="line-type-chip-row">
+                        <span class="line-type-chip" id="service-chip">{% trans "Service" %}</span>
+                        <span class="line-type-chip" id="part-chip">{% trans "Part" %}</span>
+                    </div>
+                </div>
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="add_line">
@@ -100,7 +164,7 @@
                             {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
                         </div>
                     {% endfor %}
-                    <button class="btn btn-main" type="submit">{% trans "Add Line Item" %}</button>
+                    <button class="btn btn-main" id="line-item-submit" type="submit">{% trans "Add Service Item" %}</button>
                 </form>
 
                 <div class="totals">
@@ -120,8 +184,11 @@
             </article>
         </section>
 
-        <section class="card">
-            <h2 style="margin:.1rem 0 .5rem;">{% trans "Service Lines" %}</h2>
+        <section class="card table-card service-table">
+            <div class="section-head">
+                <h2 style="margin:.1rem 0 .5rem;">{% trans "Service Lines" %}</h2>
+                <p>{% trans "Labor, diagnostics, and workshop tasks." %}</p>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -159,8 +226,11 @@
             </table>
         </section>
 
-        <section class="card">
-            <h2 style="margin:.1rem 0 .5rem;">{% trans "Part Lines" %}</h2>
+        <section class="card table-card part-table">
+            <div class="section-head">
+                <h2 style="margin:.1rem 0 .5rem;">{% trans "Part Lines" %}</h2>
+                <p>{% trans "Spare parts, materials, and consumables." %}</p>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -204,6 +274,14 @@
         (function () {
             const customerSelect = document.getElementById("id_customer");
             const carSelect = document.getElementById("id_car");
+            const lineTypeSelect = document.getElementById("id_line_type");
+            const priceItemSelect = document.getElementById("id_price_item");
+            const lineItemCard = document.getElementById("line-item-card");
+            const lineItemTitle = document.getElementById("line-item-title");
+            const lineItemHint = document.getElementById("line-item-hint");
+            const lineItemSubmit = document.getElementById("line-item-submit");
+            const serviceChip = document.getElementById("service-chip");
+            const partChip = document.getElementById("part-chip");
             if (!customerSelect || !carSelect) {
                 return;
             }
@@ -243,7 +321,59 @@
                 }
             }
 
+            function updateLineTypeState() {
+                if (!lineTypeSelect || !lineItemCard || !lineItemTitle || !lineItemHint || !lineItemSubmit) {
+                    return;
+                }
+
+                const lineType = lineTypeSelect.value || "service";
+                const isPart = lineType === "part";
+
+                lineItemCard.dataset.tone = isPart ? "part" : "service";
+                lineItemTitle.textContent = isPart ? "{% trans 'Add Part Item' %}" : "{% trans 'Add Service Item' %}";
+                lineItemHint.textContent = isPart ? "{{ line_hint_part|escapejs }}" : "{{ line_hint_service|escapejs }}";
+                lineItemSubmit.textContent = isPart ? "{% trans 'Add Part Item' %}" : "{% trans 'Add Service Item' %}";
+
+                if (serviceChip) {
+                    serviceChip.classList.toggle("active-service", !isPart);
+                }
+                if (partChip) {
+                    partChip.classList.toggle("active-part", isPart);
+                }
+            }
+
+            function filterPriceItems() {
+                if (!lineTypeSelect || !priceItemSelect) {
+                    return;
+                }
+
+                const selectedType = lineTypeSelect.value || "service";
+                const currentValue = priceItemSelect.value;
+                let currentStillVisible = false;
+
+                [...priceItemSelect.options].forEach((option) => {
+                    const itemType = option.dataset.itemType;
+                    const shouldShow = !itemType || itemType === selectedType;
+                    option.hidden = !shouldShow;
+                    if (shouldShow && option.value === currentValue) {
+                        currentStillVisible = true;
+                    }
+                });
+
+                if (!currentStillVisible) {
+                    priceItemSelect.value = "";
+                }
+            }
+
             customerSelect.addEventListener("change", refillCars);
+            if (lineTypeSelect) {
+                lineTypeSelect.addEventListener("change", function () {
+                    updateLineTypeState();
+                    filterPriceItems();
+                });
+                updateLineTypeState();
+                filterPriceItems();
+            }
             refillCars();
         })();
     </script>
