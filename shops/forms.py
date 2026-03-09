@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _
+from django.db import transaction
 class ShopOnboardingForm(forms.Form):
     shop_name = forms.CharField(max_length=120, label=_("Shop name"))
     username = forms.CharField(max_length=150, label=_("Login username"))
