@@ -1,0 +1,24 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+!.env.production.example
+
+# Django/SQLite local databases
+*.sqlite3
+
+# Collected/local media uploads
+media/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/

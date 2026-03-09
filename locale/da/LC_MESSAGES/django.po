@@ -1,0 +1,789 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: RepairShop\n"
+"POT-Creation-Date: 2026-03-09 09:40+0000\n"
+"PO-Revision-Date: 2026-03-09 09:40+0000\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Shop Functions"
+msgstr "Værkstedsfunktioner"
+
+msgid "Welcome, %(username)s."
+msgstr "Velkommen, %(username)s."
+
+msgid "Active shop: <b>%(shop_name)s</b>"
+msgstr "Aktiv værksted: <b>%(shop_name)s</b>"
+
+msgid "Manage Shops"
+msgstr "Administrer Værksteder"
+
+msgid "Add New Shop"
+msgstr "Tilføj nyt værksted"
+
+msgid "Log out"
+msgstr "Log ud"
+
+msgid "Operations"
+msgstr "Operationer"
+
+msgid "Create Repair Order"
+msgstr "Opret reparationsordre"
+
+msgid "Create and assign repair work orders."
+msgstr "Opret og tildel reparationsordrer."
+
+msgid "Allowed"
+msgstr "Tilladt"
+
+msgid "Your account does not include this right."
+msgstr "Din konto har ikke denne rettighed."
+
+msgid "Locked"
+msgstr "Last"
+
+msgid "Schedule Vehicle Inspection"
+msgstr "Planlæg syn"
+
+msgid "Plan incoming inspections and workload."
+msgstr "Planlæg kommende syn og arbejdsbelastning."
+
+msgid "Manage Parts Inventory"
+msgstr "Administrer reservedelslager"
+
+msgid "Track stock, receiving, and part usage."
+msgstr "Spor lager, modtagelse og reservedelsforbrug."
+
+msgid "View Reports"
+msgstr "Se rapporter"
+
+msgid "Open business and performance reports."
+msgstr "Åbn virksomheds- og performance-rapporter."
+
+msgid "Invoices"
+msgstr "Fakturaer"
+
+msgid "Create invoices from price table items or manual lines."
+msgstr "Opret fakturaer fra pristabellen eller manuelle linjer."
+
+msgid "Customers"
+msgstr "Kunder"
+
+msgid "Manage customer profiles and their vehicles."
+msgstr "Administrer kundeprofiler og deres biler."
+
+msgid "Manage Shop Users"
+msgstr "Administrer værkstedsbrugere"
+
+msgid "Add staff and configure role-based rights."
+msgstr "Tilføj medarbejdere og konfigurer rollebaserede rettigheder."
+
+msgid "Shop:"
+msgstr "Værksted:"
+
+msgid "Back to Shop"
+msgstr "Tilbage til værksted"
+
+msgid "Price Table"
+msgstr "Pristabel"
+
+msgid "Invoice Masterdata"
+msgstr "Faktura masterdata"
+
+msgid "New Invoice"
+msgstr "Ny faktura"
+
+msgid "Invoice #"
+msgstr "Faktura #"
+
+msgid "Date"
+msgstr "Dato"
+
+msgid "Customer"
+msgstr "Kunde"
+
+msgid "Car"
+msgstr "Bil"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Action"
+msgstr "Handling"
+
+msgid "Open"
+msgstr "Åbn"
+
+msgid "No invoices yet."
+msgstr "Ingen fakturaer endnu."
+
+msgid "Back to Dashboard"
+msgstr "Tilbage til dashboard"
+
+msgid "Add Customer"
+msgstr "Tilføj kunde"
+
+msgid "Search name:"
+msgstr "Søg navn:"
+
+msgid "Type customer name"
+msgstr "Indtast kundenavn"
+
+msgid "Search"
+msgstr "Søg"
+
+msgid "Clear"
+msgstr "Ryd"
+
+msgid "Name"
+msgstr "Navn"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Actions"
+msgstr "Handlinger"
+
+msgid "Edit"
+msgstr "Rediger"
+
+msgid "Delete"
+msgstr "Slet"
+
+msgid "Delete this customer and all cars?"
+msgstr "Slet denne kunde og alle biler?"
+
+msgid "No customers found."
+msgstr "Ingen kunder fundet."
+
+msgid "Users and Rights: %(shop_name)s"
+msgstr "Brugere og rettigheder: %(shop_name)s"
+
+msgid "Database alias:"
+msgstr "Database-alias:"
+
+msgid "Back to Shops"
+msgstr "Tilbage til værksteder"
+
+msgid "Back to My Shop"
+msgstr "Tilbage til mit værksted"
+
+msgid "New user credentials"
+msgstr "Nye brugeroplysninger"
+
+msgid "Username:"
+msgstr "Brugernavn:"
+
+msgid "Password:"
+msgstr "Adgangskode:"
+
+msgid "Copy Credentials"
+msgstr "Kopier oplysninger"
+
+msgid "Add User to Shop"
+msgstr "Tilfoj bruger til værksted"
+
+msgid "Preferred language"
+msgstr "Foretrukket sprog"
+
+msgid "Current Users"
+msgstr "Nuværende brugere"
+
+msgid "User"
+msgstr "Bruger"
+
+msgid "Language"
+msgstr "Sprog"
+
+msgid "Manage Users"
+msgstr "Administrer brugere"
+
+msgid "Create Orders"
+msgstr "Opret ordrer"
+
+msgid "Inventory"
+msgstr "Lager"
+
+msgid "Reports"
+msgstr "Rapporter"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nej"
+
+msgid "Active"
+msgstr "Aktiv"
+
+msgid "Inactive"
+msgstr "Inaktiv"
+
+msgid "Edit Rights"
+msgstr "Rediger rettigheder"
+
+msgid "No users assigned to this shop yet."
+msgstr "Ingen brugere er endnu tildelt denne værksted."
+
+msgid "Credentials copied to clipboard."
+msgstr "Oplysninger kopieret til udklipsholder."
+
+msgid "Edit Rights: %(username)s"
+msgstr "Rediger rettigheder: %(username)s"
+
+msgid "Back to Users"
+msgstr "Tilbage til brugere"
+
+msgid "Save Rights"
+msgstr "Gem rettigheder"
+
+msgid "Back to Customers"
+msgstr "Tilbage til kunder"
+
+msgid "Edit Customer"
+msgstr "Rediger kunde"
+
+msgid "Invoice Customer"
+msgstr "Fakturer kunde"
+
+msgid "Delete Customer"
+msgstr "Slet kunde"
+
+msgid "Customer Details"
+msgstr "Kundeoplysninger"
+
+msgid "Cars linked:"
+msgstr "Tilknyttede biler:"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "Notes:"
+msgstr "Noter:"
+
+msgid "Cars"
+msgstr "Biler"
+
+msgid "Plate:"
+msgstr "Nummerplade:"
+
+msgid "VIN:"
+msgstr "Stelnummer:"
+
+msgid "Color:"
+msgstr "Farve:"
+
+msgid "Inspection"
+msgstr "Syn"
+
+msgid "Type:"
+msgstr "Type:"
+
+msgid "Result:"
+msgstr "Resultat:"
+
+msgid "Status Date:"
+msgstr "Statusdato:"
+
+msgid "Mileage:"
+msgstr "Kilometertal:"
+
+msgid "Next:"
+msgstr "Næste:"
+
+msgid "Tire Hotel"
+msgstr "Dækhotel"
+
+msgid "Location:"
+msgstr "Placering:"
+
+msgid "Labels:"
+msgstr "Etiketter:"
+
+msgid "Edit Car"
+msgstr "Rediger bil"
+
+msgid "Invoice This Car"
+msgstr "Fakturer denne bil"
+
+msgid "Print Tire Labels"
+msgstr "Udskriv dæketiketter"
+
+msgid "Delete Car"
+msgstr "Slet bil"
+
+msgid "Delete this car?"
+msgstr "Slet denne bil?"
+
+msgid "No cars saved yet for this customer."
+msgstr "Ingen biler er gemt for denne kunde endnu."
+
+msgid "Cancel"
+msgstr "Annuller"
+
+msgid "Lookup Plate"
+msgstr "Søg nummerplade"
+
+msgid "Save Car"
+msgstr "Gem bil"
+
+msgid "Enter a plate before lookup."
+msgstr "Indtast en nummerplade for sogning."
+
+msgid "Looking up vehicle data..."
+msgstr "Søger efter bildata..."
+
+msgid "Lookup failed."
+msgstr "Søgning mislykkedes."
+
+msgid "Vehicle data loaded. Review and save the car."
+msgstr "Bildata indlæst. Gennemgå og gem bilen."
+
+msgid "Lookup request failed. Please try again."
+msgstr "Søgningsanmodning mislykkedes. Prøv igen."
+
+msgid "Back to Invoices"
+msgstr "Tilbage til fakturaer"
+
+msgid "Masterdata"
+msgstr "Masterdata"
+
+msgid "Email Invoice"
+msgstr "Send faktura"
+
+msgid "Print / PDF"
+msgstr "Udskriv / PDF"
+
+msgid "Status Actions"
+msgstr "Statushandlinger"
+
+msgid "Set"
+msgstr "Sæt"
+
+msgid "Invoice Header"
+msgstr "Fakturahoved"
+
+msgid "Locked:"
+msgstr "Last:"
+
+msgid "This invoice is not draft and cannot be edited."
+msgstr "Denne faktura er ikke et kladdeudkast og kan ikke redigeres."
+
+msgid "Update Invoice"
+msgstr "Opdater faktura"
+
+msgid "Add Invoice Line"
+msgstr "Tilføj fakturalinje"
+
+msgid "Add Line"
+msgstr "Tilføj linje"
+
+msgid "Invoice Lines"
+msgstr "Fakturalinjer"
+
+msgid "Description"
+msgstr "Beskrivelse"
+
+msgid "Qty"
+msgstr "Antal"
+
+msgid "Line Rebate"
+msgstr "Linjerabat"
+
+msgid "Line Total"
+msgstr "Linjetotal"
+
+msgid "Delete this line?"
+msgstr "Slet denne linje?"
+
+msgid "No lines added yet."
+msgstr "Ingen linjer tilføjet endnu."
+
+msgid "Subtotal:"
+msgstr "Subtotal:"
+
+msgid "Total Rebate:"
+msgstr "Samlet rabat:"
+
+msgid "Total ex VAT:"
+msgstr "Total ekskl. moms:"
+
+msgid "VAT Total:"
+msgstr "Moms total:"
+
+msgid "Grand Total incl VAT:"
+msgstr "Total inkl. moms:"
+
+msgid "Add Price Item"
+msgstr "Tilfoj prislinje"
+
+msgid "Save Item"
+msgstr "Gem vare"
+
+msgid "Current Items"
+msgstr "Nuværende varer"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Code"
+msgstr "Kode"
+
+msgid "No price items yet."
+msgstr "Ingen prislinjer endnu."
+
+msgid "Save Masterdata"
+msgstr "Gem masterdata"
+
+msgid "Send Email"
+msgstr "Send e-mail"
+
+msgid "Feature scaffold is ready. Plug your domain models and workflows into this page."
+msgstr "Funktionsskabelon er klar. Tilslut dine domanemodeller og workflows pa denne side."
+
+msgid "This is where you create and dispatch repair orders."
+msgstr "Her opretter og udsender du reparationsordrer."
+
+msgid "This is where your team can schedule and track inspections."
+msgstr "Her kan dit team planlagge og følge syn."
+
+msgid "This is where stock movements and part catalogs are managed."
+msgstr "Her administreres lagerbevaegelser og reservedelskataloger."
+
+msgid "This is where KPI, revenue, and technician productivity reports are shown."
+msgstr "Her vises KPI-, omsætnings- og produktivitetsrapporter."
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "Database Alias"
+msgstr "Database-alias"
+
+msgid "Users & Rights"
+msgstr "Brugere og rettigheder"
+
+msgid "Deactivate"
+msgstr "Deaktiver"
+
+msgid "Activate"
+msgstr "Aktiver"
+
+msgid "No shops yet. Create your first one."
+msgstr "Ingen værksteder endnu. Opret din første."
+
+msgid "RepairShop Cloud"
+msgstr "RepairShop Cloud"
+
+msgid "Every Garage,"
+msgstr "Ethvert værksted,"
+
+msgid "One Fast Workflow."
+msgstr "Et hurtigt workflow."
+
+msgid "Run estimates, jobs, and customer records per shop with isolated databases."
+msgstr "Håndter tilbud, opgaver og kundedata per værksted med isolerede databaser."
+
+msgid "Sign in to access your shop-specific dashboard and daily repair operations."
+msgstr "Log ind for at åbne dit værkstedsspecifikke dashboard og daglige opgaver."
+
+msgid "Open My Shop Functions"
+msgstr "åbn mine værkstedsfunktioner"
+
+msgid "Log in to My Shop"
+msgstr "Log ind på mit værksted"
+
+msgid "Admin Access"
+msgstr "Admin-adgang"
+
+msgid "Tenant Isolation"
+msgstr "Tenant-isolation"
+
+msgid "Shop data routed to its own database."
+msgstr "værkstedsdata rutes til sin egen database."
+
+msgid "Secure Access"
+msgstr "Sikker adgang"
+
+msgid "Users only open their shop workspace."
+msgstr "Brugere kan kun åbne deres egen værksteds arbejdsomrade."
+
+msgid "Cloud Ready"
+msgstr "Cloud-klar"
+
+msgid "Log in to your shop"
+msgstr "Log ind i din værksted"
+
+msgid "Use your RepairShop account to open shop-specific functions."
+msgstr "Brug din RepairShop-konto for at åbne værkstedsspecifikke funktioner."
+
+msgid "Continue"
+msgstr "Fortsæt"
+
+msgid "Back to landing page"
+msgstr "Tilbage til forsiden"
+
+msgid "Print / Save PDF"
+msgstr "Udskriv / gem PDF"
+
+msgid "From"
+msgstr "Fra"
+
+msgid "To"
+msgstr "Til"
+
+msgid "Unit"
+msgstr "Enhed"
+
+msgid "Rebate"
+msgstr "Rabat"
+
+msgid "No lines."
+msgstr "Ingen linjer."
+
+msgid "Subtotal"
+msgstr "Subtotal"
+
+msgid "Total Rebate"
+msgstr "Samlet rabat"
+
+msgid "VAT Total"
+msgstr "Moms total"
+
+msgid "Grand Total incl VAT"
+msgstr "Total inkl. moms"
+
+msgid "Notes"
+msgstr "Noter"
+
+msgid "Print"
+msgstr "Udskriv"
+
+msgid "Back to Customer"
+msgstr "Tilbage til kunde"
+
+msgid "Format:"
+msgstr "Format:"
+
+msgid "Preset"
+msgstr "Forvalg"
+
+msgid "Count"
+msgstr "Antal"
+
+msgid "Apply"
+msgstr "Anvend"
+
+msgid "Label"
+msgstr "Etiket"
+
+msgid "Invoice Number:"
+msgstr "Fakturanummer:"
+
+msgid "Total (incl VAT):"
+msgstr "Total (inkl. moms):"
+
+msgid "View / print invoice"
+msgstr "Se / udskriv faktura"
+
+msgid "View / print invoice:"
+msgstr "Se / udskriv faktura:"
+
+msgid "Create a shop account, login user, and tenant database alias."
+msgstr "Opret en værkstedskonto, loginbruger og tenant database-alias."
+
+msgid "New Shop Credentials"
+msgstr "Nye værkstedsoplysninger"
+
+msgid "Database:"
+msgstr "Database:"
+
+msgid "Shop name"
+msgstr "værkstedsnavn"
+
+msgid "Login username"
+msgstr "Loginbrugernavn"
+
+msgid "Email (optional)"
+msgstr "E-mail (valgfri)"
+
+msgid "Database alias (optional)"
+msgstr "Database-alias (valgfri)"
+
+msgid "Generate strong password automatically"
+msgstr "Generer automatisk en stærk adgangskode"
+
+msgid "Temporary password"
+msgstr "Midlertidig adgangskode"
+
+msgid "Confirm password"
+msgstr "Bekræft adgangskode"
+
+msgid "Create Shop"
+msgstr "Opret værksted"
+
+msgid "Create Invoice"
+msgstr "Opret faktura"
+
+msgid "Back to Shop List"
+msgstr "Tilbage til værkstedsliste"
+
+msgid "Temporary password reset"
+msgstr "Midlertidig nulstilling af adgangskode"
+
+msgid "Database alias"
+msgstr "Database-alias"
+
+msgid "Shop is active"
+msgstr "værksted er aktiv"
+
+msgid "Owner user is active"
+msgstr "Ejerbruger er aktiv"
+
+msgid "Reset password to a new random value"
+msgstr "Nulstil adgangskode til ny tilfaldig vaerdi"
+
+msgid "Save Changes"
+msgstr "Gem ændringer"
+
+msgid "New username"
+msgstr "Nyt brugernavn"
+
+msgid "New user email"
+msgstr "Ny bruger e-mail"
+
+msgid "Generate password"
+msgstr "Generer adgangskode"
+
+msgid "Create new user account"
+msgstr "Opret ny brugerkonto"
+
+msgid "Existing user"
+msgstr "Eksisterende bruger"
+
+msgid "Choose an existing user when not creating a new account."
+msgstr "Vælg en eksisterende bruger, hvis du ikke opretter en ny konto."
+
+msgid "Enter a username for the new user."
+msgstr "Indtast et brugernavn for den nye bruger."
+
+msgid "Select an existing user or create a new one."
+msgstr "Vælg en eksisterende bruger eller opret en ny."
+
+msgid "Make"
+msgstr "Mærke"
+
+msgid "Model"
+msgstr "Model"
+
+msgid "Year"
+msgstr "År"
+
+msgid "Plate number"
+msgstr "Nummerplade"
+
+msgid "Tire hotel enabled"
+msgstr "Dækhotel aktiveret"
+
+msgid "Tire hotel location"
+msgstr "Dækhotel placering"
+
+msgid "Tire hotel notes"
+msgstr "Dækhotel noter"
+
+msgid "Tire label count"
+msgstr "Antal dæketiketter"
+
+msgid "Inspection type"
+msgstr "Synstype"
+
+msgid "Inspection date"
+msgstr "Syndato"
+
+msgid "Inspection result"
+msgstr "Synsresultat"
+
+msgid "Inspection status"
+msgstr "Synsstatus"
+
+msgid "Inspection status date"
+msgstr "Synsstatus dato"
+
+msgid "Inspection mileage"
+msgstr "Kilometertal ved syn"
+
+msgid "Next inspection date"
+msgstr "Naeste synsdato"
+
+msgid "Total rebate type"
+msgstr "Samlet rabat type"
+
+msgid "Total rebate value"
+msgstr "Samlet rabat værdi"
+
+msgid "Selected car does not belong to this shop."
+msgstr "Valgt bil tilhører ikke dette værksted."
+
+msgid "Selected customer does not belong to this shop."
+msgstr "Valgt kunde tilhører ikke dette værksted."
+
+msgid "Selected car does not belong to the chosen customer."
+msgstr "Valgt bil tilhører ikke den valgte kunde."
+
+msgid "Price item"
+msgstr "Prislinje"
+
+msgid "Rebate type"
+msgstr "Rabat type"
+
+msgid "Rebate value"
+msgstr "Rabat værdi"
+
+msgid "Selected price item does not belong to this shop."
+msgstr "Valgt prislinje tilhører ikke dette værksted."
+
+msgid "Provide a manual description or choose a price item."
+msgstr "Angiv en manuel beskrivelse eller vælg en prislinje."
+
+msgid "Provide a unit price for manual lines."
+msgstr "Angiv en enhedspris for manuelle linjer."
+
+msgid "Legal name"
+msgstr "Juridisk navn"
+
+msgid "Address line 1"
+msgstr "Adresselinje 1"
+
+msgid "Address line 2"
+msgstr "Adresselinje 2"
+
+msgid "Postal code"
+msgstr "Postnummer"
+
+msgid "City"
+msgstr "By"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "VAT number"
+msgstr "Momsnummer"
+
+msgid "Company logo"
+msgstr "Firma logo"
+
+msgid "Recipient email"
+msgstr "Modtager e-mail"
+
+msgid "Subject"
+msgstr "Emne"
+
+msgid "Message"
+msgstr "Besked"

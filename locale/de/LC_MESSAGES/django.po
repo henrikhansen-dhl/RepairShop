@@ -1,0 +1,789 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: RepairShop\n"
+"POT-Creation-Date: 2026-03-09 09:40+0000\n"
+"PO-Revision-Date: 2026-03-09 09:40+0000\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Shop Functions"
+msgstr "Shop-Funktionen"
+
+msgid "Welcome, %(username)s."
+msgstr "Willkommen, %(username)s."
+
+msgid "Active shop: <b>%(shop_name)s</b>"
+msgstr "Aktiver Shop: <b>%(shop_name)s</b>"
+
+msgid "Manage Shops"
+msgstr "Shops verwalten"
+
+msgid "Add New Shop"
+msgstr "Neuen Shop hinzufugen"
+
+msgid "Log out"
+msgstr "Abmelden"
+
+msgid "Operations"
+msgstr "Vorgange"
+
+msgid "Create Repair Order"
+msgstr "Reparaturauftrag erstellen"
+
+msgid "Create and assign repair work orders."
+msgstr "Reparaturauftrage erstellen und zuweisen."
+
+msgid "Allowed"
+msgstr "Erlaubt"
+
+msgid "Your account does not include this right."
+msgstr "Ihr Konto hat dieses Recht nicht."
+
+msgid "Locked"
+msgstr "Gesperrt"
+
+msgid "Schedule Vehicle Inspection"
+msgstr "Fahrzeugprufung planen"
+
+msgid "Plan incoming inspections and workload."
+msgstr "Eingehende Prufungen und Auslastung planen."
+
+msgid "Manage Parts Inventory"
+msgstr "Teilelager verwalten"
+
+msgid "Track stock, receiving, and part usage."
+msgstr "Bestand, Wareneingang und Teileverbrauch verfolgen."
+
+msgid "View Reports"
+msgstr "Berichte anzeigen"
+
+msgid "Open business and performance reports."
+msgstr "Geschafts- und Leistungsberichte offnen."
+
+msgid "Invoices"
+msgstr "Rechnungen"
+
+msgid "Create invoices from price table items or manual lines."
+msgstr "Rechnungen aus Preistabelle oder manuellen Positionen erstellen."
+
+msgid "Customers"
+msgstr "Kunden"
+
+msgid "Manage customer profiles and their vehicles."
+msgstr "Kundenprofile und Fahrzeuge verwalten."
+
+msgid "Manage Shop Users"
+msgstr "Shop-Benutzer verwalten"
+
+msgid "Add staff and configure role-based rights."
+msgstr "Mitarbeiter hinzufugen und rollenbasierte Rechte konfigurieren."
+
+msgid "Shop:"
+msgstr "Shop:"
+
+msgid "Back to Shop"
+msgstr "Zuruck zum Shop"
+
+msgid "Price Table"
+msgstr "Preistabelle"
+
+msgid "Invoice Masterdata"
+msgstr "Rechnungsstammdaten"
+
+msgid "New Invoice"
+msgstr "Neue Rechnung"
+
+msgid "Invoice #"
+msgstr "Rechnung #"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Customer"
+msgstr "Kunde"
+
+msgid "Car"
+msgstr "Fahrzeug"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Total"
+msgstr "Gesamt"
+
+msgid "Action"
+msgstr "Aktion"
+
+msgid "Open"
+msgstr "Offnen"
+
+msgid "No invoices yet."
+msgstr "Noch keine Rechnungen."
+
+msgid "Back to Dashboard"
+msgstr "Zuruck zum Dashboard"
+
+msgid "Add Customer"
+msgstr "Kunde hinzufugen"
+
+msgid "Search name:"
+msgstr "Name suchen:"
+
+msgid "Type customer name"
+msgstr "Kundennamen eingeben"
+
+msgid "Search"
+msgstr "Suchen"
+
+msgid "Clear"
+msgstr "Leeren"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Email"
+msgstr "E-Mail"
+
+msgid "Actions"
+msgstr "Aktionen"
+
+msgid "Edit"
+msgstr "Bearbeiten"
+
+msgid "Delete"
+msgstr "Loschen"
+
+msgid "Delete this customer and all cars?"
+msgstr "Diesen Kunden und alle Fahrzeuge loschen?"
+
+msgid "No customers found."
+msgstr "Keine Kunden gefunden."
+
+msgid "Users and Rights: %(shop_name)s"
+msgstr "Benutzer und Rechte: %(shop_name)s"
+
+msgid "Database alias:"
+msgstr "Datenbank-Alias:"
+
+msgid "Back to Shops"
+msgstr "Zuruck zu Shops"
+
+msgid "Back to My Shop"
+msgstr "Zuruck zu meinem Shop"
+
+msgid "New user credentials"
+msgstr "Neue Benutzerdaten"
+
+msgid "Username:"
+msgstr "Benutzername:"
+
+msgid "Password:"
+msgstr "Passwort:"
+
+msgid "Copy Credentials"
+msgstr "Daten kopieren"
+
+msgid "Add User to Shop"
+msgstr "Benutzer zum Shop hinzufugen"
+
+msgid "Preferred language"
+msgstr "Bevorzugte Sprache"
+
+msgid "Current Users"
+msgstr "Aktuelle Benutzer"
+
+msgid "User"
+msgstr "Benutzer"
+
+msgid "Language"
+msgstr "Sprache"
+
+msgid "Manage Users"
+msgstr "Benutzer verwalten"
+
+msgid "Create Orders"
+msgstr "Auftrage erstellen"
+
+msgid "Inventory"
+msgstr "Lager"
+
+msgid "Reports"
+msgstr "Berichte"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nein"
+
+msgid "Active"
+msgstr "Aktiv"
+
+msgid "Inactive"
+msgstr "Inaktiv"
+
+msgid "Edit Rights"
+msgstr "Rechte bearbeiten"
+
+msgid "No users assigned to this shop yet."
+msgstr "Diesem Shop sind noch keine Benutzer zugewiesen."
+
+msgid "Credentials copied to clipboard."
+msgstr "Daten in die Zwischenablage kopiert."
+
+msgid "Edit Rights: %(username)s"
+msgstr "Rechte bearbeiten: %(username)s"
+
+msgid "Back to Users"
+msgstr "Zuruck zu Benutzern"
+
+msgid "Save Rights"
+msgstr "Rechte speichern"
+
+msgid "Back to Customers"
+msgstr "Zuruck zu Kunden"
+
+msgid "Edit Customer"
+msgstr "Kunde bearbeiten"
+
+msgid "Invoice Customer"
+msgstr "Kunde abrechnen"
+
+msgid "Delete Customer"
+msgstr "Kunde loschen"
+
+msgid "Customer Details"
+msgstr "Kundendetails"
+
+msgid "Cars linked:"
+msgstr "Verknupfte Fahrzeuge:"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "Notes:"
+msgstr "Notizen:"
+
+msgid "Cars"
+msgstr "Fahrzeuge"
+
+msgid "Plate:"
+msgstr "Kennzeichen:"
+
+msgid "VIN:"
+msgstr "VIN:"
+
+msgid "Color:"
+msgstr "Farbe:"
+
+msgid "Inspection"
+msgstr "Inspektion"
+
+msgid "Type:"
+msgstr "Typ:"
+
+msgid "Result:"
+msgstr "Ergebnis:"
+
+msgid "Status Date:"
+msgstr "Statusdatum:"
+
+msgid "Mileage:"
+msgstr "Kilometerstand:"
+
+msgid "Next:"
+msgstr "Nachste:"
+
+msgid "Tire Hotel"
+msgstr "Reifenhotel"
+
+msgid "Location:"
+msgstr "Ort:"
+
+msgid "Labels:"
+msgstr "Etiketten:"
+
+msgid "Edit Car"
+msgstr "Fahrzeug bearbeiten"
+
+msgid "Invoice This Car"
+msgstr "Dieses Fahrzeug abrechnen"
+
+msgid "Print Tire Labels"
+msgstr "Reifenetiketten drucken"
+
+msgid "Delete Car"
+msgstr "Fahrzeug loschen"
+
+msgid "Delete this car?"
+msgstr "Dieses Fahrzeug loschen?"
+
+msgid "No cars saved yet for this customer."
+msgstr "Fur diesen Kunden sind noch keine Fahrzeuge gespeichert."
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "Lookup Plate"
+msgstr "Kennzeichen suchen"
+
+msgid "Save Car"
+msgstr "Fahrzeug speichern"
+
+msgid "Enter a plate before lookup."
+msgstr "Bitte zuerst ein Kennzeichen eingeben."
+
+msgid "Looking up vehicle data..."
+msgstr "Fahrzeugdaten werden gesucht..."
+
+msgid "Lookup failed."
+msgstr "Suche fehlgeschlagen."
+
+msgid "Vehicle data loaded. Review and save the car."
+msgstr "Fahrzeugdaten geladen. Bitte prufen und speichern."
+
+msgid "Lookup request failed. Please try again."
+msgstr "Anfrage fehlgeschlagen. Bitte erneut versuchen."
+
+msgid "Back to Invoices"
+msgstr "Zuruck zu Rechnungen"
+
+msgid "Masterdata"
+msgstr "Stammdaten"
+
+msgid "Email Invoice"
+msgstr "Rechnung per E-Mail"
+
+msgid "Print / PDF"
+msgstr "Drucken / PDF"
+
+msgid "Status Actions"
+msgstr "Statusaktionen"
+
+msgid "Set"
+msgstr "Setzen"
+
+msgid "Invoice Header"
+msgstr "Rechnungskopf"
+
+msgid "Locked:"
+msgstr "Gesperrt:"
+
+msgid "This invoice is not draft and cannot be edited."
+msgstr "Diese Rechnung ist kein Entwurf und kann nicht bearbeitet werden."
+
+msgid "Update Invoice"
+msgstr "Rechnung aktualisieren"
+
+msgid "Add Invoice Line"
+msgstr "Rechnungszeile hinzufugen"
+
+msgid "Add Line"
+msgstr "Zeile hinzufugen"
+
+msgid "Invoice Lines"
+msgstr "Rechnungszeilen"
+
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Qty"
+msgstr "Menge"
+
+msgid "Line Rebate"
+msgstr "Zeilenrabatt"
+
+msgid "Line Total"
+msgstr "Zeilensumme"
+
+msgid "Delete this line?"
+msgstr "Diese Zeile loschen?"
+
+msgid "No lines added yet."
+msgstr "Noch keine Zeilen hinzugefugt."
+
+msgid "Subtotal:"
+msgstr "Zwischensumme:"
+
+msgid "Total Rebate:"
+msgstr "Gesamtrabatt:"
+
+msgid "Total ex VAT:"
+msgstr "Gesamt exkl. MwSt:"
+
+msgid "VAT Total:"
+msgstr "MwSt gesamt:"
+
+msgid "Grand Total incl VAT:"
+msgstr "Gesamt inkl. MwSt:"
+
+msgid "Add Price Item"
+msgstr "Preisposition hinzufugen"
+
+msgid "Save Item"
+msgstr "Position speichern"
+
+msgid "Current Items"
+msgstr "Aktuelle Positionen"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Code"
+msgstr "Code"
+
+msgid "No price items yet."
+msgstr "Noch keine Preispositionen."
+
+msgid "Save Masterdata"
+msgstr "Stammdaten speichern"
+
+msgid "Send Email"
+msgstr "E-Mail senden"
+
+msgid "Feature scaffold is ready. Plug your domain models and workflows into this page."
+msgstr "Das Gerust ist bereit. Binden Sie Ihre Modelle und Workflows auf dieser Seite ein."
+
+msgid "This is where you create and dispatch repair orders."
+msgstr "Hier erstellen und disponieren Sie Reparaturauftrage."
+
+msgid "This is where your team can schedule and track inspections."
+msgstr "Hier kann Ihr Team Inspektionen planen und verfolgen."
+
+msgid "This is where stock movements and part catalogs are managed."
+msgstr "Hier werden Lagerbewegungen und Teilekataloge verwaltet."
+
+msgid "This is where KPI, revenue, and technician productivity reports are shown."
+msgstr "Hier werden KPI-, Umsatz- und Produktivitatsberichte angezeigt."
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "Database Alias"
+msgstr "Datenbank-Alias"
+
+msgid "Users & Rights"
+msgstr "Benutzer & Rechte"
+
+msgid "Deactivate"
+msgstr "Deaktivieren"
+
+msgid "Activate"
+msgstr "Aktivieren"
+
+msgid "No shops yet. Create your first one."
+msgstr "Noch keine Shops. Erstellen Sie den ersten."
+
+msgid "RepairShop Cloud"
+msgstr "RepairShop Cloud"
+
+msgid "Every Garage,"
+msgstr "Jede Werkstatt,"
+
+msgid "One Fast Workflow."
+msgstr "Ein schneller Workflow."
+
+msgid "Run estimates, jobs, and customer records per shop with isolated databases."
+msgstr "Angebote, Auftrage und Kundendaten je Shop mit isolierten Datenbanken."
+
+msgid "Sign in to access your shop-specific dashboard and daily repair operations."
+msgstr "Melden Sie sich an, um Ihr Shop-Dashboard und Tagesablaufe zu nutzen."
+
+msgid "Open My Shop Functions"
+msgstr "Meine Shop-Funktionen offnen"
+
+msgid "Log in to My Shop"
+msgstr "In meinen Shop einloggen"
+
+msgid "Admin Access"
+msgstr "Admin-Zugriff"
+
+msgid "Tenant Isolation"
+msgstr "Tenant-Isolation"
+
+msgid "Shop data routed to its own database."
+msgstr "Shop-Daten werden in die eigene Datenbank geroutet."
+
+msgid "Secure Access"
+msgstr "Sicherer Zugriff"
+
+msgid "Users only open their shop workspace."
+msgstr "Benutzer offnen nur ihren eigenen Shop-Arbeitsbereich."
+
+msgid "Cloud Ready"
+msgstr "Cloud-bereit"
+
+msgid "Log in to your shop"
+msgstr "In Ihren Shop einloggen"
+
+msgid "Use your RepairShop account to open shop-specific functions."
+msgstr "Nutzen Sie Ihr RepairShop-Konto fur shop-spezifische Funktionen."
+
+msgid "Continue"
+msgstr "Weiter"
+
+msgid "Back to landing page"
+msgstr "Zuruck zur Startseite"
+
+msgid "Print / Save PDF"
+msgstr "Drucken / PDF speichern"
+
+msgid "From"
+msgstr "Von"
+
+msgid "To"
+msgstr "An"
+
+msgid "Unit"
+msgstr "Einheit"
+
+msgid "Rebate"
+msgstr "Rabatt"
+
+msgid "No lines."
+msgstr "Keine Zeilen."
+
+msgid "Subtotal"
+msgstr "Zwischensumme"
+
+msgid "Total Rebate"
+msgstr "Gesamtrabatt"
+
+msgid "VAT Total"
+msgstr "MwSt gesamt"
+
+msgid "Grand Total incl VAT"
+msgstr "Gesamt inkl. MwSt"
+
+msgid "Notes"
+msgstr "Notizen"
+
+msgid "Print"
+msgstr "Drucken"
+
+msgid "Back to Customer"
+msgstr "Zuruck zum Kunden"
+
+msgid "Format:"
+msgstr "Format:"
+
+msgid "Preset"
+msgstr "Voreinstellung"
+
+msgid "Count"
+msgstr "Anzahl"
+
+msgid "Apply"
+msgstr "Anwenden"
+
+msgid "Label"
+msgstr "Etikett"
+
+msgid "Invoice Number:"
+msgstr "Rechnungsnummer:"
+
+msgid "Total (incl VAT):"
+msgstr "Gesamt (inkl. MwSt):"
+
+msgid "View / print invoice"
+msgstr "Rechnung ansehen / drucken"
+
+msgid "View / print invoice:"
+msgstr "Rechnung ansehen / drucken:"
+
+msgid "Create a shop account, login user, and tenant database alias."
+msgstr "Shop-Konto, Login-Benutzer und Tenant-Datenbankalias erstellen."
+
+msgid "New Shop Credentials"
+msgstr "Neue Shop-Zugangsdaten"
+
+msgid "Database:"
+msgstr "Datenbank:"
+
+msgid "Shop name"
+msgstr "Shop-Name"
+
+msgid "Login username"
+msgstr "Login-Benutzername"
+
+msgid "Email (optional)"
+msgstr "E-Mail (optional)"
+
+msgid "Database alias (optional)"
+msgstr "Datenbank-Alias (optional)"
+
+msgid "Generate strong password automatically"
+msgstr "Starkes Passwort automatisch erzeugen"
+
+msgid "Temporary password"
+msgstr "Temporares Passwort"
+
+msgid "Confirm password"
+msgstr "Passwort bestatigen"
+
+msgid "Create Shop"
+msgstr "Shop erstellen"
+
+msgid "Create Invoice"
+msgstr "Rechnung erstellen"
+
+msgid "Back to Shop List"
+msgstr "Zuruck zur Shop-Liste"
+
+msgid "Temporary password reset"
+msgstr "Temporare Passwort-Zurucksetzung"
+
+msgid "Database alias"
+msgstr "Datenbank-Alias"
+
+msgid "Shop is active"
+msgstr "Shop ist aktiv"
+
+msgid "Owner user is active"
+msgstr "Eigentumer-Benutzer ist aktiv"
+
+msgid "Reset password to a new random value"
+msgstr "Passwort auf neuen Zufallswert zurucksetzen"
+
+msgid "Save Changes"
+msgstr "Anderungen speichern"
+
+msgid "New username"
+msgstr "Neuer Benutzername"
+
+msgid "New user email"
+msgstr "Neue Benutzer-E-Mail"
+
+msgid "Generate password"
+msgstr "Passwort generieren"
+
+msgid "Create new user account"
+msgstr "Neues Benutzerkonto erstellen"
+
+msgid "Existing user"
+msgstr "Vorhandener Benutzer"
+
+msgid "Choose an existing user when not creating a new account."
+msgstr "Wahlen Sie einen vorhandenen Benutzer, wenn kein neues Konto erstellt wird."
+
+msgid "Enter a username for the new user."
+msgstr "Benutzernamen fur den neuen Benutzer eingeben."
+
+msgid "Select an existing user or create a new one."
+msgstr "Einen vorhandenen Benutzer wahlen oder einen neuen erstellen."
+
+msgid "Make"
+msgstr "Marke"
+
+msgid "Model"
+msgstr "Modell"
+
+msgid "Year"
+msgstr "Jahr"
+
+msgid "Plate number"
+msgstr "Kennzeichen"
+
+msgid "Tire hotel enabled"
+msgstr "Reifenhotel aktiviert"
+
+msgid "Tire hotel location"
+msgstr "Reifenhotel Standort"
+
+msgid "Tire hotel notes"
+msgstr "Reifenhotel Notizen"
+
+msgid "Tire label count"
+msgstr "Anzahl Reifenetiketten"
+
+msgid "Inspection type"
+msgstr "Prufungsart"
+
+msgid "Inspection date"
+msgstr "Prufungsdatum"
+
+msgid "Inspection result"
+msgstr "Prufungsergebnis"
+
+msgid "Inspection status"
+msgstr "Prufungsstatus"
+
+msgid "Inspection status date"
+msgstr "Prufungsstatus Datum"
+
+msgid "Inspection mileage"
+msgstr "Kilometerstand bei Prufung"
+
+msgid "Next inspection date"
+msgstr "Nachstes Prufungsdatum"
+
+msgid "Total rebate type"
+msgstr "Gesamtrabatt Typ"
+
+msgid "Total rebate value"
+msgstr "Gesamtrabatt Wert"
+
+msgid "Selected car does not belong to this shop."
+msgstr "Das gewahlte Fahrzeug gehort nicht zu diesem Shop."
+
+msgid "Selected customer does not belong to this shop."
+msgstr "Der gewahlte Kunde gehort nicht zu diesem Shop."
+
+msgid "Selected car does not belong to the chosen customer."
+msgstr "Das gewahlte Fahrzeug gehort nicht zum ausgewahlten Kunden."
+
+msgid "Price item"
+msgstr "Preisposition"
+
+msgid "Rebate type"
+msgstr "Rabatttyp"
+
+msgid "Rebate value"
+msgstr "Rabattwert"
+
+msgid "Selected price item does not belong to this shop."
+msgstr "Die gewahlte Preisposition gehort nicht zu diesem Shop."
+
+msgid "Provide a manual description or choose a price item."
+msgstr "Manuelle Beschreibung angeben oder Preisposition auswahlen."
+
+msgid "Provide a unit price for manual lines."
+msgstr "Bitte einen Einzelpreis fur manuelle Zeilen angeben."
+
+msgid "Legal name"
+msgstr "Rechtlicher Name"
+
+msgid "Address line 1"
+msgstr "Adresszeile 1"
+
+msgid "Address line 2"
+msgstr "Adresszeile 2"
+
+msgid "Postal code"
+msgstr "Postleitzahl"
+
+msgid "City"
+msgstr "Stadt"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "VAT number"
+msgstr "USt-IdNr"
+
+msgid "Company logo"
+msgstr "Firmenlogo"
+
+msgid "Recipient email"
+msgstr "Empfanger E-Mail"
+
+msgid "Subject"
+msgstr "Betreff"
+
+msgid "Message"
+msgstr "Nachricht"

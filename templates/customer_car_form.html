@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Car | {{ customer.full_name }}</title>
+    <style>
+        body { font-family: "Segoe UI", sans-serif; margin: 0; background: #f6fbff; color: #1d2f44; }
+        .wrap { width: min(760px, 94vw); margin: 2rem auto; }
+        .card { background: #fff; border: 1px solid #d7e5f3; border-radius: 14px; padding: 1rem; }
+        .row { margin-bottom: .75rem; }
+        label { display: block; font-weight: 700; margin-bottom: .2rem; }
+        input, textarea { width: 100%; padding: .48rem; border: 1px solid #c9d9ea; border-radius: 8px; font: inherit; }
+        .btn { display: inline-block; text-decoration: none; border: 0; border-radius: 9px; padding: .5rem .85rem; font-weight: 700; cursor: pointer; }
+        .btn-primary { background: #0f7e93; color: #fff; }
+        .btn-light { background: #eef6fc; color: #1d4d71; }
+        .errors { color: #8f1d1d; margin: .25rem 0 0; font-size: .9rem; }
+        .inline-tools { display: flex; gap: .55rem; align-items: center; flex-wrap: wrap; }
+        .status { margin-top: .4rem; font-size: .9rem; color: #30506d; }
+        .result-box {
+            margin-top: .75rem;
+            border: 1px solid #dfe9f5;
+            border-radius: 8px;
+            background: #f8fbff;
+            padding: .6rem;
+            max-height: 220px;
+            overflow: auto;
+            font-family: Consolas, monospace;
+            font-size: .84rem;
+            white-space: pre-wrap;
+        }
+        .shop-logo { max-height: 54px; width: auto; display: block; margin-bottom: .6rem; border: 1px solid #d7e5f3; border-radius: 8px; background: #fff; padding: .2rem; }
+    </style>
+</head>
+<body>
+    {% load i18n %}
+    {% trans "Enter a plate before lookup." as msg_enter_plate_before_lookup %}
+    {% trans "Looking up vehicle data..." as msg_lookup_in_progress %}
+    {% trans "Lookup failed." as msg_lookup_failed %}
+    {% trans "Vehicle data loaded. Review and save the car." as msg_vehicle_loaded %}
+    {% trans "Lookup request failed. Please try again." as msg_lookup_request_failed %}
+    <main class="wrap">
+        {% if current_shop_logo_url %}
+            <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
+        {% endif %}
+        <h1>{% if is_create %}{% trans "Add Car" %}{% else %}{% trans "Edit Car" %}{% endif %}</h1>
+        <p>{% trans "Customer:" %} <b>{{ customer.full_name }}</b> | {% trans "Shop:" %} <b>{{ shop.shop_name }}</b></p>
+        <section class="card">
+            <form method="post">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    {% if field.is_hidden %}
+                        {{ field }}
+                    {% else %}
+                        <div class="row">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% if field.name == 'plate_number' %}
+                                <div class="inline-tools">
+                                    {{ field }}
+                                    <button id="lookup-plate-btn" class="btn btn-light" type="button">{% trans "Lookup Plate" %}</button>
+                                </div>
+                                <div id="lookup-status" class="status">{% trans "Enter a Danish plate and click \"Lookup Plate\"." %}</div>
+                            {% else %}
+                                {{ field }}
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="errors">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <button class="btn btn-primary" type="submit">{% if is_create %}{% trans "Add Car" %}{% else %}{% trans "Save Car" %}{% endif %}</button>
+                <a class="btn btn-light" href="{% url 'customer_detail' customer.id %}">{% trans "Cancel" %}</a>
+            </form>
+            <div id="lookup-result" class="result-box" hidden></div>
+        </section>
+    </main>
+
+    <script>
+        // Auto-fill car fields from MotorAPI by plate number.
+        (function () {
+            const plateInput = document.getElementById("id_plate_number");
+            const makeInput = document.getElementById("id_make");
+            const modelInput = document.getElementById("id_model");
+            const yearInput = document.getElementById("id_year");
+            const colorInput = document.getElementById("id_color");
+            const vinInput = document.getElementById("id_vin");
+            const notesInput = document.getElementById("id_notes");
+            const inspectionTypeInput = document.getElementById("id_inspection_type");
+            const inspectionDateInput = document.getElementById("id_inspection_date");
+            const inspectionResultInput = document.getElementById("id_inspection_result");
+            const inspectionStatusInput = document.getElementById("id_inspection_status");
+            const inspectionStatusDateInput = document.getElementById("id_inspection_status_date");
+            const inspectionMileageInput = document.getElementById("id_inspection_mileage");
+            const nextInspectionDateInput = document.getElementById("id_next_inspection_date");
+            const lookupBtn = document.getElementById("lookup-plate-btn");
+            const statusBox = document.getElementById("lookup-status");
+            const resultBox = document.getElementById("lookup-result");
+            let lookupInFlight = false;
+            let lastLookupPlate = "";
+            let lastAutoNotes = "";
+
+            if (!plateInput || !lookupBtn || !statusBox || !resultBox) {
+                return;
+            }
+
+            function normalizePlate(value) {
+                return (value || "").toUpperCase().replace(/[\s-]/g, "");
+            }
+
+            function updateStatus(message, isError) {
+                statusBox.textContent = message;
+                statusBox.style.color = isError ? "#8f1d1d" : "#30506d";
+            }
+
+            function setValueIfPresent(input, value) {
+                if (!input) {
+                    return;
+                }
+                if (value === null || value === undefined || value === "") {
+                    return;
+                }
+                input.value = String(value);
+            }
+
+            async function lookupPlate() {
+                const plate = normalizePlate(plateInput.value);
+                if (!plate) {
+                    updateStatus("{{ msg_enter_plate_before_lookup|escapejs }}", true);
+                    return;
+                }
+
+                if (lookupInFlight || plate === lastLookupPlate) {
+                    return;
+                }
+
+                lookupInFlight = true;
+                lookupBtn.disabled = true;
+                updateStatus("{{ msg_lookup_in_progress|escapejs }}", false);
+                resultBox.hidden = true;
+
+                try {
+                    const response = await fetch(`/api/vehicle/${encodeURIComponent(plate)}/`);
+                    const payload = await response.json();
+
+                    resultBox.hidden = false;
+                    resultBox.textContent = JSON.stringify(payload, null, 2);
+
+                    if (!response.ok) {
+                        updateStatus(payload.message || payload.error || "{{ msg_lookup_failed|escapejs }}", true);
+                        return;
+                    }
+
+                    const mapped = payload.mapped || {};
+                    setValueIfPresent(plateInput, mapped.plate_number || plate);
+                    setValueIfPresent(makeInput, mapped.make);
+                    setValueIfPresent(modelInput, mapped.model);
+                    setValueIfPresent(yearInput, mapped.year);
+                    setValueIfPresent(colorInput, mapped.color);
+                    setValueIfPresent(vinInput, mapped.vin);
+                    const inspection = mapped.inspection || {};
+                    setValueIfPresent(inspectionTypeInput, inspection.type);
+                    setValueIfPresent(inspectionDateInput, inspection.date);
+                    setValueIfPresent(inspectionResultInput, inspection.result);
+                    setValueIfPresent(inspectionStatusInput, inspection.status);
+                    setValueIfPresent(inspectionStatusDateInput, inspection.status_date);
+                    setValueIfPresent(inspectionMileageInput, inspection.mileage);
+                    setValueIfPresent(nextInspectionDateInput, inspection.next_inspection_date);
+                    if (notesInput && mapped.notes) {
+                        const existing = notesInput.value.trim();
+                        if (!existing || existing === lastAutoNotes) {
+                            notesInput.value = mapped.notes;
+                        } else if (!existing.includes(mapped.notes)) {
+                            notesInput.value = `${existing}\n${mapped.notes}`;
+                        }
+                        lastAutoNotes = mapped.notes;
+                    }
+                    lastLookupPlate = plate;
+
+                    updateStatus("{{ msg_vehicle_loaded|escapejs }}", false);
+                } catch (error) {
+                    updateStatus("{{ msg_lookup_request_failed|escapejs }}", true);
+                    resultBox.hidden = false;
+                    resultBox.textContent = JSON.stringify({ error: String(error) }, null, 2);
+                } finally {
+                    lookupInFlight = false;
+                    lookupBtn.disabled = false;
+                }
+            }
+
+            lookupBtn.addEventListener("click", lookupPlate);
+            plateInput.addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    lookupPlate();
+                }
+            });
+            plateInput.addEventListener("blur", lookupPlate);
+            plateInput.addEventListener("input", function () {
+                lastLookupPlate = "";
+            });
+        })();
+    </script>
+</body>
+</html>

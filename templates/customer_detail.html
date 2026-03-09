@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ customer.full_name }} | {{ shop.shop_name }}</title>
+    <style>
+        body { font-family: "Segoe UI", sans-serif; margin: 0; background: #f6fbff; color: #1d2f44; }
+        .wrap { width: min(980px, 94vw); margin: 2rem auto; }
+        .top { display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
+        .card { background: #fff; border: 1px solid #d7e5f3; border-radius: 14px; padding: 1rem; margin-top: 1rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: .75rem; }
+        .tile { border: 1px solid #e4edf8; border-radius: 10px; padding: .7rem; background: #fafcff; }
+        .btn { display: inline-block; text-decoration: none; border: 0; border-radius: 9px; padding: .48rem .82rem; font-weight: 700; cursor: pointer; }
+        .btn-primary { background: #0f7e93; color: #fff; }
+        .btn-light { background: #eef6fc; color: #1d4d71; }
+        .messages { margin: .5rem 0; padding-left: 1rem; }
+        form.inline { display: inline; }
+        .muted { color: #60758c; }
+        .badge {
+            display: inline-block;
+            margin-left: .45rem;
+            padding: .14rem .5rem;
+            border-radius: 999px;
+            background: #eaf4ff;
+            color: #1d4d71;
+            font-size: .8rem;
+            font-weight: 700;
+            vertical-align: middle;
+        }
+        .shop-logo { max-height: 54px; width: auto; display: block; margin-top: .4rem; border: 1px solid #d7e5f3; border-radius: 8px; background: #fff; padding: .2rem; }
+    </style>
+</head>
+<body>
+    {% load i18n %}
+    {% trans "Delete this customer and all cars?" as confirm_delete_customer_and_cars %}
+    {% trans "Delete this car?" as confirm_delete_car %}
+    <main class="wrap">
+        <header class="top">
+            <div>
+                <h1>{{ customer.full_name }}</h1>
+                <p class="muted">{% trans "Shop:" %} <b>{{ shop.shop_name }}</b></p>
+                {% if current_shop_logo_url %}
+                    <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
+                {% endif %}
+            </div>
+            <div>
+                <a class="btn btn-light" href="{% url 'customer_list' %}">{% trans "Back to Customers" %}</a>
+                <a class="btn btn-light" href="{% url 'customer_edit' customer.id %}">{% trans "Edit Customer" %}</a>
+                <a class="btn btn-light" href="{% url 'invoice_create' %}?customer={{ customer.id }}">{% trans "Invoice Customer" %}</a>
+                <a class="btn btn-primary" href="{% url 'customer_car_create' customer.id %}">{% trans "Add Car" %}</a>
+                <form class="inline" method="post" action="{% url 'customer_delete' customer.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-light" type="submit" onclick="return confirm('{{ confirm_delete_customer_and_cars|escapejs }}');">{% trans "Delete Customer" %}</button>
+                </form>
+            </div>
+        </header>
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <section class="card">
+            <h2>{% trans "Customer Details" %}</h2>
+            <p>
+                <b>{% trans "Cars linked:" %}</b>
+                <span class="badge">{{ cars|length }}</span>
+            </p>
+            <div class="grid">
+                <div class="tile"><b>{% trans "Phone" %}</b><div>{{ customer.phone|default:"-" }}</div></div>
+                <div class="tile"><b>{% trans "Email" %}</b><div>{{ customer.email|default:"-" }}</div></div>
+                <div class="tile"><b>{% trans "Address" %}</b><div>{{ customer.address|default:"-" }}</div></div>
+            </div>
+            <p><b>{% trans "Notes:" %}</b> {{ customer.notes|default:"-" }}</p>
+        </section>
+
+        <section class="card">
+            <h2>{% trans "Cars" %}</h2>
+            {% if cars %}
+                <div class="grid">
+                    {% for car in cars %}
+                        <article class="tile">
+                            <h3>{{ car }}</h3>
+                            <p>
+                                {% trans "Plate:" %} {{ car.plate_number|default:"-" }}<br>
+                                {% trans "VIN:" %} {{ car.vin|default:"-" }}<br>
+                                {% trans "Color:" %} {{ car.color|default:"-" }}
+                            </p>
+                            {% if car.inspection_type or car.inspection_date or car.inspection_result or car.inspection_status or car.next_inspection_date %}
+                                <p>
+                                    <b>{% trans "Inspection" %}</b><br>
+                                    {% trans "Type:" %} {{ car.inspection_type|default:"-" }}<br>
+                                    {% trans "Date:" %} {{ car.inspection_date|default:"-" }}<br>
+                                    {% trans "Result:" %} {{ car.inspection_result|default:"-" }}<br>
+                                    {% trans "Status:" %} {{ car.inspection_status|default:"-" }}<br>
+                                    {% trans "Status Date:" %} {{ car.inspection_status_date|default:"-" }}<br>
+                                    {% trans "Mileage:" %} {{ car.inspection_mileage|default:"-" }}<br>
+                                    {% trans "Next:" %} {{ car.next_inspection_date|default:"-" }}
+                                </p>
+                            {% endif %}
+                            {% if car.tire_hotel_enabled %}
+                                <p>
+                                    <b>{% trans "Tire Hotel" %}</b><br>
+                                    {% trans "Location:" %} {{ car.tire_hotel_location|default:"-" }}<br>
+                                    {% trans "Labels:" %} {{ car.tire_label_count }}
+                                    {% if car.tire_hotel_notes %}<br>{% trans "Notes:" %} {{ car.tire_hotel_notes }}{% endif %}
+                                </p>
+                            {% endif %}
+                            <p>{{ car.notes|default:"" }}</p>
+                            <a class="btn btn-light" href="{% url 'customer_car_edit' customer.id car.id %}">{% trans "Edit Car" %}</a>
+                            <a class="btn btn-light" href="{% url 'invoice_create' %}?customer={{ customer.id }}&car={{ car.id }}">{% trans "Invoice This Car" %}</a>
+                            {% if car.tire_hotel_enabled %}
+                                <a class="btn btn-light" href="{% url 'customer_car_print_labels' customer.id car.id %}?format=a4_2x7&count={{ car.tire_label_count }}" target="_blank">{% trans "Print Tire Labels" %}</a>
+                                <a class="btn btn-light" href="{% url 'customer_car_print_labels' customer.id car.id %}?format=a4_2x7&count=14" target="_blank">{% trans "Print A4 2x7" %}</a>
+                                <a class="btn btn-light" href="{% url 'customer_car_print_labels' customer.id car.id %}?format=zebra_100x50&count=1" target="_blank">{% trans "Print Zebra 100x50" %}</a>
+                            {% endif %}
+                            <form class="inline" method="post" action="{% url 'customer_car_delete' customer.id car.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-light" type="submit" onclick="return confirm('{{ confirm_delete_car|escapejs }}');">{% trans "Delete Car" %}</button>
+                            </form>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="muted">{% trans "No cars saved yet for this customer." %}</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

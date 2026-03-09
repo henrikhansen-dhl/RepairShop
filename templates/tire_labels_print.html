@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tire Labels | {{ car }}</title>
+    <style>
+        @page { margin: 8mm; }
+        body.format-a4_2x7 .grid { grid-template-columns: repeat(2, 1fr); }
+        body.format-zebra_100x50 .grid { grid-template-columns: 1fr; }
+        body.format-a4_2x7 .label { width: 99mm; min-height: 38mm; }
+        body.format-zebra_100x50 .label { width: 100mm; min-height: 50mm; }
+        @media print {
+            @page { size: A4; }
+            body.format-zebra_100x50 { width: 100mm; }
+            body.format-zebra_100x50 .wrap { width: 100mm; }
+        }
+
+        body { font-family: "Segoe UI", sans-serif; color: #10253b; margin: 0; background: #f3f7fb; }
+        .wrap { width: min(1100px, 96vw); margin: 1rem auto; }
+        .toolbar { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: .8rem; }
+        .btn { border: 0; border-radius: 8px; padding: .45rem .8rem; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #0f7e93; color: #fff; }
+        .btn-light { background: #eaf3fb; color: #1d4d71; }
+        .toolbar input, .toolbar select {
+            border: 1px solid #b8cce0;
+            border-radius: 8px;
+            padding: .35rem .5rem;
+            font: inherit;
+        }
+        .grid { display: grid; gap: 6mm; }
+        .label {
+            background: #fff;
+            border: 1px dashed #9ab4cf;
+            border-radius: 8px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .label-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            align-items: start;
+        }
+        .qr {
+            width: 72px;
+            height: 72px;
+            border: 1px solid #d3e2f0;
+            border-radius: 6px;
+            object-fit: contain;
+            background: #fff;
+        }
+        .label h3 { margin: 0 0 .35rem; font-size: 1rem; }
+        .meta { margin: 0; font-size: .88rem; line-height: 1.3; }
+        .small { font-size: .76rem; color: #49637d; margin-top: .35rem; }
+        .shop-logo { max-height: 22px; width: auto; display: block; margin-bottom: .25rem; }
+
+        @media print {
+            body { background: #fff; }
+            .toolbar { display: none; }
+            .wrap { width: 100%; margin: 0; }
+            .grid { gap: 6px; }
+            .label { break-inside: avoid; page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body class="format-{{ format_key }}">
+    {% load i18n %}
+    <main class="wrap">
+        <div class="toolbar">
+            <button class="btn btn-primary" onclick="window.print()">{% trans "Print" %}</button>
+            <a class="btn btn-light" href="{% url 'customer_detail' customer.id %}">{% trans "Back to Customer" %}</a>
+            <span>{% trans "Format:" %} <b>{{ format_preset.name }}</b></span>
+            <span>{% trans "Labels:" %} <b>{{ label_count }}</b></span>
+            <form method="get" action="" style="display: inline-flex; gap: .4rem; align-items: center;">
+                <label for="format"><b>{% trans "Preset" %}</b></label>
+                <select id="format" name="format">
+                    {% for key, preset in format_presets.items %}
+                        <option value="{{ key }}" {% if key == format_key %}selected{% endif %}>{{ preset.name }}</option>
+                    {% endfor %}
+                </select>
+                <label for="count"><b>{% trans "Count" %}</b></label>
+                <input id="count" name="count" type="number" min="1" max="40" value="{{ label_count }}">
+                <button class="btn btn-light" type="submit">{% trans "Apply" %}</button>
+            </form>
+        </div>
+
+        <section class="grid">
+            {% for idx in labels %}
+                <article class="label">
+                    <div class="label-grid">
+                        <div>
+                            {% if current_shop_logo_url %}
+                                <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
+                            {% endif %}
+                            <h3>{{ shop.shop_name }} | {% trans "Tire Hotel" %}</h3>
+                            <p class="meta">
+                                {% trans "Label" %} {{ idx.index }} / {{ label_count }}<br>
+                                {% trans "Customer:" %} {{ customer.full_name }}<br>
+                                {% trans "Car:" %} {{ car }}<br>
+                                {% trans "Plate:" %} {{ car.plate_number|default:"-" }}<br>
+                                VIN: {{ car.vin|default:"-" }}<br>
+                                {% trans "Location:" %} {{ car.tire_hotel_location|default:"-" }}
+                            </p>
+                            <div class="small">{% trans "Printed:" %} {{ printed_at|date:"Y-m-d H:i" }}</div>
+                        </div>
+                        <div>
+                            {% if idx.qr_image %}
+                                <img class="qr" src="{{ idx.qr_image }}" alt="QR code label {{ idx.index }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>

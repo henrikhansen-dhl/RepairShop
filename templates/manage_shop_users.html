@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RepairShop | Users and Rights</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(155deg, #f7fffb, #ebf3ff);
+            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+            color: #12243a;
+            padding: 1.2rem;
+        }
+
+        .wrap {
+            width: min(1100px, 100%);
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #d6e6f5;
+            border-radius: 14px;
+            padding: 1rem;
+            box-shadow: 0 12px 30px rgba(8, 25, 42, 0.1);
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: .7rem;
+            margin-bottom: .9rem;
+        }
+
+        h1 { margin: 0; }
+
+        .btn {
+            display: inline-block;
+            border: 0;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: 700;
+            padding: .55rem .85rem;
+            cursor: pointer;
+            background: #0f7e93;
+            color: #fff;
+        }
+
+        .btn-soft {
+            background: #e7f5ff;
+            color: #0f4e68;
+            border: 1px solid #c9e2f3;
+        }
+
+        .card {
+            margin-top: .8rem;
+            border: 1px solid #dceaf7;
+            border-radius: 12px;
+            padding: .85rem;
+            background: #f9fcff;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: .7rem;
+            margin-top: .6rem;
+        }
+
+        .field {
+            background: #fff;
+            border: 1px solid #d8e7f4;
+            border-radius: 10px;
+            padding: .6rem;
+        }
+
+        .field-wide { grid-column: 1 / -1; }
+
+        label {
+            display: block;
+            font-size: .88rem;
+            font-weight: 700;
+            margin-bottom: .32rem;
+        }
+
+        input, select {
+            width: 100%;
+            border: 1px solid #b8cee2;
+            border-radius: 8px;
+            padding: .5rem .6rem;
+            font-size: .95rem;
+            background: #fff;
+        }
+
+        .errorlist {
+            list-style: none;
+            margin: .4rem 0 0;
+            padding: .45rem .55rem;
+            border-radius: 8px;
+            background: #ffe8e8;
+            color: #8b1d1d;
+            font-size: .85rem;
+        }
+
+        .table-card {
+            margin-top: .9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .93rem;
+        }
+
+        th, td {
+            text-align: left;
+            border-bottom: 1px solid #e4eef8;
+            padding: .55rem;
+            vertical-align: top;
+        }
+
+        .badge {
+            display: inline-block;
+            border-radius: 999px;
+            padding: .15rem .5rem;
+            font-size: .78rem;
+            font-weight: 700;
+        }
+
+        .on { background: #e5f8e5; color: #1e6f1e; }
+        .off { background: #ffe8e8; color: #8e1f1f; }
+
+        .message {
+            margin-bottom: .6rem;
+            border-radius: 8px;
+            padding: .55rem .7rem;
+            background: #e9fce9;
+            border: 1px solid #bde4bd;
+            color: #1c681c;
+            font-weight: 600;
+        }
+
+        .credential-panel {
+            margin-top: .7rem;
+            border: 1px solid #bcdff0;
+            background: #eef8ff;
+            border-radius: 10px;
+            padding: .75rem;
+        }
+        .shop-logo { max-height: 58px; width: auto; display: block; margin-top: .4rem; border: 1px solid #d6e6f5; border-radius: 8px; background: #fff; padding: .2rem; }
+    </style>
+</head>
+<body>
+    {% load i18n %}
+    {% trans "Credentials copied to clipboard." as copied_credentials_message %}
+    <main class="wrap">
+        <header class="top">
+            <div>
+                <h1>{% blocktrans with shop_name=shop.shop_name %}Users and Rights: {{ shop_name }}{% endblocktrans %}</h1>
+                <div>{% trans "Database alias:" %} <b>{{ shop.database_name }}</b></div>
+                {% if current_shop_logo_url %}
+                    <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
+                {% endif %}
+            </div>
+            <div>
+                {% if request.user.is_staff %}
+                    <a class="btn btn-soft" href="{% url 'shop_list' %}">{% trans "Back to Shops" %}</a>
+                {% else %}
+                    <a class="btn btn-soft" href="{% url 'shop_dashboard' %}">{% trans "Back to My Shop" %}</a>
+                {% endif %}
+            </div>
+        </header>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if created_user_credentials %}
+            <section class="credential-panel" aria-live="polite">
+                <b>{% trans "New user credentials" %}</b><br>
+                {% trans "Shop:" %} {{ created_user_credentials.shop_name }}<br>
+                {% trans "Username:" %} {{ created_user_credentials.username }}<br>
+                {% trans "Password:" %} <span id="new-user-pass">{{ created_user_credentials.password }}</span><br>
+                <button class="btn" style="margin-top:.45rem;" type="button" onclick="copyCredentials()">{% trans "Copy Credentials" %}</button>
+            </section>
+        {% endif %}
+
+        <section class="card">
+            <h2 style="margin:.1rem 0 .4rem;">{% trans "Add User to Shop" %}</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="field field-wide">{{ form.non_field_errors }}</div>
+
+                <div class="field">
+                    <label for="id_create_new_user">Create new user account</label>
+                    {{ form.create_new_user }}
+                    {{ form.create_new_user.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_existing_user">Existing user</label>
+                    {{ form.existing_user }}
+                    {{ form.existing_user.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_username">New username</label>
+                    {{ form.username }}
+                    {{ form.username.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_email">New user email</label>
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_generate_password">Generate password</label>
+                    {{ form.generate_password }}
+                    {{ form.generate_password.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_password1">Password</label>
+                    {{ form.password1 }}
+                    {{ form.password1.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_password2">Confirm password</label>
+                    {{ form.password2 }}
+                    {{ form.password2.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_role">Role</label>
+                    {{ form.role }}
+                    {{ form.role.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_preferred_language">Preferred language</label>
+                    {{ form.preferred_language }}
+                    {{ form.preferred_language.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_can_manage_users">Can manage users</label>
+                    {{ form.can_manage_users }}
+                    {{ form.can_manage_users.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_can_create_repair_order">Can create repair orders</label>
+                    {{ form.can_create_repair_order }}
+                    {{ form.can_create_repair_order.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_can_manage_inventory">Can manage inventory</label>
+                    {{ form.can_manage_inventory }}
+                    {{ form.can_manage_inventory.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_can_view_reports">Can view reports</label>
+                    {{ form.can_view_reports }}
+                    {{ form.can_view_reports.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_is_active">Access active</label>
+                    {{ form.is_active }}
+                    {{ form.is_active.errors }}
+                </div>
+
+                <div class="field field-wide" style="display:flex; justify-content:flex-end;">
+                    <button class="btn" type="submit">{% trans "Add or Update Access" %}</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="card table-card">
+            <h2 style="margin:.1rem 0 .45rem;">{% trans "Current Users" %}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{% trans "User" %}</th>
+                        <th>{% trans "Role" %}</th>
+                        <th>{% trans "Language" %}</th>
+                        <th>{% trans "Manage Users" %}</th>
+                        <th>{% trans "Create Orders" %}</th>
+                        <th>{% trans "Inventory" %}</th>
+                        <th>{% trans "Reports" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th>{% trans "Action" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for access in accesses %}
+                        <tr>
+                            <td>{{ access.user.username }}</td>
+                            <td>{{ access.get_role_display }}</td>
+                            <td>{{ access.get_preferred_language_display }}</td>
+                            <td>{% if access.can_manage_users %}<span class="badge on">{% trans "Yes" %}</span>{% else %}<span class="badge off">{% trans "No" %}</span>{% endif %}</td>
+                            <td>{% if access.can_create_repair_order %}<span class="badge on">{% trans "Yes" %}</span>{% else %}<span class="badge off">{% trans "No" %}</span>{% endif %}</td>
+                            <td>{% if access.can_manage_inventory %}<span class="badge on">{% trans "Yes" %}</span>{% else %}<span class="badge off">{% trans "No" %}</span>{% endif %}</td>
+                            <td>{% if access.can_view_reports %}<span class="badge on">{% trans "Yes" %}</span>{% else %}<span class="badge off">{% trans "No" %}</span>{% endif %}</td>
+                            <td>{% if access.is_active %}<span class="badge on">{% trans "Active" %}</span>{% else %}<span class="badge off">{% trans "Inactive" %}</span>{% endif %}</td>
+                            <td>
+                                <a class="btn btn-soft" href="{% url 'edit_shop_user_rights' shop.pk access.pk %}">{% trans "Edit Rights" %}</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="9">{% trans "No users assigned to this shop yet." %}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+        function copyCredentials() {
+            const shop = '{{ created_user_credentials.shop_name|default:""|escapejs }}';
+            const username = '{{ created_user_credentials.username|default:""|escapejs }}';
+            const password = '{{ created_user_credentials.password|default:""|escapejs }}';
+            const text = `Shop: ${shop}\nUsername: ${username}\nPassword: ${password}`;
+            navigator.clipboard.writeText(text).then(function () {
+                alert('{{ copied_credentials_message|escapejs }}');
+            });
+        }
+    </script>
+</body>
+</html>

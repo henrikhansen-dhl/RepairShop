@@ -1,0 +1,20 @@
+{% load i18n %}
+{% if custom_message %}{{ custom_message }}
+
+{% endif %}{% trans "Invoice Number:" %} {{ invoice.invoice_number }}
+{% trans "Issue Date:" %} {{ invoice.issue_date }}
+{% trans "Due Date:" %} {{ invoice.due_date|default:"-" }}
+{% trans "Total (incl VAT):" %} {{ invoice.grand_total_incl_vat|floatformat:2 }}
+
+{% trans "View / print invoice:" %}
+{{ invoice_print_url }}
+
+{% trans "From:" %}
+{% if master_data.legal_name %}{{ master_data.legal_name }}{% else %}{{ shop.shop_name }}{% endif %}
+{% if master_data.address_line1 %}{{ master_data.address_line1 }}
+{% endif %}{% if master_data.address_line2 %}{{ master_data.address_line2 }}
+{% endif %}{% if master_data.postal_code or master_data.city %}{{ master_data.postal_code }} {{ master_data.city }}
+{% endif %}{% if master_data.country %}{{ master_data.country }}
+{% endif %}{% if master_data.phone %}{% trans "Phone:" %} {{ master_data.phone }}
+{% endif %}{% if master_data.email %}{% trans "Email:" %} {{ master_data.email }}
+{% endif %}

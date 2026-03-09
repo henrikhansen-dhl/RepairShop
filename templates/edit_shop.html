@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RepairShop | Edit Shop</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: #12243a;
+            background: linear-gradient(160deg, #f8fffc, #ebf3ff);
+            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+            padding: 1.2rem;
+        }
+
+        .wrap {
+            width: min(860px, 100%);
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #d6e6f5;
+            border-radius: 14px;
+            padding: 1rem;
+            box-shadow: 0 12px 30px rgba(8, 25, 42, 0.1);
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: .7rem;
+            margin-bottom: .8rem;
+        }
+
+        h1 { margin: 0; }
+
+        .btn {
+            display: inline-block;
+            border: 0;
+            background: #0f7e93;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: .6rem .9rem;
+            cursor: pointer;
+        }
+
+        .btn-soft {
+            background: #e7f5ff;
+            color: #0f4e68;
+            border: 1px solid #c9e2f3;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: .8rem;
+        }
+
+        .field {
+            background: #f5fbff;
+            border: 1px solid #d6e6f5;
+            border-radius: 10px;
+            padding: .65rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: .35rem;
+            font-size: .9rem;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid #b8cee2;
+            border-radius: 8px;
+            padding: .55rem .65rem;
+            font-size: .96rem;
+            background: #fff;
+        }
+
+        .errorlist {
+            list-style: none;
+            margin: .45rem 0 0;
+            padding: .45rem .55rem;
+            border-radius: 8px;
+            background: #ffe8e8;
+            color: #8b1d1d;
+            font-size: .86rem;
+        }
+
+        .helptext {
+            display: block;
+            margin-top: .35rem;
+            color: #4c6784;
+            font-size: .82rem;
+        }
+
+        .field-wide { grid-column: 1 / -1; }
+
+        .toolbar {
+            display: flex;
+            justify-content: flex-end;
+            gap: .5rem;
+            grid-column: 1 / -1;
+        }
+
+        .message {
+            margin-bottom: .6rem;
+            border-radius: 8px;
+            padding: .55rem .7rem;
+            background: #e9fce9;
+            border: 1px solid #bde4bd;
+            color: #1c681c;
+            font-weight: 600;
+        }
+
+        .credential-panel {
+            margin-bottom: .8rem;
+            border: 1px solid #bcdff0;
+            background: #eef8ff;
+            border-radius: 10px;
+            padding: .75rem;
+        }
+    </style>
+</head>
+<body>
+    {% load i18n %}
+    {% trans "Credentials copied to clipboard." as copied_credentials_message %}
+    <main class="wrap">
+        <header class="top">
+            <h1>{% blocktrans with shop_name=shop.shop_name %}Edit {{ shop_name }}{% endblocktrans %}</h1>
+            <div style="display:flex; gap:.45rem; flex-wrap:wrap;">
+                <a class="btn btn-soft" href="{% url 'manage_shop_users' shop.pk %}">{% trans "Users & Rights" %}</a>
+                <a class="btn btn-soft" href="{% url 'shop_list' %}">{% trans "Back to Shop List" %}</a>
+            </div>
+        </header>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if reset_credentials %}
+            <section class="credential-panel">
+                <b>{% trans "Temporary password reset" %}</b><br>
+                {% trans "Username:" %} {{ reset_credentials.username }}<br>
+                {% trans "Password:" %} <span id="reset-pass">{{ reset_credentials.password }}</span>
+                <div style="margin-top:.5rem;">
+                    <button class="btn" type="button" onclick="copyResetCredentials()">{% trans "Copy Credentials" %}</button>
+                </div>
+            </section>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="field field-wide">{{ form.non_field_errors }}</div>
+
+            <div class="field">
+                <label for="id_shop_name">{% trans "Shop name" %}</label>
+                {{ form.shop_name }}
+                {{ form.shop_name.errors }}
+            </div>
+
+            <div class="field">
+                <label for="id_database_name">{% trans "Database alias" %}</label>
+                {{ form.database_name }}
+                {{ form.database_name.errors }}
+            </div>
+
+            <div class="field">
+                <label for="id_username">{% trans "Login username" %}</label>
+                {{ form.username }}
+                {{ form.username.errors }}
+            </div>
+
+            <div class="field">
+                <label for="id_email">{% trans "Email" %}</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+
+            <div class="field">
+                <label for="id_is_active">{% trans "Shop is active" %}</label>
+                {{ form.is_active }}
+                {{ form.is_active.errors }}
+            </div>
+
+            <div class="field">
+                <label for="id_owner_is_active">{% trans "Owner user is active" %}</label>
+                {{ form.owner_is_active }}
+                {{ form.owner_is_active.errors }}
+            </div>
+
+            <div class="field field-wide">
+                <label for="id_reset_password">{% trans "Reset password to a new random value" %}</label>
+                {{ form.reset_password }}
+                {{ form.reset_password.errors }}
+                {% if form.reset_password.help_text %}
+                    <span class="helptext">{{ form.reset_password.help_text }}</span>
+                {% endif %}
+            </div>
+
+            <div class="toolbar">
+                <button class="btn" type="submit">{% trans "Save Changes" %}</button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        function copyResetCredentials() {
+            const username = '{{ reset_credentials.username|default:""|escapejs }}';
+            const password = '{{ reset_credentials.password|default:""|escapejs }}';
+            const text = `Username: ${username}\nPassword: ${password}`;
+            navigator.clipboard.writeText(text).then(function () {
+                alert('{{ copied_credentials_message|escapejs }}');
+            });
+        }
+    </script>
+</body>
+</html>
