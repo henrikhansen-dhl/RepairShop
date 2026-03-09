@@ -121,6 +121,12 @@
             {% endfor %}
         {% endif %}
 
+        {% if is_work_order_locked %}
+            <section class="card">
+                <p style="margin:0; color:#8b1d1d;"><b>{% trans "Locked:" %}</b> {% trans "This work order has already created an invoice. Header fields and line items are read-only to keep the invoice aligned with the recorded work." %}</p>
+            </section>
+        {% endif %}
+
         {% if available_status_targets %}
             <section class="card">
                 <h2 style="margin:.1rem 0 .5rem;">{% trans "Status Actions" %}</h2>
@@ -150,7 +156,7 @@
                             {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
                         </div>
                     {% endfor %}
-                    <button class="btn btn-main" type="submit">{% trans "Update Work Order" %}</button>
+                    <button class="btn btn-main" type="submit" {% if is_work_order_locked %}disabled{% endif %}>{% trans "Update Work Order" %}</button>
                 </form>
             </article>
 
@@ -175,7 +181,7 @@
                             {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
                         </div>
                     {% endfor %}
-                    <button class="btn btn-main" id="line-item-submit" type="submit">{% trans "Add Service Item" %}</button>
+                    <button class="btn btn-main" id="line-item-submit" type="submit" {% if is_work_order_locked %}disabled{% endif %}>{% trans "Add Service Item" %}</button>
                 </form>
 
                 <div class="totals">
@@ -223,12 +229,12 @@
                             <td>{{ line.vat_amount|floatformat:2 }}</td>
                             <td>
                                 <div class="table-actions">
-                                    <button class="btn btn-soft" type="button" onclick="toggleLineEditor('{{ line.id }}', true)">{{ label_edit }}</button>
+                                    <button class="btn btn-soft" type="button" {% if is_work_order_locked %}disabled{% endif %} onclick="toggleLineEditor('{{ line.id }}', true)">{{ label_edit }}</button>
                                     <form method="post" style="margin:0;">
                                         {% csrf_token %}
                                         <input type="hidden" name="action" value="delete_line">
                                         <input type="hidden" name="line_id" value="{{ line.id }}">
-                                        <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_line_item|escapejs }}');">{% trans "Delete" %}</button>
+                                        <button class="btn btn-soft" type="submit" {% if is_work_order_locked %}disabled{% endif %} onclick="return confirm('{{ confirm_delete_line_item|escapejs }}');">{% trans "Delete" %}</button>
                                     </form>
                                 </div>
                             </td>
@@ -250,7 +256,7 @@
                                             {% endfor %}
                                         </div>
                                         <div class="edit-actions">
-                                            <button class="btn btn-main" type="submit">{% trans "Save Changes" %}</button>
+                                            <button class="btn btn-main" type="submit" {% if is_work_order_locked %}disabled{% endif %}>{% trans "Save Changes" %}</button>
                                             <button class="btn btn-soft" type="button" onclick="toggleLineEditor('{{ line.id }}', false)">{{ label_cancel }}</button>
                                         </div>
                                     </form>
@@ -292,12 +298,12 @@
                             <td>{{ line.vat_amount|floatformat:2 }}</td>
                             <td>
                                 <div class="table-actions">
-                                    <button class="btn btn-soft" type="button" onclick="toggleLineEditor('{{ line.id }}', true)">{{ label_edit }}</button>
+                                    <button class="btn btn-soft" type="button" {% if is_work_order_locked %}disabled{% endif %} onclick="toggleLineEditor('{{ line.id }}', true)">{{ label_edit }}</button>
                                     <form method="post" style="margin:0;">
                                         {% csrf_token %}
                                         <input type="hidden" name="action" value="delete_line">
                                         <input type="hidden" name="line_id" value="{{ line.id }}">
-                                        <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_line_item|escapejs }}');">{% trans "Delete" %}</button>
+                                        <button class="btn btn-soft" type="submit" {% if is_work_order_locked %}disabled{% endif %} onclick="return confirm('{{ confirm_delete_line_item|escapejs }}');">{% trans "Delete" %}</button>
                                     </form>
                                 </div>
                             </td>
@@ -319,7 +325,7 @@
                                             {% endfor %}
                                         </div>
                                         <div class="edit-actions">
-                                            <button class="btn btn-main" type="submit">{% trans "Save Changes" %}</button>
+                                            <button class="btn btn-main" type="submit" {% if is_work_order_locked %}disabled{% endif %}>{% trans "Save Changes" %}</button>
                                             <button class="btn btn-soft" type="button" onclick="toggleLineEditor('{{ line.id }}', false)">{{ label_cancel }}</button>
                                         </div>
                                     </form>

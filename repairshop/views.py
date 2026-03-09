@@ -223,6 +223,7 @@ def repair_work_order_detail(request, work_order_id):
     header_form = RepairWorkOrderForm(user=request.user, shop=shop, instance=work_order)
     line_form = RepairWorkOrderLineForm(shop)
     active_edit_line_id = None
+    is_work_order_locked = bool(work_order.invoice_id)
     transition_map = {
         RepairWorkOrder.STATUS_NEW: [RepairWorkOrder.STATUS_ASSIGNED, RepairWorkOrder.STATUS_CANCELLED],
         RepairWorkOrder.STATUS_ASSIGNED: [RepairWorkOrder.STATUS_IN_PROGRESS, RepairWorkOrder.STATUS_CANCELLED],
@@ -252,6 +253,9 @@ def repair_work_order_detail(request, work_order_id):
             return redirect("repair_work_order_detail", work_order_id=work_order.pk)
 
         if action == "update_work_order":
+            if is_work_order_locked:
+                messages.error(request, "This work order is linked to an invoice and its details are locked.")
+                return redirect("repair_work_order_detail", work_order_id=work_order.pk)
             header_form = RepairWorkOrderForm(request.POST, user=request.user, shop=shop, instance=work_order)
             if header_form.is_valid():
                 updated_work_order = header_form.save(commit=False)
@@ -261,6 +265,9 @@ def repair_work_order_detail(request, work_order_id):
                 return redirect("repair_work_order_detail", work_order_id=work_order.pk)
 
         if action == "add_line":
+            if is_work_order_locked:
+                messages.error(request, "This work order is linked to an invoice and its line items are locked.")
+                return redirect("repair_work_order_detail", work_order_id=work_order.pk)
             line_form = RepairWorkOrderLineForm(shop, request.POST)
             if line_form.is_valid():
                 line = line_form.save(commit=False)
@@ -277,6 +284,9 @@ def repair_work_order_detail(request, work_order_id):
                 return redirect("repair_work_order_detail", work_order_id=work_order.pk)
 
         if action == "delete_line":
+            if is_work_order_locked:
+                messages.error(request, "This work order is linked to an invoice and its line items are locked.")
+                return redirect("repair_work_order_detail", work_order_id=work_order.pk)
             line_id = request.POST.get("line_id", "").strip()
             line = get_object_or_404(RepairWorkOrderLine, pk=line_id, work_order=work_order)
             line.delete()
@@ -284,6 +294,9 @@ def repair_work_order_detail(request, work_order_id):
             return redirect("repair_work_order_detail", work_order_id=work_order.pk)
 
         if action == "update_line":
+            if is_work_order_locked:
+                messages.error(request, "This work order is linked to an invoice and its line items are locked.")
+                return redirect("repair_work_order_detail", work_order_id=work_order.pk)
             line_id = request.POST.get("line_id", "").strip()
             line = get_object_or_404(RepairWorkOrderLine, pk=line_id, work_order=work_order)
             active_edit_line_id = line.pk
@@ -375,6 +388,7 @@ def repair_work_order_detail(request, work_order_id):
                 {"value": status, "label": dict(RepairWorkOrder.STATUS_CHOICES).get(status, status)}
                 for status in transition_map.get(work_order.status, [])
             ],
+            "is_work_order_locked": is_work_order_locked,
             "customer_cars_json": customer_cars,
         },
     )
