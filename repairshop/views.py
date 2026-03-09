@@ -222,6 +222,7 @@ def repair_work_order_detail(request, work_order_id):
 
     header_form = RepairWorkOrderForm(user=request.user, shop=shop, instance=work_order)
     line_form = RepairWorkOrderLineForm(shop)
+    active_edit_line_id = None
     transition_map = {
         RepairWorkOrder.STATUS_NEW: [RepairWorkOrder.STATUS_ASSIGNED, RepairWorkOrder.STATUS_CANCELLED],
         RepairWorkOrder.STATUS_ASSIGNED: [RepairWorkOrder.STATUS_IN_PROGRESS, RepairWorkOrder.STATUS_CANCELLED],
@@ -282,6 +283,25 @@ def repair_work_order_detail(request, work_order_id):
             messages.success(request, "Line item removed.")
             return redirect("repair_work_order_detail", work_order_id=work_order.pk)
 
+        if action == "update_line":
+            line_id = request.POST.get("line_id", "").strip()
+            line = get_object_or_404(RepairWorkOrderLine, pk=line_id, work_order=work_order)
+            active_edit_line_id = line.pk
+            edit_form = RepairWorkOrderLineForm(shop, request.POST, instance=line, prefix=f"line-{line.pk}")
+            if edit_form.is_valid():
+                updated_line = edit_form.save(commit=False)
+                updated_line.work_order = work_order
+                if updated_line.price_item:
+                    if not updated_line.description:
+                        updated_line.description = updated_line.price_item.description
+                    if updated_line.unit_price in (None, ""):
+                        updated_line.unit_price = updated_line.price_item.unit_price
+                    if updated_line.vat_percent in (None, ""):
+                        updated_line.vat_percent = updated_line.price_item.vat_percent
+                updated_line.save()
+                messages.success(request, "Line item updated.")
+                return redirect("repair_work_order_detail", work_order_id=work_order.pk)
+
         if action == "create_invoice":
             if work_order.invoice_id:
                 messages.success(request, f"Invoice '{work_order.invoice.invoice_number}' already exists for this work order.")
@@ -320,6 +340,17 @@ def repair_work_order_detail(request, work_order_id):
             return redirect("invoice_detail", invoice_id=invoice.pk)
 
     lines = work_order.service_lines.select_related("price_item").all()
+    line_edit_forms = {}
+    for line in lines:
+        prefix = f"line-{line.pk}"
+        if active_edit_line_id == line.pk and request.method == "POST" and request.POST.get("action", "").strip() == "update_line":
+            form = RepairWorkOrderLineForm(shop, request.POST, instance=line, prefix=prefix)
+        else:
+            form = RepairWorkOrderLineForm(shop, instance=line, prefix=prefix)
+        line_edit_forms[line.pk] = form
+        line.edit_form = form
+        line.show_edit_form = active_edit_line_id == line.pk and form.errors
+
     service_lines = [line for line in lines if line.line_type == RepairWorkOrderLine.TYPE_SERVICE]
     part_lines = [line for line in lines if line.line_type == RepairWorkOrderLine.TYPE_PART]
     customer_cars = list(

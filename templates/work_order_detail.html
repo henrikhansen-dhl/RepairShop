@@ -43,6 +43,13 @@
         .section-head p { margin: 0; color: #60758c; }
         .table-card.service-table { border-color: #cbe7f1; }
         .table-card.part-table { border-color: #e8dcc0; }
+        .table-actions { display: flex; gap: .45rem; flex-wrap: wrap; }
+        .edit-row { background: #f8fbff; }
+        .edit-panel { border: 1px solid #d8e8f6; border-radius: 10px; padding: .85rem; background: #fff; }
+        .inline-edit-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+        .inline-edit-grid .row { margin-bottom: 0; }
+        .inline-edit-grid .row-wide { grid-column: 1 / -1; }
+        .edit-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .85rem; }
         .errors { color: #8b1d1d; font-size: .88rem; margin-top: .24rem; }
         .message { background: #e9fce9; border: 1px solid #bde4bd; border-radius: 8px; padding: .55rem .65rem; margin-top: .7rem; }
         .shop-logo { max-height: 56px; width: auto; display: block; margin-top: .4rem; border: 1px solid #d8e8f6; border-radius: 8px; background: #fff; padding: .2rem; }
@@ -50,14 +57,18 @@
         @media (max-width: 920px) {
             .grid { grid-template-columns: 1fr; }
             .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .inline-edit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
         @media (max-width: 640px) {
             .summary-grid { grid-template-columns: 1fr; }
+            .inline-edit-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     {% trans "Delete this line item?" as confirm_delete_line_item %}
+    {% trans "Edit" as label_edit %}
+    {% trans "Cancel" as label_cancel %}
     {% trans "Add labor, diagnostics, or workshop tasks here." as line_hint_service %}
     {% trans "Add spare parts, materials, or consumables here." as line_hint_part %}
     {% trans "Service" as label_service %}
@@ -211,12 +222,39 @@
                             <td>{{ line.line_total|floatformat:2 }}</td>
                             <td>{{ line.vat_amount|floatformat:2 }}</td>
                             <td>
-                                <form method="post" style="margin:0;">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="action" value="delete_line">
-                                    <input type="hidden" name="line_id" value="{{ line.id }}">
-                                    <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_line_item|escapejs }}');">{% trans "Delete" %}</button>
-                                </form>
+                                <div class="table-actions">
+                                    <button class="btn btn-soft" type="button" onclick="toggleLineEditor('{{ line.id }}', true)">{{ label_edit }}</button>
+                                    <form method="post" style="margin:0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="delete_line">
+                                        <input type="hidden" name="line_id" value="{{ line.id }}">
+                                        <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_line_item|escapejs }}');">{% trans "Delete" %}</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="edit-row-{{ line.id }}" class="edit-row" {% if not line.show_edit_form %}hidden{% endif %}>
+                            <td colspan="7">
+                                <div class="edit-panel">
+                                    <form method="post" data-line-editor>
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="update_line">
+                                        <input type="hidden" name="line_id" value="{{ line.id }}">
+                                        <div class="inline-edit-grid">
+                                            {% for field in line.edit_form %}
+                                                <div class="row {% if field.name == 'description' %}row-wide{% endif %}">
+                                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                                    {{ field }}
+                                                    {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="edit-actions">
+                                            <button class="btn btn-main" type="submit">{% trans "Save Changes" %}</button>
+                                            <button class="btn btn-soft" type="button" onclick="toggleLineEditor('{{ line.id }}', false)">{{ label_cancel }}</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     {% empty %}
@@ -253,12 +291,39 @@
                             <td>{{ line.line_total|floatformat:2 }}</td>
                             <td>{{ line.vat_amount|floatformat:2 }}</td>
                             <td>
-                                <form method="post" style="margin:0;">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="action" value="delete_line">
-                                    <input type="hidden" name="line_id" value="{{ line.id }}">
-                                    <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_line_item|escapejs }}');">{% trans "Delete" %}</button>
-                                </form>
+                                <div class="table-actions">
+                                    <button class="btn btn-soft" type="button" onclick="toggleLineEditor('{{ line.id }}', true)">{{ label_edit }}</button>
+                                    <form method="post" style="margin:0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="delete_line">
+                                        <input type="hidden" name="line_id" value="{{ line.id }}">
+                                        <button class="btn btn-soft" type="submit" onclick="return confirm('{{ confirm_delete_line_item|escapejs }}');">{% trans "Delete" %}</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="edit-row-{{ line.id }}" class="edit-row" {% if not line.show_edit_form %}hidden{% endif %}>
+                            <td colspan="7">
+                                <div class="edit-panel">
+                                    <form method="post" data-line-editor>
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="update_line">
+                                        <input type="hidden" name="line_id" value="{{ line.id }}">
+                                        <div class="inline-edit-grid">
+                                            {% for field in line.edit_form %}
+                                                <div class="row {% if field.name == 'description' %}row-wide{% endif %}">
+                                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                                    {{ field }}
+                                                    {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="edit-actions">
+                                            <button class="btn btn-main" type="submit">{% trans "Save Changes" %}</button>
+                                            <button class="btn btn-soft" type="button" onclick="toggleLineEditor('{{ line.id }}', false)">{{ label_cancel }}</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     {% empty %}
@@ -365,6 +430,45 @@
                 }
             }
 
+            function syncLineEditor(editorRoot) {
+                const typeSelect = editorRoot.querySelector("select[name$='line_type']");
+                const priceSelect = editorRoot.querySelector("select[name$='price_item']");
+                if (!typeSelect || !priceSelect) {
+                    return;
+                }
+
+                const selectedType = typeSelect.value || "service";
+                const currentValue = priceSelect.value;
+                let currentStillVisible = false;
+
+                [...priceSelect.options].forEach((option) => {
+                    const itemType = option.dataset.itemType;
+                    const shouldShow = !itemType || itemType === selectedType;
+                    option.hidden = !shouldShow;
+                    if (shouldShow && option.value === currentValue) {
+                        currentStillVisible = true;
+                    }
+                });
+
+                if (!currentStillVisible) {
+                    priceSelect.value = "";
+                }
+            }
+
+            window.toggleLineEditor = function (lineId, shouldShow) {
+                const row = document.getElementById(`edit-row-${lineId}`);
+                if (!row) {
+                    return;
+                }
+                row.hidden = !shouldShow;
+                if (shouldShow) {
+                    const firstField = row.querySelector("input, select, textarea");
+                    if (firstField) {
+                        firstField.focus();
+                    }
+                }
+            };
+
             customerSelect.addEventListener("change", refillCars);
             if (lineTypeSelect) {
                 lineTypeSelect.addEventListener("change", function () {
@@ -374,6 +478,17 @@
                 updateLineTypeState();
                 filterPriceItems();
             }
+
+            document.querySelectorAll("form[data-line-editor]").forEach((form) => {
+                syncLineEditor(form);
+                const typeSelect = form.querySelector("select[name$='line_type']");
+                if (typeSelect) {
+                    typeSelect.addEventListener("change", function () {
+                        syncLineEditor(form);
+                    });
+                }
+            });
+
             refillCars();
         })();
     </script>
