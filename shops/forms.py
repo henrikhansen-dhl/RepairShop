@@ -1,91 +1,4 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
-from django.db import transaction
-class ShopOnboardingForm(forms.Form):
-    shop_name = forms.CharField(max_length=120, label=_("Shop name"))
-    username = forms.CharField(max_length=150, label=_("Login username"))
-    email = forms.EmailField(required=False, label=_("Email"))
-    generate_password = forms.BooleanField(
-        required=False,
-        initial=True,
-        label=_("Generate strong password automatically"),
-        help_text=_("If checked, the system generates a strong temporary password."),
-    )
-    password1 = forms.CharField(widget=forms.PasswordInput, required=False, label=_("Temporary password"))
-    password2 = forms.CharField(widget=forms.PasswordInput, required=False, label=_("Confirm password"))
-    database_name = forms.CharField(
-        max_length=64,
-        required=False,
-        label=_("Database alias (optional)"),
-        help_text=_("Optional alias, for example: downtown_db. Leave blank to auto-generate."),
-    )
-
-    def clean_username(self):
-        username = self.cleaned_data["username"].strip()
-        user_model = get_user_model()
-        if user_model.objects.filter(username=username).exists():
-            raise forms.ValidationError(_("This username already exists."))
-        return username
-
-    def clean(self):
-        cleaned_data = super().clean()
-        generate_password = cleaned_data.get("generate_password", False)
-        password1 = cleaned_data.get("password1")
-        password2 = cleaned_data.get("password2")
-
-        if generate_password:
-            generated = generate_strong_password()
-            cleaned_data["password1"] = generated
-            cleaned_data["password2"] = generated
-            self.generated_password = generated
-        else:
-            if not password1:
-                self.add_error("password1", _("Enter a password or enable auto-generation."))
-            if password1 and len(password1) < 8:
-                self.add_error("password1", _("Use at least 8 characters."))
-            if password1 and password2 and password1 != password2:
-                self.add_error("password2", _("Passwords do not match."))
-            self.generated_password = password1 or ""
-
-        db_alias = cleaned_data.get("database_name", "").strip()
-        if not db_alias:
-            shop_slug = slugify(cleaned_data.get("shop_name", ""))
-            db_alias = f"{shop_slug.replace('-', '_')}_db" if shop_slug else "shop_db"
-
-        cleaned_data["database_name"] = db_alias
-
-        if ShopProfile.objects.filter(database_name=db_alias).exists():
-            self.add_error("database_name", _("This database alias is already in use."))
-
-        return cleaned_data
-
-    @transaction.atomic
-    def save(self):
-        user_model = get_user_model()
-        plain_password = self.cleaned_data["password1"]
-        user = user_model.objects.create_user(
-            username=self.cleaned_data["username"],
-            email=self.cleaned_data["email"],
-            password=plain_password,
-        )
-        shop = ShopProfile.objects.create(
-            owner=user,
-            shop_name=self.cleaned_data["shop_name"],
-            database_name=self.cleaned_data["database_name"],
-        )
-        ShopUserAccess.objects.create(
-            shop=shop,
-            user=user,
-            role=ShopUserAccess.ROLE_OWNER,
-            can_manage_users=True,
-            can_create_repair_order=True,
-            can_manage_inventory=True,
-            can_view_reports=True,
-            preferred_language=ShopUserAccess.LANGUAGE_EN,
-            is_active=True,
-        )
-        return shop, user
-from django import forms
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.utils import timezone
@@ -100,23 +13,9 @@ from .models import Customer, CustomerCar, Invoice, InvoiceLine, InvoicePriceIte
 def generate_strong_password(length: int = 14) -> str:
     alphabet = string.ascii_letters + string.digits + "!@#$%^&*"
     return "".join(secrets.choice(alphabet) for _ in range(length))
-class RepairWorkOrderForm(forms.ModelForm):
-    class Meta:
-        model = RepairWorkOrder
-        fields = ["shop", "description", "assigned_to", "status"]
-        widgets = {
-            "description": forms.Textarea(attrs={"rows": 3}),
-        }
 
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop("user", None)
-        super().__init__(*args, **kwargs)
-        if user:
-            # Limit shop choices to those the user can access
-            self.fields["shop"].queryset = ShopProfile.objects.filter(user_accesses__user=user, user_accesses__is_active=True)
-            # Limit assigned_to choices to users in the shop
-            self.fields["assigned_to"].queryset = ShopUserAccess.objects.filter(shop__in=self.fields["shop"].queryset).values_list("user", flat=True)
-        self.fields["status"].initial = RepairWorkOrder.STATUS_NEW
+
+class ShopOnboardingForm(forms.Form):
     shop_name = forms.CharField(max_length=120, label=_("Shop name"))
     username = forms.CharField(max_length=150, label=_("Login username"))
     email = forms.EmailField(required=False, label=_("Email"))
@@ -205,6 +104,45 @@ class RepairWorkOrderForm(forms.ModelForm):
         )
 
         return user, shop_profile, plain_password
+
+
+class RepairWorkOrderForm(forms.ModelForm):
+    class Meta:
+        model = RepairWorkOrder
+        fields = ["description", "assigned_to", "status"]
+        widgets = {
+            "description": forms.Textarea(attrs={"rows": 5}),
+        }
+        labels = {
+            "description": _("Description"),
+            "assigned_to": _("Assigned to"),
+            "status": _("Status"),
+        }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        shop = kwargs.pop("shop", None)
+        super().__init__(*args, **kwargs)
+        accessible_users = get_user_model().objects.none()
+
+        if shop is not None:
+            accessible_users = get_user_model().objects.filter(
+                shop_accesses__shop=shop,
+                shop_accesses__is_active=True,
+            ).order_by("username").distinct()
+        elif user is not None:
+            accessible_shops = ShopProfile.objects.filter(
+                user_accesses__user=user,
+                user_accesses__is_active=True,
+            )
+            accessible_users = get_user_model().objects.filter(
+                shop_accesses__shop__in=accessible_shops,
+                shop_accesses__is_active=True,
+            ).order_by("username").distinct()
+
+        self.fields["assigned_to"].queryset = accessible_users
+        self.fields["assigned_to"].required = False
+        self.fields["status"].initial = RepairWorkOrder.STATUS_NEW
 
 
 class ShopEditForm(forms.ModelForm):
