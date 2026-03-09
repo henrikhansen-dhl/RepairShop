@@ -51,8 +51,8 @@
         .workorder-card strong { font-size: 1.1em; }
     </style>
 </head>
+{% load i18n %}
 <body>
-    {% load i18n %}
     <main class="wrap">
         <a class="btn" href="{% url 'shop_dashboard' %}">{% trans "Back to Dashboard" %}</a>
         <h1>{% trans "Create Repair Order" %}</h1>
