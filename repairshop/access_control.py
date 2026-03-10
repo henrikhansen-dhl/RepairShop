@@ -53,6 +53,13 @@ def get_shop_context_for_user(user):
     }
 
 
+def apply_shop_context_to_request(request, context):
+    """Attach resolved shop context to the current request object."""
+    request.current_shop = context["shop"]
+    request.current_shop_access = context["access"]
+    request.current_shop_rights = context["rights"]
+
+
 def require_shop_right(required_right: str | None = None):
     """
     Ensure authenticated user has an active shop context and optional right.
@@ -64,17 +71,19 @@ def require_shop_right(required_right: str | None = None):
         @login_required
         @wraps(view_func)
         def wrapped(request, *args, **kwargs):
+            context = get_shop_context_for_user(request.user)
+            if context:
+                apply_shop_context_to_request(request, context)
+
             if request.user.is_staff:
+                if not context:
+                    messages.error(request, "No active shop access was found for your account.")
+                    return redirect("landing")
                 return view_func(request, *args, **kwargs)
 
-            context = get_shop_context_for_user(request.user)
             if not context:
                 messages.error(request, "No active shop access was found for your account.")
                 return redirect("landing")
-
-            request.current_shop = context["shop"]
-            request.current_shop_access = context["access"]
-            request.current_shop_rights = context["rights"]
 
             if required_right and not context["rights"].get(required_right, False):
                 return HttpResponseForbidden("You do not have permission for this shop function.")
