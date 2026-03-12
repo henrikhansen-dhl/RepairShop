@@ -161,6 +161,39 @@ python manage.py migrate
 python manage.py collectstatic --noinput
 ```
 
+## Static files on PythonAnywhere
+
+If the Django admin looks plain or unstyled in production, the usual cause is that static files are not mapped in the PythonAnywhere Web tab.
+
+This project uses:
+
+```text
+STATIC_URL=/static/
+STATIC_ROOT=/home/henrikhansen/RepairShop/staticfiles
+MEDIA_URL=/media/
+MEDIA_ROOT=/home/henrikhansen/RepairShop/media
+```
+
+After you run `python manage.py collectstatic --noinput`, add these mappings in the PythonAnywhere Web tab:
+
+```text
+URL: /static/
+Directory: /home/henrikhansen/RepairShop/staticfiles
+```
+
+```text
+URL: /media/
+Directory: /home/henrikhansen/RepairShop/media
+```
+
+Then reload the web app.
+
+Quick check:
+
+- Open `/static/admin/css/base.css` in your browser on the live site.
+- If it loads, admin CSS is being served.
+- If it returns 404, the Web tab static mapping is missing or points to the wrong directory.
+
 ## Important note about tenant databases
 
 This codebase currently marks `shops` as a shared app, so shared data migrates on `default` only.

@@ -145,6 +145,14 @@ def _qr_png_data_uri(text: str) -> str:
     return f"data:image/png;base64,{encoded}"
 
 
+def _customer_payment_terms_payload(shop):
+    return list(
+        Customer.objects.filter(shop=shop)
+        .order_by("full_name", "id")
+        .values("id", "payment_due_condition", "payment_due_days")
+    )
+
+
 def landing_page(request):
     return render(request, "landing.html")
 
@@ -155,7 +163,7 @@ def shop_dashboard(request):
     return render(request, "shop_dashboard.html", {"shop_context": shop_context})
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_REPAIR_ORDERS)
 def create_repair_order(request):
     user = request.user
     shop = getattr(request, "current_shop", None)
@@ -208,7 +216,7 @@ def create_repair_order(request):
     })
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_REPAIR_ORDERS)
 def repair_work_order_detail(request, work_order_id):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -394,7 +402,7 @@ def repair_work_order_detail(request, work_order_id):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_INSPECTIONS)
 def schedule_inspection(request):
     return render(
         request,
@@ -407,7 +415,7 @@ def schedule_inspection(request):
     )
 
 
-@require_shop_right("can_manage_inventory")
+@require_shop_right("can_manage_inventory", required_feature=ShopProfile.FEATURE_INVENTORY)
 def manage_inventory(request):
     return render(
         request,
@@ -420,7 +428,7 @@ def manage_inventory(request):
     )
 
 
-@require_shop_right("can_view_reports")
+@require_shop_right("can_view_reports", required_feature=ShopProfile.FEATURE_REPORTS)
 def view_reports(request):
     return render(
         request,
@@ -433,7 +441,7 @@ def view_reports(request):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_INVOICES)
 def invoice_list(request):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -455,7 +463,7 @@ def invoice_list(request):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_INVOICES)
 def invoice_create(request):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -486,6 +494,7 @@ def invoice_create(request):
         .order_by("customer__full_name", "make", "model")
         .values("id", "customer_id", "make", "model", "year", "plate_number")
     )
+    customer_payment_terms = _customer_payment_terms_payload(shop)
 
     return render(
         request,
@@ -496,15 +505,18 @@ def invoice_create(request):
             "title": _("Create Invoice"),
             "submit_label": _("Create Invoice"),
             "customer_cars_json": customer_cars,
+            "customer_payment_terms_json": customer_payment_terms,
         },
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_INVOICES)
 def invoice_detail(request, invoice_id):
     shop = getattr(request, "current_shop", None)
     if not shop:
         return HttpResponseForbidden("Invoice management is available for shop users only.")
+
+    master_data, _ = ShopMasterData.objects.get_or_create(shop=shop)
 
     invoice = get_object_or_404(
         Invoice.objects.select_related("customer", "car").prefetch_related("lines__price_item"),
@@ -585,11 +597,13 @@ def invoice_detail(request, invoice_id):
         .order_by("customer__full_name", "make", "model")
         .values("id", "customer_id", "make", "model", "year", "plate_number")
     )
+    customer_payment_terms = _customer_payment_terms_payload(shop)
     return render(
         request,
         "invoice_detail.html",
         {
             "shop": shop,
+            "master_data": master_data,
             "invoice": invoice,
             "lines": lines,
             "header_form": header_form,
@@ -597,11 +611,12 @@ def invoice_detail(request, invoice_id):
             "is_locked": invoice.status != Invoice.STATUS_DRAFT,
             "available_status_targets": transition_map.get(invoice.status, []),
             "customer_cars_json": customer_cars,
+            "customer_payment_terms_json": customer_payment_terms,
         },
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_INVOICES)
 def invoice_print(request, invoice_id):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -627,7 +642,7 @@ def invoice_print(request, invoice_id):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_INVOICES)
 def invoice_email(request, invoice_id):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -639,11 +654,14 @@ def invoice_email(request, invoice_id):
         shop=shop,
     )
     master_data, _ = ShopMasterData.objects.get_or_create(shop=shop)
+    email_backend = django_settings.EMAIL_BACKEND
+    is_file_backend = email_backend == "django.core.mail.backends.filebased.EmailBackend"
+    is_console_backend = email_backend == "django.core.mail.backends.console.EmailBackend"
 
     default_subject = f"Invoice {invoice.invoice_number} from {shop.shop_name}"
     default_message = (
         "Dear customer,\n\n"
-        f"Please find invoice {invoice.invoice_number} attached in this email message. "
+        f"Please find invoice {invoice.invoice_number} available from the link in this email message. "
         "You can also view/print it from the provided link.\n\n"
         "Best regards"
     )
@@ -676,7 +694,15 @@ def invoice_email(request, invoice_id):
             email.attach_alternative(html_body, "text/html")
             email.send(fail_silently=False)
 
-            messages.success(request, f"Invoice email sent to {recipient}.")
+            if is_file_backend:
+                messages.success(
+                    request,
+                    f"Invoice email rendered to local files for development. Check {django_settings.EMAIL_FILE_PATH}.",
+                )
+            elif is_console_backend:
+                messages.success(request, f"Invoice email rendered to the development server console for {recipient}.")
+            else:
+                messages.success(request, f"Invoice email sent to {recipient}.")
             return redirect("invoice_detail", invoice_id=invoice.pk)
     else:
         form = InvoiceEmailForm(
@@ -694,11 +720,15 @@ def invoice_email(request, invoice_id):
             "shop": shop,
             "invoice": invoice,
             "form": form,
+            "email_backend": email_backend,
+            "email_file_path": str(django_settings.EMAIL_FILE_PATH),
+            "is_file_backend": is_file_backend,
+            "is_console_backend": is_console_backend,
         },
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_INVOICES)
 def invoice_price_table(request):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -727,7 +757,7 @@ def invoice_price_table(request):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_INVOICES)
 def invoice_masterdata(request):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -754,7 +784,7 @@ def invoice_masterdata(request):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_CUSTOMERS)
 def customer_list(request):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -776,7 +806,7 @@ def customer_list(request):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_CUSTOMERS)
 def customer_create(request):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -805,7 +835,7 @@ def customer_create(request):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_CUSTOMERS)
 def customer_detail(request, customer_id):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -824,7 +854,7 @@ def customer_detail(request, customer_id):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_CUSTOMERS)
 def customer_car_create(request, customer_id):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -855,7 +885,7 @@ def customer_car_create(request, customer_id):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_CUSTOMERS)
 def customer_edit(request, customer_id):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -885,7 +915,7 @@ def customer_edit(request, customer_id):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_CUSTOMERS)
 def customer_delete(request, customer_id):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -901,7 +931,7 @@ def customer_delete(request, customer_id):
     return redirect("customer_list")
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_CUSTOMERS)
 def customer_car_edit(request, customer_id, car_id):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -931,7 +961,7 @@ def customer_car_edit(request, customer_id, car_id):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_CUSTOMERS)
 def customer_car_delete(request, customer_id, car_id):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -948,7 +978,7 @@ def customer_car_delete(request, customer_id, car_id):
     return redirect("customer_detail", customer_id=customer.pk)
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_CUSTOMERS)
 def customer_car_print_labels(request, customer_id, car_id):
     shop = getattr(request, "current_shop", None)
     if not shop:
@@ -1028,7 +1058,7 @@ def customer_car_print_labels(request, customer_id, car_id):
     )
 
 
-@require_shop_right("can_create_repair_order")
+@require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_CUSTOMERS)
 def api_vehicle_lookup(request, plate):
     """
     Proxy endpoint for MotorAPI plate lookup.
@@ -1282,6 +1312,8 @@ def manage_shop_users(request, shop_id):
         shop = get_object_or_404(ShopProfile.objects.select_related("owner"), pk=shop_id)
     else:
         user_context = get_shop_context_for_user(request.user)
+        if not user_context or not user_context.get("features", {}).get(ShopProfile.FEATURE_USER_MANAGEMENT, False):
+            return HttpResponseForbidden("User management is not included in your shop subscription.")
         if not user_context or not user_context["rights"].get("can_manage_users", False):
             return HttpResponseForbidden("You do not have permission to manage shop users.")
         if user_context["shop"].pk != shop_id:
@@ -1328,6 +1360,8 @@ def edit_shop_user_rights(request, shop_id, access_id):
         shop = get_object_or_404(ShopProfile, pk=shop_id)
     else:
         user_context = get_shop_context_for_user(request.user)
+        if not user_context or not user_context.get("features", {}).get(ShopProfile.FEATURE_USER_MANAGEMENT, False):
+            return HttpResponseForbidden("User management is not included in your shop subscription.")
         if not user_context or not user_context["rights"].get("can_manage_users", False):
             return HttpResponseForbidden("You do not have permission to edit shop user rights.")
         if user_context["shop"].pk != shop_id:

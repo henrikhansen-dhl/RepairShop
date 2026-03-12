@@ -5,7 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 
-from shops.models import ShopUserAccess
+from shops.models import ShopProfile, ShopUserAccess
+
+
+def get_shop_feature_flags(shop):
+    if not shop:
+        return {}
+    return {code: shop.has_feature(code) for code, _label in ShopProfile.FEATURE_CHOICES}
 
 
 def get_shop_context_for_user(user):
@@ -23,6 +29,7 @@ def get_shop_context_for_user(user):
             "shop": shop_profile,
             "access": None,
             "is_owner": True,
+            "features": get_shop_feature_flags(shop_profile),
             "rights": {
                 "can_manage_users": True,
                 "can_create_repair_order": True,
@@ -44,6 +51,7 @@ def get_shop_context_for_user(user):
         "shop": access.shop,
         "access": access,
         "is_owner": False,
+        "features": get_shop_feature_flags(access.shop),
         "rights": {
             "can_manage_users": access.can_manage_users,
             "can_create_repair_order": access.can_create_repair_order,
@@ -58,9 +66,10 @@ def apply_shop_context_to_request(request, context):
     request.current_shop = context["shop"]
     request.current_shop_access = context["access"]
     request.current_shop_rights = context["rights"]
+    request.current_shop_features = context.get("features", {})
 
 
-def require_shop_right(required_right: str | None = None):
+def require_shop_right(required_right: str | None = None, required_feature: str | None = None):
     """
     Ensure authenticated user has an active shop context and optional right.
 
@@ -84,6 +93,10 @@ def require_shop_right(required_right: str | None = None):
             if not context:
                 messages.error(request, "No active shop access was found for your account.")
                 return redirect("landing")
+
+            if required_feature and not context.get("features", {}).get(required_feature, False):
+                messages.error(request, "This function is not included in your shop subscription.")
+                return redirect("shop_dashboard")
 
             if required_right and not context["rights"].get(required_right, False):
                 return HttpResponseForbidden("You do not have permission for this shop function.")

@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 import secrets
 import string
 
-from .models import Customer, CustomerCar, Invoice, InvoiceLine, InvoicePriceItem, RepairWorkOrder, RepairWorkOrderLine, ShopMasterData, ShopProfile, ShopUserAccess
+from .models import Customer, CustomerCar, Invoice, InvoiceLine, InvoicePriceItem, RepairWorkOrder, RepairWorkOrderLine, ShopMasterData, ShopProfile, ShopUserAccess, default_shop_features
 
 
 class WorkOrderPriceItemSelect(forms.Select):
@@ -40,6 +40,14 @@ class ShopOnboardingForm(forms.Form):
     shop_name = forms.CharField(max_length=120, label=_("Shop name"))
     username = forms.CharField(max_length=150, label=_("Login username"))
     email = forms.EmailField(required=False, label=_("Email"))
+    enabled_features = forms.MultipleChoiceField(
+        required=False,
+        choices=ShopProfile.FEATURE_CHOICES,
+        initial=default_shop_features(),
+        widget=forms.CheckboxSelectMultiple,
+        label=_("Paid functions"),
+        help_text=_("Only selected functions will be visible and usable for this shop."),
+    )
     generate_password = forms.BooleanField(
         required=False,
         initial=True,
@@ -110,6 +118,7 @@ class ShopOnboardingForm(forms.Form):
             shop_name=self.cleaned_data["shop_name"],
             database_name=self.cleaned_data["database_name"],
             is_active=True,
+            enabled_features=self.cleaned_data.get("enabled_features", []),
         )
 
         ShopUserAccess.objects.create(
@@ -278,6 +287,13 @@ class RepairWorkOrderLineForm(forms.ModelForm):
 class ShopEditForm(forms.ModelForm):
     username = forms.CharField(max_length=150, label=_("Login username"))
     email = forms.EmailField(required=False, label=_("Email"))
+    enabled_features = forms.MultipleChoiceField(
+        required=False,
+        choices=ShopProfile.FEATURE_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        label=_("Paid functions"),
+        help_text=_("Only selected functions will be visible and usable for this shop."),
+    )
     owner_is_active = forms.BooleanField(required=False, initial=True, label=_("Owner user is active"))
     reset_password = forms.BooleanField(
         required=False,
@@ -287,11 +303,12 @@ class ShopEditForm(forms.ModelForm):
 
     class Meta:
         model = ShopProfile
-        fields = ["shop_name", "database_name", "is_active"]
+        fields = ["shop_name", "database_name", "is_active", "enabled_features"]
         labels = {
             "shop_name": _("Shop name"),
             "database_name": _("Database alias"),
             "is_active": _("Shop is active"),
+            "enabled_features": _("Paid functions"),
         }
 
     def __init__(self, *args, **kwargs):
@@ -300,6 +317,7 @@ class ShopEditForm(forms.ModelForm):
         self.fields["username"].initial = owner.username
         self.fields["email"].initial = owner.email
         self.fields["owner_is_active"].initial = owner.is_active
+        self.fields["enabled_features"].initial = self.instance.get_enabled_features()
 
     def clean_username(self):
         username = self.cleaned_data["username"].strip()
@@ -322,6 +340,7 @@ class ShopEditForm(forms.ModelForm):
         owner.username = self.cleaned_data["username"]
         owner.email = self.cleaned_data.get("email", "")
         owner.is_active = self.cleaned_data.get("owner_is_active", True)
+        shop.enabled_features = self.cleaned_data.get("enabled_features", [])
 
         generated_password = ""
         if self.cleaned_data.get("reset_password"):
@@ -458,12 +477,17 @@ class ShopUserAccessEditForm(forms.ModelForm):
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ["full_name", "phone", "email", "address", "notes"]
+        fields = ["full_name", "phone", "email", "address", "payment_due_condition", "payment_due_days", "notes"]
+        widgets = {
+            "payment_due_days": forms.NumberInput(attrs={"min": 0}),
+        }
         labels = {
             "full_name": _("Name"),
             "phone": _("Phone"),
             "email": _("Email"),
             "address": _("Address"),
+            "payment_due_condition": _("Payment due date condition"),
+            "payment_due_days": _("Payment due days"),
             "notes": _("Notes"),
         }
 
@@ -549,6 +573,10 @@ class InvoiceForm(forms.ModelForm):
             "total_rebate_value",
             "notes",
         ]
+        widgets = {
+            "issue_date": forms.DateInput(attrs={"type": "date"}),
+            "due_date": forms.DateInput(attrs={"type": "date"}),
+        }
         labels = {
             "customer": _("Customer"),
             "car": _("Car"),
@@ -563,6 +591,8 @@ class InvoiceForm(forms.ModelForm):
     def __init__(self, shop: ShopProfile, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.shop = shop
+        self.fields["notes"].widget.attrs.setdefault("rows", 2)
+        self.fields["due_date"].required = False
         self.fields["customer"].queryset = Customer.objects.filter(shop=shop).order_by("full_name")
         car_queryset = CustomerCar.objects.filter(customer__shop=shop).select_related("customer").order_by("customer__full_name", "make", "model")
 
@@ -582,6 +612,13 @@ class InvoiceForm(forms.ModelForm):
             self.fields["issue_date"].initial = timezone.localdate()
             self.fields["status"].initial = Invoice.STATUS_DRAFT
 
+        selected_customer = self.fields["customer"].queryset.filter(pk=selected_customer_id).first() if selected_customer_id else None
+        issue_date = self.initial.get("issue_date") or getattr(self.instance, "issue_date", None) or self.fields["issue_date"].initial
+        if selected_customer and issue_date and not self.instance.pk:
+            calculated_due_date = selected_customer.calculate_invoice_due_date(issue_date)
+            if calculated_due_date is not None:
+                self.fields["due_date"].initial = calculated_due_date
+
     def clean_car(self):
         car = self.cleaned_data.get("car")
         if car and car.customer.shop_id != self.shop.pk:
@@ -592,10 +629,15 @@ class InvoiceForm(forms.ModelForm):
         cleaned_data = super().clean()
         customer = cleaned_data.get("customer")
         car = cleaned_data.get("car")
+        issue_date = cleaned_data.get("issue_date")
         if customer and customer.shop_id != self.shop.pk:
             self.add_error("customer", _("Selected customer does not belong to this shop."))
         if customer and car and car.customer_id != customer.pk:
             self.add_error("car", _("Selected car does not belong to the chosen customer."))
+        if customer and issue_date:
+            calculated_due_date = customer.calculate_invoice_due_date(issue_date)
+            if calculated_due_date is not None:
+                cleaned_data["due_date"] = calculated_due_date
         return cleaned_data
 
 

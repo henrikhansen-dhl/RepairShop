@@ -132,6 +132,7 @@
                     <th>{% trans "Logo" %}</th>
                     <th>{% trans "Login Username" %}</th>
                     <th>{% trans "Database Alias" %}</th>
+                    <th>{% trans "Paid Functions" %}</th>
                     <th>{% trans "Status" %}</th>
                     <th>{% trans "Actions" %}</th>
                 </tr>
@@ -149,6 +150,7 @@
                         </td>
                         <td>{{ shop.owner.username }}</td>
                         <td>{{ shop.database_name }}</td>
+                        <td>{{ shop.enabled_feature_summary }}</td>
                         <td>
                             {% if shop.is_active %}
                                 <span class="pill active">{% trans "Active" %}</span>
@@ -173,7 +175,7 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="6">{% trans "No shops yet. Create your first one." %}</td>
+                        <td colspan="7">{% trans "No shops yet. Create your first one." %}</td>
                     </tr>
                 {% endfor %}
             </tbody>

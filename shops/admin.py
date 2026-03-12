@@ -70,16 +70,20 @@ class RepairWorkOrderLineInline(admin.TabularInline):
 
 @admin.register(ShopProfile)
 class ShopProfileAdmin(admin.ModelAdmin):
-    list_display = ("shop_name", "database_name", "owner", "is_active", "created_at", "updated_at")
+    list_display = ("shop_name", "database_name", "owner", "enabled_feature_summary", "is_active", "created_at", "updated_at")
     list_filter = ("is_active", "created_at")
     search_fields = ("shop_name", "database_name", "owner__username", "owner__email")
     ordering = ("shop_name",)
     autocomplete_fields = ("owner",)
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = ("created_at", "updated_at", "enabled_feature_summary")
     fieldsets = (
-        (None, {"fields": ("shop_name", "database_name", "owner", "is_active")}),
+        (None, {"fields": ("shop_name", "database_name", "owner", "is_active", "enabled_feature_summary")}),
         ("Timestamps", {"fields": ("created_at", "updated_at")}),
     )
+
+    @admin.display(description="Paid functions")
+    def enabled_feature_summary(self, obj):
+        return obj.enabled_feature_summary
 
 
 @admin.register(ShopUserAccess)
@@ -122,7 +126,7 @@ class ShopMasterDataAdmin(admin.ModelAdmin):
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ("full_name", "shop", "phone", "email", "created_at")
+    list_display = ("full_name", "shop", "phone", "email", "payment_due_condition", "payment_due_days", "created_at")
     list_filter = ("shop", "created_at")
     search_fields = ("full_name", "phone", "email", "address", "shop__shop_name")
     ordering = ("full_name",)
@@ -131,7 +135,7 @@ class CustomerAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
     fieldsets = (
         (None, {"fields": ("shop", "full_name", "phone", "email")}),
-        ("Details", {"fields": ("address", "notes")}),
+        ("Details", {"fields": ("address", "payment_due_condition", "payment_due_days", "notes")}),
         ("Timestamps", {"fields": ("created_at", "updated_at")}),
     )
 

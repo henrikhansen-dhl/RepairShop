@@ -8,6 +8,7 @@
         body { margin: 0; background: #f5fbff; color: #14283f; font-family: "Segoe UI", sans-serif; }
         .wrap { width: min(840px, 95vw); margin: 1.2rem auto; }
         .card { margin-top: .9rem; background: #fff; border: 1px solid #d8e8f6; border-radius: 12px; padding: .9rem; }
+        .notice { margin-top: .9rem; background: #eef6fc; border: 1px solid #c8dcef; border-radius: 12px; padding: .85rem .95rem; color: #22435f; }
         .row { margin-bottom: .7rem; }
         label { display: block; font-weight: 700; margin-bottom: .2rem; }
         input, textarea { width: 100%; border: 1px solid #b9cfe4; border-radius: 8px; padding: .5rem .6rem; font: inherit; }
@@ -26,6 +27,19 @@
         <div>{% trans "Customer:" %} <b>{{ invoice.customer.full_name }}</b></div>
         {% if current_shop_logo_url %}
             <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
+        {% endif %}
+
+        {% if is_file_backend %}
+            <section class="notice">
+                <b>{% trans "Development email mode" %}</b><br>
+                {% trans "Emails are written to local files instead of being delivered." %}<br>
+                <span>{{ email_file_path }}</span>
+            </section>
+        {% elif is_console_backend %}
+            <section class="notice">
+                <b>{% trans "Development email mode" %}</b><br>
+                {% trans "Emails are written to the runserver console instead of being delivered." %}
+            </section>
         {% endif %}
 
         <section class="card">

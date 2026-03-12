@@ -47,15 +47,19 @@
     </main>
 
     {{ customer_cars_json|json_script:"customer-cars-data" }}
+    {{ customer_payment_terms_json|json_script:"customer-payment-terms-data" }}
     <script>
         (function () {
             const customerSelect = document.getElementById("id_customer");
             const carSelect = document.getElementById("id_car");
+            const issueDateInput = document.getElementById("id_issue_date");
+            const dueDateInput = document.getElementById("id_due_date");
             if (!customerSelect || !carSelect) {
                 return;
             }
 
             const cars = JSON.parse(document.getElementById("customer-cars-data").textContent || "[]");
+            const paymentTerms = JSON.parse(document.getElementById("customer-payment-terms-data").textContent || "[]");
             const initialCarValue = carSelect.value;
 
             function carLabel(car) {
@@ -90,8 +94,75 @@
                 }
             }
 
+            function parseDateInput(value) {
+                if (!value) {
+                    return null;
+                }
+
+                const parts = value.split("-").map(Number);
+                if (parts.length !== 3 || parts.some(Number.isNaN)) {
+                    return null;
+                }
+
+                return new Date(parts[0], parts[1] - 1, parts[2]);
+            }
+
+            function formatDateInput(dateValue) {
+                const year = dateValue.getFullYear();
+                const month = String(dateValue.getMonth() + 1).padStart(2, "0");
+                const day = String(dateValue.getDate()).padStart(2, "0");
+                return `${year}-${month}-${day}`;
+            }
+
+            function getSelectedPaymentTerm() {
+                return paymentTerms.find((item) => String(item.id) === String(customerSelect.value));
+            }
+
+            function calculateDueDate() {
+                if (!issueDateInput || !dueDateInput) {
+                    return;
+                }
+
+                const paymentTerm = getSelectedPaymentTerm();
+                if (!paymentTerm || !paymentTerm.payment_due_condition) {
+                    return;
+                }
+
+                const issueDate = parseDateInput(issueDateInput.value);
+                if (!issueDate) {
+                    return;
+                }
+
+                const extraDays = Number(paymentTerm.payment_due_days || 0);
+                const dueDate = new Date(issueDate.getFullYear(), issueDate.getMonth(), issueDate.getDate());
+
+                if (paymentTerm.payment_due_condition === "days") {
+                    dueDate.setDate(dueDate.getDate() + extraDays);
+                } else if (paymentTerm.payment_due_condition === "running_week" || paymentTerm.payment_due_condition === "running_week_days") {
+                    const daysUntilSunday = (7 - dueDate.getDay()) % 7;
+                    dueDate.setDate(dueDate.getDate() + daysUntilSunday);
+                    if (paymentTerm.payment_due_condition === "running_week_days") {
+                        dueDate.setDate(dueDate.getDate() + extraDays);
+                    }
+                } else if (paymentTerm.payment_due_condition === "running_month" || paymentTerm.payment_due_condition === "running_month_days") {
+                    dueDate.setMonth(dueDate.getMonth() + 1, 0);
+                    if (paymentTerm.payment_due_condition === "running_month_days") {
+                        dueDate.setDate(dueDate.getDate() + extraDays);
+                    }
+                } else {
+                    return;
+                }
+
+                dueDateInput.value = formatDateInput(dueDate);
+            }
+
             customerSelect.addEventListener("change", refillCars);
+            customerSelect.addEventListener("change", calculateDueDate);
+            if (issueDateInput) {
+                issueDateInput.addEventListener("change", calculateDueDate);
+            }
             refillCars();
+            calculateDueDate();
         })();
     </script>
 </body>

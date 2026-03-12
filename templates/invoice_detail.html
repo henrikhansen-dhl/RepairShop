@@ -5,41 +5,447 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Invoice {{ invoice.invoice_number }} | {{ shop.shop_name }}</title>
     <style>
-        body { margin: 0; background: #f5fbff; color: #14283f; font-family: "Segoe UI", sans-serif; }
-        .wrap { width: min(1140px, 96vw); margin: 1.2rem auto; }
-        .top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .6rem; }
-        .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: .9rem; }
-        .card { margin-top: .9rem; background: #fff; border: 1px solid #d8e8f6; border-radius: 12px; padding: .9rem; }
-        .btn { display: inline-block; text-decoration: none; border: 0; border-radius: 9px; padding: .48rem .8rem; font-weight: 700; cursor: pointer; }
-        .btn-main { background: #0f7e93; color: #fff; }
-        .btn-soft { background: #e9f4ff; color: #1c4f75; }
-        .row { margin-bottom: .68rem; }
-        label { display: block; font-weight: 700; margin-bottom: .2rem; }
-        input, select, textarea { width: 100%; border: 1px solid #b9cfe4; border-radius: 8px; padding: .48rem .58rem; font: inherit; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border-bottom: 1px solid #e5eef8; text-align: left; padding: .5rem; vertical-align: top; }
-        .totals { background: #f7fbff; border: 1px solid #dbeaf8; border-radius: 10px; padding: .7rem; margin-top: .7rem; }
-        .totals p { margin: .25rem 0; }
-        .errors { color: #8b1d1d; font-size: .88rem; margin-top: .24rem; }
-        .message { background: #e9fce9; border: 1px solid #bde4bd; border-radius: 8px; padding: .55rem .65rem; margin-top: .7rem; }
-        .shop-logo { max-height: 56px; width: auto; display: block; margin-top: .4rem; border: 1px solid #d8e8f6; border-radius: 8px; background: #fff; padding: .2rem; }
-        @media (max-width: 920px) { .grid { grid-template-columns: 1fr; } }
+        :root {
+            --page-bg: linear-gradient(160deg, #edf6ff, #f9fcff 40%, #eef7f3);
+            --paper: #fffdf8;
+            --ink: #172a3f;
+            --muted: #557086;
+            --line: #d7e3ef;
+            --line-strong: #bccddd;
+            --brand: #0f7e93;
+            --brand-dark: #0c6171;
+            --soft: #ebf5ff;
+            --success-bg: #e9fce9;
+            --success-line: #bde4bd;
+            --shadow: 0 20px 48px rgba(16, 34, 56, 0.1);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--page-bg);
+            color: var(--ink);
+            font-family: Georgia, "Times New Roman", serif;
+            min-height: 100vh;
+        }
+
+        .wrap {
+            width: min(1180px, 95vw);
+            margin: .9rem auto 1.5rem;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .65rem;
+            flex-wrap: wrap;
+            margin-bottom: .65rem;
+        }
+
+        .action-group {
+            display: flex;
+            gap: .45rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border: 0;
+            border-radius: 999px;
+            padding: .5rem .88rem;
+            font-weight: 700;
+            font-size: .95rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform .14s ease, background .14s ease;
+        }
+
+        .btn:hover { transform: translateY(-1px); }
+        .btn-main { background: var(--brand); color: #fff; }
+        .btn-main:hover { background: var(--brand-dark); }
+        .btn-soft { background: #fff; color: #22435f; border: 1px solid var(--line); }
+        .btn-danger { background: #fff0f0; color: #8b1d1d; border: 1px solid #f0c4c4; }
+
+        .message {
+            background: var(--success-bg);
+            border: 1px solid var(--success-line);
+            border-radius: 12px;
+            padding: .55rem .75rem;
+            margin-bottom: .65rem;
+            font-weight: 600;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .sheet,
+        .card {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .card {
+            padding: .85rem;
+            margin-bottom: .75rem;
+        }
+
+        .status-actions {
+            display: flex;
+            gap: .45rem;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .status-actions select {
+            min-width: 180px;
+            width: auto;
+            max-width: 100%;
+            background: #fff;
+        }
+
+        .sheet {
+            overflow: hidden;
+        }
+
+        .sheet-head {
+            display: flex;
+            justify-content: space-between;
+            gap: .8rem;
+            flex-wrap: wrap;
+            padding: .95rem 1rem .7rem;
+            background: linear-gradient(135deg, #fff, #f4f8fc);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .sheet-brand {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            min-width: 0;
+        }
+
+        .sheet-brand-copy {
+            min-width: 0;
+        }
+
+        .sheet-title h1 {
+            margin: 0;
+            font-size: clamp(1.45rem, 3vw, 2.15rem);
+            font-weight: 700;
+            letter-spacing: .02em;
+            line-height: 1.1;
+        }
+
+        .sheet-title p {
+            margin: .18rem 0 0;
+            color: var(--muted);
+            font-family: "Segoe UI", sans-serif;
+            font-size: .92rem;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            border-radius: 999px;
+            border: 1px solid var(--line-strong);
+            padding: .28rem .68rem;
+            font-weight: 700;
+            font-family: "Segoe UI", sans-serif;
+            background: #f7fbff;
+            font-size: .92rem;
+        }
+
+        .status-inline-form {
+            display: flex;
+            gap: .45rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 0;
+        }
+
+        .status-tools {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: .55rem;
+            flex-wrap: wrap;
+        }
+
+        .shop-logo {
+            max-height: 48px;
+            width: auto;
+            display: block;
+            margin: 0;
+            border-radius: 10px;
+        }
+
+        .sheet-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: .8rem;
+            padding: .85rem 1rem 1rem;
+        }
+
+        .party-card,
+        .meta-card,
+        .form-card,
+        .line-card {
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: .8rem;
+        }
+
+        .party-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .9rem;
+        }
+
+        .block-label {
+            display: inline-block;
+            margin-bottom: .32rem;
+            color: var(--muted);
+            font-size: .74rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            font-family: "Segoe UI", sans-serif;
+            font-weight: 800;
+        }
+
+        .party-card p,
+        .meta-card p {
+            margin: .18rem 0;
+            line-height: 1.5;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: .65rem .75rem;
+            margin-top: .55rem;
+        }
+
+        .form-grid .span-2 { grid-column: 1 / -1; }
+
+        .notes-toggle-row {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-start;
+            margin-top: -.05rem;
+        }
+
+        .notes-toggle {
+            background: #f4f8fc;
+            color: #22435f;
+            border: 1px solid var(--line);
+            padding: .42rem .78rem;
+        }
+
+        .notes-panel[hidden] {
+            display: none;
+        }
+
+        label {
+            display: block;
+            font-family: "Segoe UI", sans-serif;
+            font-weight: 700;
+            font-size: .92rem;
+            margin-bottom: .2rem;
+            color: #22384d;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            border: 1px solid #bfd0df;
+            border-radius: 10px;
+            padding: .48rem .58rem;
+            font: inherit;
+            background: #fff;
+        }
+
+        textarea { min-height: 68px; resize: vertical; }
+
+        .errors {
+            color: #8b1d1d;
+            font-family: "Segoe UI", sans-serif;
+            font-size: .88rem;
+            margin-top: .28rem;
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .6rem;
+            flex-wrap: wrap;
+            margin-bottom: .5rem;
+        }
+
+        .section-head h2,
+        .section-head h3 {
+            margin: 0;
+            font-size: 1.02rem;
+        }
+
+        .section-head p {
+            margin: .1rem 0 0;
+            color: var(--muted);
+            font-family: "Segoe UI", sans-serif;
+            font-size: .9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            padding: .7rem .55rem;
+            text-align: left;
+            border-bottom: 1px solid var(--line-strong);
+            color: var(--muted);
+            font-size: .82rem;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        tbody td {
+            padding: .78rem .55rem;
+            border-bottom: 1px solid #edf2f7;
+            vertical-align: top;
+        }
+
+        .numeric { text-align: right; white-space: nowrap; }
+
+        .totals {
+            margin-left: auto;
+            margin-top: 1rem;
+            width: min(360px, 100%);
+            border-top: 2px solid var(--line-strong);
+            padding-top: .7rem;
+        }
+
+        .totals p {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin: .35rem 0;
+        }
+
+        .totals .grand {
+            font-size: 1.08rem;
+            font-weight: 700;
+        }
+
+        .modal-shell {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: rgba(11, 24, 39, 0.54);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+        }
+
+        .modal-shell.is-open { display: flex; }
+
+        .modal-window {
+            width: min(560px, 100%);
+            max-height: 92vh;
+            overflow: auto;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 1rem;
+            box-shadow: 0 28px 70px rgba(10, 22, 40, 0.22);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .7rem;
+            margin-bottom: .8rem;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.15rem;
+        }
+
+        .modal-close {
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--ink);
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .empty-row {
+            text-align: center;
+            padding: 1.3rem .6rem;
+            color: var(--muted);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .locked-note {
+            margin: 0;
+            color: #8b1d1d;
+            font-family: "Segoe UI", sans-serif;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1080px) {
+            .form-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 920px) {
+            .form-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 720px) {
+            .sheet-brand {
+                align-items: flex-start;
+            }
+
+            .sheet-grid,
+            .party-grid,
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid .span-2 {
+                grid-column: auto;
+            }
+        }
     </style>
 </head>
 <body>
     {% load i18n %}
     {% trans "Delete this line?" as confirm_delete_line %}
     <main class="wrap">
-        <header class="top">
+        <header class="topbar">
             <div>
-                <h1 style="margin:.1rem 0;">{% trans "Invoice" %} {{ invoice.invoice_number }}</h1>
-                <div>{% trans "Customer:" %} <b>{{ invoice.customer.full_name }}</b></div>
-                <div>{% trans "Status:" %} <b>{{ invoice.get_status_display }}</b></div>
-                {% if current_shop_logo_url %}
-                    <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
-                {% endif %}
+                <div class="block-label">{% trans "Invoice Workspace" %}</div>
+                <div style="font-family:'Segoe UI', sans-serif; color:var(--muted); font-size:.92rem;">{% trans "Edit the invoice header at the top and manage detail lines below." %}</div>
             </div>
-            <div>
+            <div class="action-group">
                 {% include "includes/back_to_dashboard_button.html" %}
                 <a class="btn btn-soft" href="{% url 'invoice_list' %}">{% trans "Back to Invoices" %}</a>
                 <a class="btn btn-soft" href="{% url 'invoice_price_table' %}">{% trans "Price Table" %}</a>
@@ -55,73 +461,108 @@
             {% endfor %}
         {% endif %}
 
-        {% if available_status_targets %}
-            <section class="card">
-                <h2 style="margin:.1rem 0 .5rem;">{% trans "Status Actions" %}</h2>
-                <div style="display:flex; gap:.5rem; flex-wrap:wrap;">
-                    {% for status in available_status_targets %}
-                        <form method="post" style="margin:0;">
-                            {% csrf_token %}
-                            <input type="hidden" name="action" value="change_status">
-                            <input type="hidden" name="target_status" value="{{ status }}">
-                            <button class="btn btn-soft" type="submit">
-                                {% trans "Set" %} {{ status|title }}
-                            </button>
-                        </form>
-                    {% endfor %}
+        <section class="sheet">
+            <div class="sheet-head">
+                <div class="sheet-brand">
+                    {% if master_data.company_logo %}
+                        <img class="shop-logo" src="{{ master_data.company_logo.url }}" alt="{{ shop.shop_name }} logo">
+                    {% elif current_shop_logo_url %}
+                        <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
+                    {% endif %}
+                    <div class="sheet-title sheet-brand-copy">
+                        <div class="block-label">{% trans "Invoice" %}</div>
+                        <h1>{{ invoice.invoice_number }}</h1>
+                        <p>{% trans "Edit the header here, then continue with the lines below." %}</p>
+                    </div>
                 </div>
-            </section>
-        {% endif %}
-
-        <section class="grid">
-            <article class="card">
-                <h2 style="margin:.1rem 0 .5rem;">{% trans "Invoice Header" %}</h2>
-                {% if is_locked %}
-                    <p style="margin-top:0; color:#8b1d1d;"><b>{% trans "Locked:" %}</b> {% trans "This invoice is not draft and cannot be edited." %}</p>
-                {% endif %}
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="update_invoice">
-                    {% for field in header_form %}
-                        <div class="row">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
+                <div class="status-tools">
+                    <div class="status-pill">{% trans "Status" %}: {{ invoice.get_status_display }}</div>
+                    {% if available_status_targets %}
+                        <div class="status-actions">
+                            <form method="post" class="status-inline-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="change_status">
+                                <label for="target-status-select">{% trans "Change status" %}</label>
+                                <select id="target-status-select" name="target_status">
+                                    {% for status in available_status_targets %}
+                                        <option value="{{ status }}">{{ status|title }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="btn btn-soft" type="submit">{% trans "Apply" %}</button>
+                            </form>
                         </div>
-                    {% endfor %}
-                    <button class="btn btn-main" type="submit" {% if is_locked %}disabled{% endif %}>{% trans "Update Invoice" %}</button>
-                </form>
-            </article>
+                    {% endif %}
+                </div>
+            </div>
 
-            <article class="card">
-                <h2 style="margin:.1rem 0 .5rem;">{% trans "Add Invoice Line" %}</h2>
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="add_line">
-                    {% for field in line_form %}
-                        <div class="row">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
+            <div class="sheet-grid">
+                <section class="form-card">
+                    <div class="section-head">
+                        <div>
+                            <h2>{% trans "Invoice Header" %}</h2>
+                            <p>{% trans "Customer, dates, status, rebate, and notes." %}</p>
                         </div>
-                    {% endfor %}
-                    <button class="btn btn-main" type="submit" {% if is_locked %}disabled{% endif %}>{% trans "Add Line" %}</button>
-                </form>
-            </article>
+                    </div>
+                    {% if is_locked %}
+                        <p class="locked-note"><b>{% trans "Locked:" %}</b> {% trans "This invoice is not draft and cannot be edited." %}</p>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_invoice">
+                        <div class="form-grid">
+                            {% for field in header_form %}
+                                    {% if field.name == 'notes' %}
+                                        <div class="notes-toggle-row">
+                                            <button
+                                                class="btn notes-toggle"
+                                                type="button"
+                                                id="notes-toggle"
+                                                aria-expanded="{% if field.value or field.errors %}true{% else %}false{% endif %}"
+                                                aria-controls="notes-panel"
+                                            >
+                                                {% if field.value or field.errors %}{% trans "Hide notes" %}{% else %}{% trans "Show notes" %}{% endif %}
+                                            </button>
+                                        </div>
+                                        <div class="span-2 notes-panel" id="notes-panel" {% if not field.value and not field.errors %}hidden{% endif %}>
+                                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                            {{ field }}
+                                            {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
+                                        </div>
+                                    {% else %}
+                                        <div>
+                                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                            {{ field }}
+                                            {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
+                                        </div>
+                                    {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div style="margin-top:.9rem; display:flex; justify-content:flex-end;">
+                            <button class="btn btn-main" type="submit" {% if is_locked %}disabled{% endif %}>{% trans "Update Invoice Header" %}</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
         </section>
 
-        <section class="card">
-            <h2 style="margin:.1rem 0 .5rem;">{% trans "Invoice Lines" %}</h2>
+        <section class="card line-card">
+            <div class="section-head">
+                <div>
+                    <h2>{% trans "Invoice Lines" %}</h2>
+                    <p>{% trans "Detail lines follow the header, similar to the PDF structure." %}</p>
+                </div>
+                <button class="btn btn-main" type="button" id="open-line-modal-secondary" {% if is_locked %}disabled{% endif %}>{% trans "Add Line" %}</button>
+            </div>
             <table>
                 <thead>
                     <tr>
                         <th>{% trans "Description" %}</th>
-                        <th>{% trans "Qty" %}</th>
-                        <th>{% trans "Unit Price" %}</th>
-                        <th>{% trans "VAT %" %}</th>
-                        <th>{% trans "Line Rebate" %}</th>
-                        <th>{% trans "Line Total" %}</th>
-                        <th>VAT</th>
+                        <th class="numeric">{% trans "Qty" %}</th>
+                        <th class="numeric">{% trans "Unit Price" %}</th>
+                        <th class="numeric">{% trans "VAT %" %}</th>
+                        <th class="numeric">{% trans "Line Rebate" %}</th>
+                        <th class="numeric">{% trans "Line Total" %}</th>
+                        <th class="numeric">VAT</th>
                         <th>{% trans "Action" %}</th>
                     </tr>
                 </thead>
@@ -129,10 +570,10 @@
                     {% for line in lines %}
                         <tr>
                             <td>{{ line.description }}</td>
-                            <td>{{ line.quantity }}</td>
-                            <td>{{ line.unit_price|floatformat:2 }}</td>
-                            <td>{{ line.vat_percent|floatformat:2 }}</td>
-                            <td>
+                            <td class="numeric">{{ line.quantity }}</td>
+                            <td class="numeric">{{ line.unit_price|floatformat:2 }}</td>
+                            <td class="numeric">{{ line.vat_percent|floatformat:2 }}</td>
+                            <td class="numeric">
                                 {% if line.rebate_type == 'percent' %}
                                     {{ line.rebate_value }}%
                                 {% elif line.rebate_type == 'amount' %}
@@ -141,19 +582,19 @@
                                     -
                                 {% endif %}
                             </td>
-                            <td>{{ line.line_total|floatformat:2 }}</td>
-                            <td>{{ line.vat_amount|floatformat:2 }}</td>
+                            <td class="numeric">{{ line.line_total|floatformat:2 }}</td>
+                            <td class="numeric">{{ line.vat_amount|floatformat:2 }}</td>
                             <td>
                                 <form method="post" style="margin:0;">
                                     {% csrf_token %}
                                     <input type="hidden" name="action" value="delete_line">
                                     <input type="hidden" name="line_id" value="{{ line.id }}">
-                                    <button class="btn btn-soft" type="submit" {% if is_locked %}disabled{% endif %} onclick="return confirm('{{ confirm_delete_line|escapejs }}');">{% trans "Delete" %}</button>
+                                    <button class="btn btn-danger" type="submit" {% if is_locked %}disabled{% endif %} onclick="return confirm('{{ confirm_delete_line|escapejs }}');">{% trans "Delete" %}</button>
                                 </form>
                             </td>
                         </tr>
                     {% empty %}
-                        <tr><td colspan="8">{% trans "No lines added yet." %}</td></tr>
+                        <tr><td colspan="8" class="empty-row">{% trans "No lines added yet." %}</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -163,21 +604,55 @@
                 <p><b>{% trans "Total Rebate:" %}</b> {{ invoice.total_rebate_amount|floatformat:2 }}</p>
                 <p><b>{% trans "Total ex VAT:" %}</b> {{ invoice.grand_total|floatformat:2 }}</p>
                 <p><b>{% trans "VAT Total:" %}</b> {{ invoice.vat_total|floatformat:2 }}</p>
-                <p><b>{% trans "Grand Total incl VAT:" %}</b> {{ invoice.grand_total_incl_vat|floatformat:2 }}</p>
+                <p class="grand"><b>{% trans "Grand Total incl VAT:" %}</b> <b>{{ invoice.grand_total_incl_vat|floatformat:2 }}</b></p>
             </div>
         </section>
+
+        <div id="line-modal" class="modal-shell{% if line_form.errors %} is-open{% endif %}" aria-hidden="{% if line_form.errors %}false{% else %}true{% endif %}">
+            <div class="modal-window" role="dialog" aria-modal="true" aria-labelledby="line-modal-title">
+                <div class="modal-header">
+                    <div>
+                        <h3 id="line-modal-title">{% trans "Add Invoice Line" %}</h3>
+                        <p style="margin:.2rem 0 0; color:var(--muted); font-family:'Segoe UI', sans-serif;">{% trans "Use this smaller line-entry window and return to the invoice automatically after adding the line." %}</p>
+                    </div>
+                    <button class="modal-close" type="button" id="close-line-modal" aria-label="{% trans 'Close' %}">×</button>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="add_line">
+                    <div class="form-grid">
+                        {% for field in line_form %}
+                            <div class="{% if field.name == 'description' %}span-2{% endif %}">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; gap:.55rem; margin-top:.95rem;">
+                        <button class="btn btn-soft" type="button" id="cancel-line-modal">{% trans "Cancel" %}</button>
+                        <button class="btn btn-main" type="submit" {% if is_locked %}disabled{% endif %}>{% trans "Add Line" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </main>
 
     {{ customer_cars_json|json_script:"customer-cars-data" }}
+    {{ customer_payment_terms_json|json_script:"customer-payment-terms-data" }}
     <script>
         (function () {
             const customerSelect = document.getElementById("id_customer");
             const carSelect = document.getElementById("id_car");
+            const issueDateInput = document.getElementById("id_issue_date");
+            const dueDateInput = document.getElementById("id_due_date");
             if (!customerSelect || !carSelect) {
                 return;
             }
 
             const cars = JSON.parse(document.getElementById("customer-cars-data").textContent || "[]");
+            const paymentTerms = JSON.parse(document.getElementById("customer-payment-terms-data").textContent || "[]");
             const initialCarValue = carSelect.value;
 
             function carLabel(car) {
@@ -212,8 +687,151 @@
                 }
             }
 
+            function parseDateInput(value) {
+                if (!value) {
+                    return null;
+                }
+
+                const parts = value.split("-").map(Number);
+                if (parts.length !== 3 || parts.some(Number.isNaN)) {
+                    return null;
+                }
+
+                return new Date(parts[0], parts[1] - 1, parts[2]);
+            }
+
+            function formatDateInput(dateValue) {
+                const year = dateValue.getFullYear();
+                const month = String(dateValue.getMonth() + 1).padStart(2, "0");
+                const day = String(dateValue.getDate()).padStart(2, "0");
+                return `${year}-${month}-${day}`;
+            }
+
+            function getSelectedPaymentTerm() {
+                return paymentTerms.find((item) => String(item.id) === String(customerSelect.value));
+            }
+
+            function calculateDueDate() {
+                if (!issueDateInput || !dueDateInput) {
+                    return;
+                }
+
+                const paymentTerm = getSelectedPaymentTerm();
+                if (!paymentTerm || !paymentTerm.payment_due_condition) {
+                    return;
+                }
+
+                const issueDate = parseDateInput(issueDateInput.value);
+                if (!issueDate) {
+                    return;
+                }
+
+                const extraDays = Number(paymentTerm.payment_due_days || 0);
+                const dueDate = new Date(issueDate.getFullYear(), issueDate.getMonth(), issueDate.getDate());
+
+                if (paymentTerm.payment_due_condition === "days") {
+                    dueDate.setDate(dueDate.getDate() + extraDays);
+                } else if (paymentTerm.payment_due_condition === "running_week" || paymentTerm.payment_due_condition === "running_week_days") {
+                    const daysUntilSunday = (7 - dueDate.getDay()) % 7;
+                    dueDate.setDate(dueDate.getDate() + daysUntilSunday);
+                    if (paymentTerm.payment_due_condition === "running_week_days") {
+                        dueDate.setDate(dueDate.getDate() + extraDays);
+                    }
+                } else if (paymentTerm.payment_due_condition === "running_month" || paymentTerm.payment_due_condition === "running_month_days") {
+                    dueDate.setMonth(dueDate.getMonth() + 1, 0);
+                    if (paymentTerm.payment_due_condition === "running_month_days") {
+                        dueDate.setDate(dueDate.getDate() + extraDays);
+                    }
+                } else {
+                    return;
+                }
+
+                dueDateInput.value = formatDateInput(dueDate);
+            }
+
             customerSelect.addEventListener("change", refillCars);
+            {% if not is_locked %}
+                customerSelect.addEventListener("change", calculateDueDate);
+                if (issueDateInput) {
+                    issueDateInput.addEventListener("change", calculateDueDate);
+                }
+            {% endif %}
             refillCars();
+            {% if not is_locked %}
+                calculateDueDate();
+            {% endif %}
+        })();
+
+        (function () {
+            const toggle = document.getElementById("notes-toggle");
+            const panel = document.getElementById("notes-panel");
+
+            if (!toggle || !panel) {
+                return;
+            }
+
+            function syncLabel() {
+                const expanded = !panel.hasAttribute("hidden");
+                toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+                toggle.textContent = expanded ? "{% trans 'Hide notes' %}" : "{% trans 'Show notes' %}";
+            }
+
+            toggle.addEventListener("click", function () {
+                if (panel.hasAttribute("hidden")) {
+                    panel.removeAttribute("hidden");
+                } else {
+                    panel.setAttribute("hidden", "hidden");
+                }
+                syncLabel();
+            });
+
+            syncLabel();
+        })();
+
+        (function () {
+            const modal = document.getElementById("line-modal");
+            const openButtons = [
+                document.getElementById("open-line-modal"),
+                document.getElementById("open-line-modal-secondary")
+            ].filter(Boolean);
+            const closeButtons = [
+                document.getElementById("close-line-modal"),
+                document.getElementById("cancel-line-modal")
+            ].filter(Boolean);
+
+            if (!modal) {
+                return;
+            }
+
+            function openModal() {
+                modal.classList.add("is-open");
+                modal.setAttribute("aria-hidden", "false");
+            }
+
+            function closeModal() {
+                modal.classList.remove("is-open");
+                modal.setAttribute("aria-hidden", "true");
+            }
+
+            openButtons.forEach((button) => {
+                button.addEventListener("click", openModal);
+            });
+
+            closeButtons.forEach((button) => {
+                button.addEventListener("click", closeModal);
+            });
+
+            modal.addEventListener("click", function (event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape" && modal.classList.contains("is-open")) {
+                    closeModal();
+                }
+            });
         })();
     </script>
 </body>

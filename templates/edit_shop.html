@@ -73,13 +73,33 @@
             font-weight: 700;
         }
 
-        input {
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
             width: 100%;
             border: 1px solid #b8cee2;
             border-radius: 8px;
             padding: .55rem .65rem;
             font-size: .96rem;
             background: #fff;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: .45rem;
+            margin-top: .35rem;
+        }
+
+        .feature-option {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            background: #fff;
+            border: 1px solid #cfe1ef;
+            border-radius: 9px;
+            padding: .55rem .7rem;
+            font-weight: 600;
         }
 
         .errorlist {
@@ -196,6 +216,19 @@
                 <label for="id_owner_is_active">{% trans "Owner user is active" %}</label>
                 {{ form.owner_is_active }}
                 {{ form.owner_is_active.errors }}
+            </div>
+
+            <div class="field field-wide">
+                <label>{% trans "Paid functions" %}</label>
+                <div class="feature-grid">
+                    {% for checkbox in form.enabled_features %}
+                        <label class="feature-option">{{ checkbox.tag }} <span>{{ checkbox.choice_label }}</span></label>
+                    {% endfor %}
+                </div>
+                {{ form.enabled_features.errors }}
+                {% if form.enabled_features.help_text %}
+                    <span class="helptext">{{ form.enabled_features.help_text }}</span>
+                {% endif %}
             </div>
 
             <div class="field field-wide">

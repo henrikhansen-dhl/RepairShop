@@ -180,7 +180,7 @@
                         {% blocktrans with shop_name=shop_context.shop.shop_name %}Active shop: <b>{{ shop_name }}</b>{% endblocktrans %}
                     {% endif %}
                 </p>
-                <p>{% trans "Use these shortcuts to move between customer work, invoicing, and staff operations without leaving the active shop context." %}</p>
+                <p>{% trans "Only paid shop functions that your current user is allowed to use are shown here." %}</p>
                 {% if current_shop_logo_url %}
                     <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop_context.shop.shop_name }} logo">
                 {% endif %}
@@ -200,86 +200,84 @@
         <section class="card">
             <div class="section-head">
                 <h2>{% trans "Operations" %}</h2>
-                <p>{% trans "Only the functions allowed for your current shop role are shown as active." %}</p>
+                <p>{% trans "Only paid functions with matching user rights are visible in the dashboard." %}</p>
             </div>
             <div class="grid">
-                {% if request.user.is_staff or shop_context and shop_context.rights.can_create_repair_order %}
-                    <article class="tile">
-                        <a href="{% url 'create_repair_order' %}">{% trans "Create Repair Order" %}</a>
-                        <p>{% trans "Create and assign repair work orders." %}</p>
-                        <span class="chip">{% trans "Allowed" %}</span>
-                    </article>
-                {% else %}
+                {% if shop_context and shop_context.features.repair_orders %}
+                    {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
+                        <article class="tile">
+                            <a href="{% url 'create_repair_order' %}">{% trans "Create Repair Order" %}</a>
+                            <p>{% trans "Create and assign repair work orders." %}</p>
+                            <span class="chip">{% trans "Allowed" %}</span>
+                        </article>
+                    {% endif %}
+                {% endif %}
+
+                {% if shop_context and shop_context.features.inspections %}
+                    {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
+                        <article class="tile">
+                            <a href="{% url 'schedule_inspection' %}">{% trans "Schedule Vehicle Inspection" %}</a>
+                            <p>{% trans "Plan incoming inspections and workload." %}</p>
+                            <span class="chip">{% trans "Allowed" %}</span>
+                        </article>
+                    {% endif %}
+                {% endif %}
+
+                {% if shop_context and shop_context.features.inventory %}
+                    {% if request.user.is_staff or shop_context.rights.can_manage_inventory %}
+                        <article class="tile">
+                            <a href="{% url 'manage_inventory' %}">{% trans "Manage Parts Inventory" %}</a>
+                            <p>{% trans "Track stock, receiving, and part usage." %}</p>
+                            <span class="chip">{% trans "Allowed" %}</span>
+                        </article>
+                    {% endif %}
+                {% endif %}
+
+                {% if shop_context and shop_context.features.reports %}
+                    {% if request.user.is_staff or shop_context.rights.can_view_reports %}
+                        <article class="tile">
+                            <a href="{% url 'view_reports' %}">{% trans "View Reports" %}</a>
+                            <p>{% trans "Open business and performance reports." %}</p>
+                            <span class="chip">{% trans "Allowed" %}</span>
+                        </article>
+                    {% endif %}
+                {% endif %}
+
+                {% if shop_context and shop_context.features.invoices %}
+                    {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
+                        <article class="tile">
+                            <a href="{% url 'invoice_list' %}">{% trans "Invoices" %}</a>
+                            <p>{% trans "Create invoices from price table items or manual lines." %}</p>
+                            <span class="chip">{% trans "Allowed" %}</span>
+                        </article>
+                    {% endif %}
+                {% endif %}
+
+                {% if shop_context and shop_context.features.customers %}
+                    {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
+                        <article class="tile">
+                            <a href="{% url 'customer_list' %}">{% trans "Customers" %}</a>
+                            <p>{% trans "Manage customer profiles and their vehicles." %}</p>
+                            <span class="chip">{% trans "Allowed" %}</span>
+                        </article>
+                    {% endif %}
+                {% endif %}
+
+                {% if shop_context and shop_context.features.user_management %}
+                    {% if request.user.is_staff or shop_context.rights.can_manage_users %}
+                        <article class="tile">
+                            <a href="{% url 'manage_shop_users' shop_context.shop.pk %}">{% trans "Manage Shop Users" %}</a>
+                            <p>{% trans "Add staff and configure role-based rights." %}</p>
+                            <span class="chip">{% trans "Allowed" %}</span>
+                        </article>
+                    {% endif %}
+                {% endif %}
+
+                {% if not shop_context %}
                     <article class="tile locked">
-                        <b>{% trans "Create Repair Order" %}</b>
-                        <p>{% trans "Your account does not include this right." %}</p>
-                        <span class="chip chip-lock">{% trans "Locked" %}</span>
-                    </article>
-                {% endif %}
-
-                {% if request.user.is_staff or shop_context and shop_context.rights.can_create_repair_order %}
-                    <article class="tile">
-                        <a href="{% url 'schedule_inspection' %}">{% trans "Schedule Vehicle Inspection" %}</a>
-                        <p>{% trans "Plan incoming inspections and workload." %}</p>
-                        <span class="chip">{% trans "Allowed" %}</span>
-                    </article>
-                {% else %}
-                    <article class="tile locked">
-                        <b>{% trans "Schedule Vehicle Inspection" %}</b>
-                        <p>{% trans "Your account does not include this right." %}</p>
-                        <span class="chip chip-lock">{% trans "Locked" %}</span>
-                    </article>
-                {% endif %}
-
-                {% if request.user.is_staff or shop_context and shop_context.rights.can_manage_inventory %}
-                    <article class="tile">
-                        <a href="{% url 'manage_inventory' %}">{% trans "Manage Parts Inventory" %}</a>
-                        <p>{% trans "Track stock, receiving, and part usage." %}</p>
-                        <span class="chip">{% trans "Allowed" %}</span>
-                    </article>
-                {% else %}
-                    <article class="tile locked">
-                        <b>{% trans "Manage Parts Inventory" %}</b>
-                        <p>{% trans "Your account does not include this right." %}</p>
-                        <span class="chip chip-lock">{% trans "Locked" %}</span>
-                    </article>
-                {% endif %}
-
-                {% if request.user.is_staff or shop_context and shop_context.rights.can_view_reports %}
-                    <article class="tile">
-                        <a href="{% url 'view_reports' %}">{% trans "View Reports" %}</a>
-                        <p>{% trans "Open business and performance reports." %}</p>
-                        <span class="chip">{% trans "Allowed" %}</span>
-                    </article>
-                {% else %}
-                    <article class="tile locked">
-                        <b>{% trans "View Reports" %}</b>
-                        <p>{% trans "Your account does not include this right." %}</p>
-                        <span class="chip chip-lock">{% trans "Locked" %}</span>
-                    </article>
-                {% endif %}
-
-                {% if shop_context and shop_context.rights.can_create_repair_order %}
-                    <article class="tile">
-                        <a href="{% url 'invoice_list' %}">{% trans "Invoices" %}</a>
-                        <p>{% trans "Create invoices from price table items or manual lines." %}</p>
-                        <span class="chip">{% trans "Allowed" %}</span>
-                    </article>
-                {% endif %}
-
-                {% if shop_context and shop_context.rights.can_create_repair_order %}
-                    <article class="tile">
-                        <a href="{% url 'customer_list' %}">{% trans "Customers" %}</a>
-                        <p>{% trans "Manage customer profiles and their vehicles." %}</p>
-                        <span class="chip">{% trans "Allowed" %}</span>
-                    </article>
-                {% endif %}
-
-                {% if shop_context and request.user.is_staff or shop_context and shop_context.rights.can_manage_users %}
-                    <article class="tile">
-                        <a href="{% url 'manage_shop_users' shop_context.shop.pk %}">{% trans "Manage Shop Users" %}</a>
-                        <p>{% trans "Add staff and configure role-based rights." %}</p>
-                        <span class="chip">{% trans "Allowed" %}</span>
+                        <b>{% trans "No active shop" %}</b>
+                        <p>{% trans "Your account does not currently have an active shop context." %}</p>
+                        <span class="chip chip-lock">{% trans "Unavailable" %}</span>
                     </article>
                 {% endif %}
             </div>

@@ -76,6 +76,8 @@
                 <div class="tile"><b>{% trans "Phone" %}</b><div>{{ customer.phone|default:"-" }}</div></div>
                 <div class="tile"><b>{% trans "Email" %}</b><div>{{ customer.email|default:"-" }}</div></div>
                 <div class="tile"><b>{% trans "Address" %}</b><div>{{ customer.address|default:"-" }}</div></div>
+                <div class="tile"><b>{% trans "Payment due condition" %}</b><div>{{ customer.get_payment_due_condition_display|default:"-" }}</div></div>
+                <div class="tile"><b>{% trans "Payment due days" %}</b><div>{% if customer.payment_due_condition %}{{ customer.payment_due_days }}{% else %}-{% endif %}</div></div>
             </div>
             <p><b>{% trans "Notes:" %}</b> {{ customer.notes|default:"-" }}</p>
         </section>

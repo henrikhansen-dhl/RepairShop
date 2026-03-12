@@ -1,6 +1,22 @@
+import calendar
+from datetime import timedelta
+
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
+from django.utils.translation import gettext_lazy as _
+
+
+def default_shop_features():
+    return [
+        "repair_orders",
+        "inspections",
+        "inventory",
+        "reports",
+        "invoices",
+        "customers",
+        "user_management",
+    ]
 
 
 class ShopProfile(models.Model):
@@ -11,6 +27,23 @@ class ShopProfile(models.Model):
     (for example: "shop1_db", "shop2_db").
     """
 
+    FEATURE_REPAIR_ORDERS = "repair_orders"
+    FEATURE_INSPECTIONS = "inspections"
+    FEATURE_INVENTORY = "inventory"
+    FEATURE_REPORTS = "reports"
+    FEATURE_INVOICES = "invoices"
+    FEATURE_CUSTOMERS = "customers"
+    FEATURE_USER_MANAGEMENT = "user_management"
+    FEATURE_CHOICES = [
+        (FEATURE_REPAIR_ORDERS, _("Repair Orders")),
+        (FEATURE_INSPECTIONS, _("Vehicle Inspections")),
+        (FEATURE_INVENTORY, _("Inventory Management")),
+        (FEATURE_REPORTS, _("Reports")),
+        (FEATURE_INVOICES, _("Invoices")),
+        (FEATURE_CUSTOMERS, _("Customers & Vehicles")),
+        (FEATURE_USER_MANAGEMENT, _("Shop User Management")),
+    ]
+
     owner = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -19,6 +52,7 @@ class ShopProfile(models.Model):
     shop_name = models.CharField(max_length=120, unique=True)
     database_name = models.CharField(max_length=64, unique=True)
     is_active = models.BooleanField(default=True)
+    enabled_features = models.JSONField(default=default_shop_features, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -27,6 +61,22 @@ class ShopProfile(models.Model):
 
     def __str__(self) -> str:
         return f"{self.shop_name} ({self.database_name})"
+
+    def get_enabled_features(self) -> list[str]:
+        valid_codes = {code for code, _label in self.FEATURE_CHOICES}
+        return [code for code in (self.enabled_features or []) if code in valid_codes]
+
+    def has_feature(self, feature_code: str) -> bool:
+        return feature_code in set(self.get_enabled_features())
+
+    def get_enabled_feature_labels(self) -> list[str]:
+        labels_by_code = dict(self.FEATURE_CHOICES)
+        return [str(labels_by_code[code]) for code in self.get_enabled_features() if code in labels_by_code]
+
+    @property
+    def enabled_feature_summary(self) -> str:
+        labels = self.get_enabled_feature_labels()
+        return ", ".join(labels) if labels else "No paid functions"
 
 
 class ShopUserAccess(models.Model):
@@ -267,6 +317,21 @@ class RepairWorkOrderLine(models.Model):
         return self.line_total * (self.vat_percent / 100)
 
 class Customer(models.Model):
+    PAYMENT_DUE_NONE = ""
+    PAYMENT_DUE_DAYS = "days"
+    PAYMENT_DUE_RUNNING_WEEK = "running_week"
+    PAYMENT_DUE_RUNNING_MONTH = "running_month"
+    PAYMENT_DUE_RUNNING_WEEK_DAYS = "running_week_days"
+    PAYMENT_DUE_RUNNING_MONTH_DAYS = "running_month_days"
+    PAYMENT_DUE_CHOICES = [
+        (PAYMENT_DUE_NONE, _("No automatic due date")),
+        (PAYMENT_DUE_DAYS, _("+day")),
+        (PAYMENT_DUE_RUNNING_WEEK, _("running week")),
+        (PAYMENT_DUE_RUNNING_MONTH, _("running month")),
+        (PAYMENT_DUE_RUNNING_WEEK_DAYS, _("running week + days")),
+        (PAYMENT_DUE_RUNNING_MONTH_DAYS, _("running month + days")),
+    ]
+
     shop = models.ForeignKey(
         ShopProfile,
         on_delete=models.CASCADE,
@@ -276,6 +341,8 @@ class Customer(models.Model):
     phone = models.CharField(max_length=32, blank=True)
     email = models.EmailField(blank=True)
     address = models.CharField(max_length=255, blank=True)
+    payment_due_condition = models.CharField(max_length=32, choices=PAYMENT_DUE_CHOICES, blank=True, default="")
+    payment_due_days = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -287,6 +354,30 @@ class Customer(models.Model):
 
     def __str__(self) -> str:
         return f"{self.full_name} ({self.shop.shop_name})"
+
+    def calculate_invoice_due_date(self, issue_date):
+        if not issue_date or not self.payment_due_condition:
+            return None
+
+        extra_days = self.payment_due_days or 0
+
+        if self.payment_due_condition == self.PAYMENT_DUE_DAYS:
+            return issue_date + timedelta(days=extra_days)
+
+        if self.payment_due_condition in {self.PAYMENT_DUE_RUNNING_WEEK, self.PAYMENT_DUE_RUNNING_WEEK_DAYS}:
+            week_end = issue_date + timedelta(days=(6 - issue_date.weekday()))
+            if self.payment_due_condition == self.PAYMENT_DUE_RUNNING_WEEK_DAYS:
+                week_end += timedelta(days=extra_days)
+            return week_end
+
+        if self.payment_due_condition in {self.PAYMENT_DUE_RUNNING_MONTH, self.PAYMENT_DUE_RUNNING_MONTH_DAYS}:
+            month_end_day = calendar.monthrange(issue_date.year, issue_date.month)[1]
+            month_end = issue_date.replace(day=month_end_day)
+            if self.payment_due_condition == self.PAYMENT_DUE_RUNNING_MONTH_DAYS:
+                month_end += timedelta(days=extra_days)
+            return month_end
+
+        return None
 
 
 class CustomerCar(models.Model):
@@ -446,6 +537,10 @@ class Invoice(models.Model):
     def save(self, *args, **kwargs):
         if not self.invoice_number and self.shop_id:
             self.invoice_number = get_next_invoice_number(self.shop)
+        if self.customer_id and self.issue_date:
+            calculated_due_date = self.customer.calculate_invoice_due_date(self.issue_date)
+            if calculated_due_date is not None:
+                self.due_date = calculated_due_date
         super().save(*args, **kwargs)
 
     @property
