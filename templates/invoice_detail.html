@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Invoice {{ invoice.invoice_number }} | {{ shop.shop_name }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/da.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js"></script>
     <style>
         :root {
             --page-bg: linear-gradient(160deg, #edf6ff, #f9fcff 40%, #eef7f3);
@@ -585,12 +589,17 @@
                             <td class="numeric">{{ line.line_total|floatformat:2 }}</td>
                             <td class="numeric">{{ line.vat_amount|floatformat:2 }}</td>
                             <td>
-                                <form method="post" style="margin:0;">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="action" value="delete_line">
-                                    <input type="hidden" name="line_id" value="{{ line.id }}">
-                                    <button class="btn btn-danger" type="submit" {% if is_locked %}disabled{% endif %} onclick="return confirm('{{ confirm_delete_line|escapejs }}');">{% trans "Delete" %}</button>
-                                </form>
+                                <div style="display:flex; gap:.35rem; flex-wrap:wrap;">
+                                    {% if not is_locked %}
+                                        <a class="btn btn-soft" href="{% url 'invoice_detail' invoice.id %}?edit_line={{ line.id }}#line-modal">{% trans "Edit" %}</a>
+                                    {% endif %}
+                                    <form method="post" style="margin:0;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="delete_line">
+                                        <input type="hidden" name="line_id" value="{{ line.id }}">
+                                        <button class="btn btn-danger" type="submit" {% if is_locked %}disabled{% endif %} onclick="return confirm('{{ confirm_delete_line|escapejs }}');">{% trans "Delete" %}</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     {% empty %}
@@ -601,6 +610,12 @@
 
             <div class="totals">
                 <p><b>{% trans "Subtotal:" %}</b> {{ invoice.subtotal|floatformat:2 }}</p>
+                {% if invoice.line_rebate_amount %}
+                    <p><b>{% trans "Line Rebate:" %}</b> {{ invoice.line_rebate_amount|floatformat:2 }}</p>
+                {% endif %}
+                {% if invoice.invoice_rebate_amount %}
+                    <p><b>{% trans "Invoice Rebate:" %}</b> {{ invoice.invoice_rebate_amount|floatformat:2 }}</p>
+                {% endif %}
                 <p><b>{% trans "Total Rebate:" %}</b> {{ invoice.total_rebate_amount|floatformat:2 }}</p>
                 <p><b>{% trans "Total ex VAT:" %}</b> {{ invoice.grand_total|floatformat:2 }}</p>
                 <p><b>{% trans "VAT Total:" %}</b> {{ invoice.vat_total|floatformat:2 }}</p>
@@ -608,19 +623,28 @@
             </div>
         </section>
 
-        <div id="line-modal" class="modal-shell{% if line_form.errors %} is-open{% endif %}" aria-hidden="{% if line_form.errors %}false{% else %}true{% endif %}">
+        <div id="line-modal" class="modal-shell{% if line_form.errors or active_edit_line_id %} is-open{% endif %}" aria-hidden="{% if line_form.errors or active_edit_line_id %}false{% else %}true{% endif %}">
             <div class="modal-window" role="dialog" aria-modal="true" aria-labelledby="line-modal-title">
                 <div class="modal-header">
                     <div>
-                        <h3 id="line-modal-title">{% trans "Add Invoice Line" %}</h3>
-                        <p style="margin:.2rem 0 0; color:var(--muted); font-family:'Segoe UI', sans-serif;">{% trans "Use this smaller line-entry window and return to the invoice automatically after adding the line." %}</p>
+                        <h3 id="line-modal-title">{% if active_edit_line_id %}{% trans "Edit Invoice Line" %}{% else %}{% trans "Add Invoice Line" %}{% endif %}</h3>
+                        <p style="margin:.2rem 0 0; color:var(--muted); font-family:'Segoe UI', sans-serif;">
+                            {% if active_edit_line_id %}
+                                {% trans "Update this line and return to the invoice overview." %}
+                            {% else %}
+                                {% trans "Use this smaller line-entry window and return to the invoice automatically after adding the line." %}
+                            {% endif %}
+                        </p>
                     </div>
                     <button class="modal-close" type="button" id="close-line-modal" aria-label="{% trans 'Close' %}">×</button>
                 </div>
 
                 <form method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="action" value="add_line">
+                    <input type="hidden" name="action" value="{% if active_edit_line_id %}update_line{% else %}add_line{% endif %}">
+                    {% if active_edit_line_id %}
+                        <input type="hidden" name="line_id" value="{{ active_edit_line_id }}">
+                    {% endif %}
                     <div class="form-grid">
                         {% for field in line_form %}
                             <div class="{% if field.name == 'description' %}span-2{% endif %}">
@@ -632,7 +656,7 @@
                     </div>
                     <div style="display:flex; justify-content:flex-end; gap:.55rem; margin-top:.95rem;">
                         <button class="btn btn-soft" type="button" id="cancel-line-modal">{% trans "Cancel" %}</button>
-                        <button class="btn btn-main" type="submit" {% if is_locked %}disabled{% endif %}>{% trans "Add Line" %}</button>
+                        <button class="btn btn-main" type="submit" {% if is_locked %}disabled{% endif %}>{% if active_edit_line_id %}{% trans "Update Line" %}{% else %}{% trans "Add Line" %}{% endif %}</button>
                     </div>
                 </form>
             </div>
@@ -641,12 +665,47 @@
 
     {{ customer_cars_json|json_script:"customer-cars-data" }}
     {{ customer_payment_terms_json|json_script:"customer-payment-terms-data" }}
+    {{ invoice_price_items_json|json_script:"invoice-price-items-data" }}
     <script>
+        (function () {
+            const languageCode = "{{ request.LANGUAGE_CODE|default:'en'|lower }}";
+            const languagePrefix = languageCode.split("-")[0];
+
+            if (typeof flatpickr === "undefined") {
+                return;
+            }
+
+            const options = {
+                allowInput: true,
+                clickOpens: true,
+                dateFormat: "Y-m-d",
+            };
+
+            if (languagePrefix === "da") {
+                options.dateFormat = "d/m/Y";
+                options.locale = "da";
+            } else if (languagePrefix === "de") {
+                options.dateFormat = "d.m.Y";
+                options.locale = "de";
+            }
+
+            ["id_issue_date", "id_due_date"].forEach((fieldId) => {
+                const input = document.getElementById(fieldId);
+                if (input) {
+                    flatpickr(input, options);
+                }
+            });
+        })();
+
         (function () {
             const customerSelect = document.getElementById("id_customer");
             const carSelect = document.getElementById("id_car");
             const issueDateInput = document.getElementById("id_issue_date");
             const dueDateInput = document.getElementById("id_due_date");
+            const languageCode = "{{ request.LANGUAGE_CODE|default:'en'|lower }}";
+            const dateDisplayStyle = languageCode.startsWith("da")
+                ? "day-first-slash"
+                : (languageCode.startsWith("de") ? "day-first-dot" : "iso");
             if (!customerSelect || !carSelect) {
                 return;
             }
@@ -692,18 +751,39 @@
                     return null;
                 }
 
-                const parts = value.split("-").map(Number);
+                const normalized = String(value).trim();
+                if (!normalized) {
+                    return null;
+                }
+
+                const separator = normalized.includes("/") ? "/" : (normalized.includes(".") ? "." : "-");
+                const parts = normalized.split(separator).map(Number);
                 if (parts.length !== 3 || parts.some(Number.isNaN)) {
                     return null;
                 }
 
-                return new Date(parts[0], parts[1] - 1, parts[2]);
+                let year;
+                let month;
+                let day;
+                if (String(parts[0]).length === 4) {
+                    [year, month, day] = parts;
+                } else {
+                    [day, month, year] = parts;
+                }
+
+                return new Date(year, month - 1, day);
             }
 
             function formatDateInput(dateValue) {
                 const year = dateValue.getFullYear();
                 const month = String(dateValue.getMonth() + 1).padStart(2, "0");
                 const day = String(dateValue.getDate()).padStart(2, "0");
+                if (dateDisplayStyle === "day-first-slash") {
+                    return `${day}/${month}/${year}`;
+                }
+                if (dateDisplayStyle === "day-first-dot") {
+                    return `${day}.${month}.${year}`;
+                }
                 return `${year}-${month}-${day}`;
             }
 
@@ -786,6 +866,56 @@
             });
 
             syncLabel();
+        })();
+
+        (function () {
+            const priceItemDataNode = document.getElementById("invoice-price-items-data");
+            const modal = document.getElementById("line-modal");
+            if (!priceItemDataNode || !modal) {
+                return;
+            }
+
+            const lineForm = modal.querySelector("form");
+            if (!lineForm) {
+                return;
+            }
+
+            const priceItems = JSON.parse(priceItemDataNode.textContent || "[]");
+            const priceItemById = new Map(priceItems.map((item) => [String(item.id), item]));
+            const priceItemSelect = lineForm.querySelector('[name="price_item"]');
+            const descriptionInput = lineForm.querySelector('[name="description"]');
+            const unitPriceInput = lineForm.querySelector('[name="unit_price"]');
+            const vatInput = lineForm.querySelector('[name="vat_percent"]');
+
+            if (!priceItemSelect || !descriptionInput || !unitPriceInput || !vatInput) {
+                return;
+            }
+
+            function applyPriceItemValues(forceApply) {
+                const selectedId = String(priceItemSelect.value || "");
+                const selectedItem = priceItemById.get(selectedId);
+                if (!selectedItem) {
+                    return;
+                }
+
+                if (forceApply || !descriptionInput.value.trim()) {
+                    descriptionInput.value = selectedItem.description || "";
+                }
+                if (forceApply || !String(unitPriceInput.value || "").trim()) {
+                    unitPriceInput.value = selectedItem.unit_price ?? "";
+                }
+                if (forceApply || !String(vatInput.value || "").trim()) {
+                    vatInput.value = selectedItem.vat_percent ?? "";
+                }
+            }
+
+            priceItemSelect.addEventListener("change", function () {
+                applyPriceItemValues(true);
+            });
+
+            {% if not active_edit_line_id %}
+                applyPriceItemValues(false);
+            {% endif %}
         })();
 
         (function () {

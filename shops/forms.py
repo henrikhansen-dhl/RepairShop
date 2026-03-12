@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.utils import timezone
 from django.utils.text import slugify
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import get_language, gettext_lazy as _
 import secrets
 import string
 
@@ -134,6 +134,36 @@ class ShopOnboardingForm(forms.Form):
         )
 
         return user, shop_profile, plain_password
+
+
+def _date_placeholder_for_language(language_code: str) -> str:
+    language_prefix = (language_code or "en").split("-")[0].lower()
+    if language_prefix == "da":
+        return "dd/mm/yyyy"
+    if language_prefix == "de":
+        return "dd.mm.yyyy"
+    return "yyyy-mm-dd"
+
+
+def _configure_localized_date_field(field: forms.Field, language_code: str) -> None:
+    language_prefix = (language_code or "en").split("-")[0].lower()
+    if language_prefix == "da":
+        input_formats = ["%d/%m/%Y", "%d.%m.%Y", "%d-%m-%Y", "%Y-%m-%d"]
+        display_format = "%d/%m/%Y"
+    elif language_prefix == "de":
+        input_formats = ["%d.%m.%Y", "%d/%m/%Y", "%d-%m-%Y", "%Y-%m-%d"]
+        display_format = "%d.%m.%Y"
+    else:
+        input_formats = ["%Y-%m-%d", "%m/%d/%Y", "%m-%d-%Y", "%d/%m/%Y", "%d.%m.%Y"]
+        display_format = "%Y-%m-%d"
+
+    field.input_formats = input_formats
+    attrs = dict(getattr(field.widget, "attrs", {}))
+    attrs["type"] = "text"
+    attrs.setdefault("class", "js-local-date")
+    attrs.setdefault("autocomplete", "off")
+    attrs.setdefault("placeholder", _date_placeholder_for_language(language_code))
+    field.widget = forms.DateInput(format=display_format, attrs=attrs)
 
 
 class RepairWorkOrderForm(forms.ModelForm):
@@ -574,8 +604,8 @@ class InvoiceForm(forms.ModelForm):
             "notes",
         ]
         widgets = {
-            "issue_date": forms.DateInput(attrs={"type": "date"}),
-            "due_date": forms.DateInput(attrs={"type": "date"}),
+            "issue_date": forms.DateInput(attrs={"type": "text"}),
+            "due_date": forms.DateInput(attrs={"type": "text"}),
         }
         labels = {
             "customer": _("Customer"),
@@ -591,6 +621,9 @@ class InvoiceForm(forms.ModelForm):
     def __init__(self, shop: ShopProfile, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.shop = shop
+        language_code = get_language() or "en"
+        _configure_localized_date_field(self.fields["issue_date"], language_code)
+        _configure_localized_date_field(self.fields["due_date"], language_code)
         self.fields["notes"].widget.attrs.setdefault("rows", 2)
         self.fields["due_date"].required = False
         self.fields["customer"].queryset = Customer.objects.filter(shop=shop).order_by("full_name")

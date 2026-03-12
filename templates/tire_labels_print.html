@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -103,7 +103,7 @@
                                 VIN: {{ car.vin|default:"-" }}<br>
                                 {% trans "Location:" %} {{ car.tire_hotel_location|default:"-" }}
                             </p>
-                            <div class="small">{% trans "Printed:" %} {{ printed_at|date:"Y-m-d H:i" }}</div>
+                            <div class="small">{% trans "Printed:" %} {{ printed_at|date:"SHORT_DATETIME_FORMAT" }}</div>
                         </div>
                         <div>
                             {% if idx.qr_image %}

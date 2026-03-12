@@ -526,6 +526,14 @@ def invoice_detail(request, invoice_id):
 
     header_form = InvoiceForm(shop, instance=invoice)
     line_form = InvoiceLineForm(shop)
+    active_edit_line_id = ""
+
+    if request.method != "POST":
+        requested_edit_line_id = (request.GET.get("edit_line") or "").strip()
+        if requested_edit_line_id and invoice.status == Invoice.STATUS_DRAFT:
+            edit_line = get_object_or_404(InvoiceLine, pk=requested_edit_line_id, invoice=invoice)
+            active_edit_line_id = str(edit_line.pk)
+            line_form = InvoiceLineForm(shop, instance=edit_line)
 
     transition_map = {
         Invoice.STATUS_DRAFT: [Invoice.STATUS_ISSUED, Invoice.STATUS_CANCELLED],
@@ -554,7 +562,7 @@ def invoice_detail(request, invoice_id):
             messages.success(request, f"Invoice status changed to '{invoice.get_status_display()}'.")
             return redirect("invoice_detail", invoice_id=invoice.pk)
 
-        if action in {"update_invoice", "add_line", "delete_line"} and invoice.status != Invoice.STATUS_DRAFT:
+        if action in {"update_invoice", "add_line", "update_line", "delete_line"} and invoice.status != Invoice.STATUS_DRAFT:
             messages.error(request, "Only draft invoices can be edited. Set status back to Draft to modify lines.")
             return redirect("invoice_detail", invoice_id=invoice.pk)
 
@@ -583,6 +591,27 @@ def invoice_detail(request, invoice_id):
                 messages.success(request, "Invoice line added.")
                 return redirect("invoice_detail", invoice_id=invoice.pk)
 
+        if action == "update_line":
+            line_id = request.POST.get("line_id", "").strip()
+            line = get_object_or_404(InvoiceLine, pk=line_id, invoice=invoice)
+            line_form = InvoiceLineForm(shop, request.POST, instance=line)
+            active_edit_line_id = str(line.pk)
+            if line_form.is_valid():
+                updated_line = line_form.save(commit=False)
+                updated_line.invoice = invoice
+                if updated_line.price_item:
+                    if not updated_line.description:
+                        updated_line.description = updated_line.price_item.description
+                    if updated_line.unit_price is None:
+                        updated_line.unit_price = updated_line.price_item.unit_price
+                    if updated_line.vat_percent is None:
+                        updated_line.vat_percent = updated_line.price_item.vat_percent
+                if updated_line.vat_percent is None:
+                    updated_line.vat_percent = 25
+                updated_line.save()
+                messages.success(request, "Invoice line updated.")
+                return redirect("invoice_detail", invoice_id=invoice.pk)
+
         if action == "delete_line":
             line_id = request.POST.get("line_id", "").strip()
             line = get_object_or_404(InvoiceLine, pk=line_id, invoice=invoice)
@@ -598,6 +627,11 @@ def invoice_detail(request, invoice_id):
         .values("id", "customer_id", "make", "model", "year", "plate_number")
     )
     customer_payment_terms = _customer_payment_terms_payload(shop)
+    invoice_price_items = list(
+        InvoicePriceItem.objects.filter(shop=shop, is_active=True)
+        .order_by("item_type", "description")
+        .values("id", "description", "unit_price", "vat_percent")
+    )
     return render(
         request,
         "invoice_detail.html",
@@ -608,10 +642,12 @@ def invoice_detail(request, invoice_id):
             "lines": lines,
             "header_form": header_form,
             "line_form": line_form,
+            "active_edit_line_id": active_edit_line_id,
             "is_locked": invoice.status != Invoice.STATUS_DRAFT,
             "available_status_targets": transition_map.get(invoice.status, []),
             "customer_cars_json": customer_cars,
             "customer_payment_terms_json": customer_payment_terms,
+            "invoice_price_items_json": invoice_price_items,
         },
     )
 
@@ -692,7 +728,23 @@ def invoice_email(request, invoice_id):
                 to=[recipient],
             )
             email.attach_alternative(html_body, "text/html")
-            email.send(fail_silently=False)
+            try:
+                email.send(fail_silently=False)
+            except Exception as exc:
+                messages.error(request, f"Invoice email could not be sent: {exc}")
+                return render(
+                    request,
+                    "invoice_email_form.html",
+                    {
+                        "shop": shop,
+                        "invoice": invoice,
+                        "form": form,
+                        "email_backend": email_backend,
+                        "email_file_path": str(django_settings.EMAIL_FILE_PATH),
+                        "is_file_backend": is_file_backend,
+                        "is_console_backend": is_console_backend,
+                    },
+                )
 
             if is_file_backend:
                 messages.success(

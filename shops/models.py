@@ -1,4 +1,5 @@
 import calendar
+from decimal import Decimal
 from datetime import timedelta
 
 from django.conf import settings
@@ -545,26 +546,36 @@ class Invoice(models.Model):
 
     @property
     def subtotal(self):
-        return sum((line.line_total for line in self.lines.all()), 0)
+        # Subtotal after line-level rebates, before invoice-level rebate.
+        return sum((line.line_total for line in self.lines.all()), Decimal("0"))
 
     @property
-    def total_rebate_amount(self):
+    def line_rebate_amount(self):
+        return sum((line.rebate_amount for line in self.lines.all()), Decimal("0"))
+
+    @property
+    def invoice_rebate_amount(self):
         subtotal = self.subtotal
-        value = self.total_rebate_value or 0
+        value = self.total_rebate_value or Decimal("0")
         if self.total_rebate_type == self.REBATE_PERCENT:
-            amount = subtotal * (value / 100)
+            amount = subtotal * (value / Decimal("100"))
             return min(amount, subtotal)
         if self.total_rebate_type == self.REBATE_AMOUNT:
             return min(value, subtotal)
-        return 0
+        return Decimal("0")
+
+    @property
+    def total_rebate_amount(self):
+        # Total discount shown to the user should include both line rebates and invoice-level rebate.
+        return self.line_rebate_amount + self.invoice_rebate_amount
 
     @property
     def grand_total(self):
-        return self.subtotal - self.total_rebate_amount
+        return self.subtotal - self.invoice_rebate_amount
 
     @property
     def vat_total(self):
-        return sum((line.vat_amount for line in self.lines.all()), 0)
+        return sum((line.vat_amount for line in self.lines.all()), Decimal("0"))
 
     @property
     def grand_total_incl_vat(self):
@@ -616,13 +627,13 @@ class InvoiceLine(models.Model):
     @property
     def rebate_amount(self):
         subtotal = self.line_subtotal
-        value = self.rebate_value or 0
+        value = self.rebate_value or Decimal("0")
         if self.rebate_type == self.REBATE_PERCENT:
-            amount = subtotal * (value / 100)
+            amount = subtotal * (value / Decimal("100"))
             return min(amount, subtotal)
         if self.rebate_type == self.REBATE_AMOUNT:
             return min(value, subtotal)
-        return 0
+        return Decimal("0")
 
     @property
     def line_total(self):

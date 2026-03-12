@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ title }} | {{ shop.shop_name }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/da.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js"></script>
     <style>
         body { margin: 0; background: #f5fbff; color: #14283f; font-family: "Segoe UI", sans-serif; }
         .wrap { width: min(840px, 95vw); margin: 1.2rem auto; }
@@ -50,10 +54,44 @@
     {{ customer_payment_terms_json|json_script:"customer-payment-terms-data" }}
     <script>
         (function () {
+            const languageCode = "{{ request.LANGUAGE_CODE|default:'en'|lower }}";
+            const languagePrefix = languageCode.split("-")[0];
+
+            if (typeof flatpickr === "undefined") {
+                return;
+            }
+
+            const options = {
+                allowInput: true,
+                clickOpens: true,
+                dateFormat: "Y-m-d",
+            };
+
+            if (languagePrefix === "da") {
+                options.dateFormat = "d/m/Y";
+                options.locale = "da";
+            } else if (languagePrefix === "de") {
+                options.dateFormat = "d.m.Y";
+                options.locale = "de";
+            }
+
+            ["id_issue_date", "id_due_date"].forEach((fieldId) => {
+                const input = document.getElementById(fieldId);
+                if (input) {
+                    flatpickr(input, options);
+                }
+            });
+        })();
+
+        (function () {
             const customerSelect = document.getElementById("id_customer");
             const carSelect = document.getElementById("id_car");
             const issueDateInput = document.getElementById("id_issue_date");
             const dueDateInput = document.getElementById("id_due_date");
+            const languageCode = "{{ request.LANGUAGE_CODE|default:'en'|lower }}";
+            const dateDisplayStyle = languageCode.startsWith("da")
+                ? "day-first-slash"
+                : (languageCode.startsWith("de") ? "day-first-dot" : "iso");
             if (!customerSelect || !carSelect) {
                 return;
             }
@@ -99,18 +137,39 @@
                     return null;
                 }
 
-                const parts = value.split("-").map(Number);
+                const normalized = String(value).trim();
+                if (!normalized) {
+                    return null;
+                }
+
+                const separator = normalized.includes("/") ? "/" : (normalized.includes(".") ? "." : "-");
+                const parts = normalized.split(separator).map(Number);
                 if (parts.length !== 3 || parts.some(Number.isNaN)) {
                     return null;
                 }
 
-                return new Date(parts[0], parts[1] - 1, parts[2]);
+                let year;
+                let month;
+                let day;
+                if (String(parts[0]).length === 4) {
+                    [year, month, day] = parts;
+                } else {
+                    [day, month, year] = parts;
+                }
+
+                return new Date(year, month - 1, day);
             }
 
             function formatDateInput(dateValue) {
                 const year = dateValue.getFullYear();
                 const month = String(dateValue.getMonth() + 1).padStart(2, "0");
                 const day = String(dateValue.getDate()).padStart(2, "0");
+                if (dateDisplayStyle === "day-first-slash") {
+                    return `${day}/${month}/${year}`;
+                }
+                if (dateDisplayStyle === "day-first-dot") {
+                    return `${day}.${month}.${year}`;
+                }
                 return `${year}-${month}-${day}`;
             }
 
