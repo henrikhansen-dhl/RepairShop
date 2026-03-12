@@ -15,10 +15,10 @@ msgid "Welcome, %(username)s."
 msgstr "Velkommen, %(username)s."
 
 msgid "Active shop: <b>%(shop_name)s</b>"
-msgstr "Aktiv værksted: <b>%(shop_name)s</b>"
+msgstr "Aktivt værksted: <b>%(shop_name)s</b>"
 
 msgid "Manage Shops"
-msgstr "Administrer Værksteder"
+msgstr "Administrer værksteder"
 
 msgid "Add New Shop"
 msgstr "Tilføj nyt værksted"
@@ -189,7 +189,7 @@ msgid "Copy Credentials"
 msgstr "Kopier oplysninger"
 
 msgid "Add User to Shop"
-msgstr "Tilfoj bruger til værksted"
+msgstr "Tilføj bruger til værksted"
 
 msgid "Preferred language"
 msgstr "Foretrukket sprog"
@@ -231,7 +231,7 @@ msgid "Edit Rights"
 msgstr "Rediger rettigheder"
 
 msgid "No users assigned to this shop yet."
-msgstr "Ingen brugere er endnu tildelt denne værksted."
+msgstr "Ingen brugere er endnu tildelt dette værksted."
 
 msgid "Credentials copied to clipboard."
 msgstr "Oplysninger kopieret til udklipsholder."
@@ -423,7 +423,7 @@ msgid "Grand Total incl VAT:"
 msgstr "Total inkl. moms:"
 
 msgid "Add Price Item"
-msgstr "Tilfoj prislinje"
+msgstr "Tilføj prislinje"
 
 msgid "Save Item"
 msgstr "Gem vare"
@@ -495,7 +495,7 @@ msgid "Sign in to access your shop-specific dashboard and daily repair operation
 msgstr "Log ind for at åbne dit værkstedsspecifikke dashboard og daglige opgaver."
 
 msgid "Open My Shop Functions"
-msgstr "åbn mine værkstedsfunktioner"
+msgstr "Åbn mine værkstedsfunktioner"
 
 msgid "Log in to My Shop"
 msgstr "Log ind på mit værksted"
@@ -507,22 +507,22 @@ msgid "Tenant Isolation"
 msgstr "Tenant-isolation"
 
 msgid "Shop data routed to its own database."
-msgstr "værkstedsdata rutes til sin egen database."
+msgstr "Værkstedsdata sendes til sin egen database."
 
 msgid "Secure Access"
 msgstr "Sikker adgang"
 
 msgid "Users only open their shop workspace."
-msgstr "Brugere kan kun åbne deres egen værksteds arbejdsomrade."
+msgstr "Brugere kan kun åbne deres eget værkstedsarbejdsområde."
 
 msgid "Cloud Ready"
 msgstr "Cloud-klar"
 
 msgid "Log in to your shop"
-msgstr "Log ind i din værksted"
+msgstr "Log ind på dit værksted"
 
 msgid "Use your RepairShop account to open shop-specific functions."
-msgstr "Brug din RepairShop-konto for at åbne værkstedsspecifikke funktioner."
+msgstr "Brug din RepairShop-konto til at åbne værkstedsspecifikke funktioner."
 
 msgid "Continue"
 msgstr "Fortsæt"
@@ -597,7 +597,7 @@ msgid "View / print invoice:"
 msgstr "Se / udskriv faktura:"
 
 msgid "Create a shop account, login user, and tenant database alias."
-msgstr "Opret en værkstedskonto, loginbruger og tenant database-alias."
+msgstr "Opret en værkstedskonto, en loginbruger og et tenant-databasealias."
 
 msgid "New Shop Credentials"
 msgstr "Nye værkstedsoplysninger"
@@ -606,7 +606,7 @@ msgid "Database:"
 msgstr "Database:"
 
 msgid "Shop name"
-msgstr "værkstedsnavn"
+msgstr "Værkstedsnavn"
 
 msgid "Login username"
 msgstr "Loginbrugernavn"
@@ -642,13 +642,13 @@ msgid "Database alias"
 msgstr "Database-alias"
 
 msgid "Shop is active"
-msgstr "værksted er aktiv"
+msgstr "Værkstedet er aktivt"
 
 msgid "Owner user is active"
 msgstr "Ejerbruger er aktiv"
 
 msgid "Reset password to a new random value"
-msgstr "Nulstil adgangskode til ny tilfaldig vaerdi"
+msgstr "Nulstil adgangskode til en ny tilfældig værdi"
 
 msgid "Save Changes"
 msgstr "Gem ændringer"
@@ -705,7 +705,7 @@ msgid "Inspection type"
 msgstr "Synstype"
 
 msgid "Inspection date"
-msgstr "Syndato"
+msgstr "Synsdato"
 
 msgid "Inspection result"
 msgstr "Synsresultat"
@@ -720,7 +720,7 @@ msgid "Inspection mileage"
 msgstr "Kilometertal ved syn"
 
 msgid "Next inspection date"
-msgstr "Naeste synsdato"
+msgstr "Næste synsdato"
 
 msgid "Total rebate type"
 msgstr "Samlet rabat type"
@@ -787,3 +787,147 @@ msgstr "Emne"
 
 msgid "Message"
 msgstr "Besked"
+
+msgid "Active shop: <strong>%(shop_name)s</strong>"
+msgstr "Aktivt værksted: <strong>%(shop_name)s</strong>"
+
+msgid "Administration workspace"
+msgstr "Administrationsarbejdsområde"
+
+msgid "Back to Invoice"
+msgstr "Tilbage til faktura"
+
+msgid "Change status"
+msgstr "Skift status"
+
+msgid "Create Invoice From Work Order"
+msgstr "Opret faktura fra reparationsordre"
+
+msgid "Customer, dates, status, rebate, and notes."
+msgstr "Kunde, datoer, status, rabat og noter."
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Edit Invoice Line"
+msgstr "Rediger fakturalinje"
+
+msgid "Edit Price Item"
+msgstr "Rediger prislinje"
+
+msgid "Edit the header here, then continue with the lines below."
+msgstr "Rediger hovedet her, og fortsæt derefter med linjerne nedenfor."
+
+msgid "Generate a print-friendly invoice view for"
+msgstr "Generer en udskriftsvenlig fakturavisning for"
+
+msgid "Invoice ready"
+msgstr "Faktura klar"
+
+msgid "Labor, diagnostics, and workshop tasks."
+msgstr "Arbejde, diagnostik og værkstedsopgaver."
+
+msgid "Line items"
+msgstr "Linjer"
+
+msgid "Manage reusable service and part pricing for"
+msgstr "Administrer genanvendelige service- og reservedelspriser for"
+
+msgid "No active shop"
+msgstr "Intet aktivt værksted"
+
+msgid "No part lines added yet."
+msgstr "Ingen reservedelslinjer tilføjet endnu."
+
+msgid "No service lines added yet."
+msgstr "Ingen servicelinjer tilføjet endnu."
+
+msgid "Paid Functions"
+msgstr "Betalte funktioner"
+
+msgid "Paid functions"
+msgstr "Betalte funktioner"
+
+msgid "Part"
+msgstr "Reservedel"
+
+msgid "Parts:"
+msgstr "Reservedele:"
+
+msgid "Payment due condition"
+msgstr "Betalingsbetingelse"
+
+msgid "Payment due days"
+msgstr "Betalingsdage"
+
+msgid "Print A4 2x7"
+msgstr "Udskriv A4 2x7"
+
+msgid "Print Invoice"
+msgstr "Udskriv faktura"
+
+msgid "Priority"
+msgstr "Prioritet"
+
+msgid "Repair Orders"
+msgstr "Reparationsordrer"
+
+msgid "Role"
+msgstr "Rolle"
+
+msgid "Service"
+msgstr "Service"
+
+msgid "Services:"
+msgstr "Service:"
+
+msgid "Shop Users"
+msgstr "Værkstedsbrugere"
+
+msgid "Unit Price"
+msgstr "Enhedspris"
+
+msgid "Unassigned"
+msgstr "Ikke tildelt"
+
+msgid "Unavailable"
+msgstr "Ikke tilgængelig"
+
+msgid "Update Invoice Header"
+msgstr "Opdater fakturahoved"
+
+msgid "Update Item"
+msgstr "Opdater linje"
+
+msgid "Update Line"
+msgstr "Opdater linje"
+
+msgid "VAT %"
+msgstr "Moms %"
+
+msgid "Vehicle"
+msgstr "Køretøj"
+
+msgid "Work Order Details"
+msgstr "Reparationsordredetaljer"
+
+msgid "Workspace"
+msgstr "Arbejdsområde"
+
+msgid "Workspace navigation and shared shop styling."
+msgstr "Arbejdsområdenavigation og delt værkstedsdesign."
+
+msgid "Workshop Queue"
+msgstr "Værkstedskø"
+
+msgid "Add Service Item"
+msgstr "Tilføj servicelinje"
+
+msgid "Only paid functions with matching user rights are visible in the dashboard."
+msgstr "Kun betalte funktioner med tilhørende brugerrettigheder er synlige i dashboardet."
+
+msgid "Login Username"
+msgstr "Login-brugernavn"
+
+msgid "Spare parts, materials, and consumables."
+msgstr "Reservedele, materialer og forbrugsvarer."

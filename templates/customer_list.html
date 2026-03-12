@@ -1,95 +1,69 @@
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Customers | {{ shop.shop_name }}</title>
-    <style>
-        body { font-family: "Segoe UI", sans-serif; margin: 0; background: #f6fbff; color: #1d2f44; }
-        .wrap { width: min(980px, 94vw); margin: 2rem auto; }
-        .top { display: flex; justify-content: space-between; align-items: center; gap: .8rem; flex-wrap: wrap; }
-        .card { background: #fff; border: 1px solid #d7e5f3; border-radius: 14px; padding: 1rem; margin-top: 1rem; }
-        .btn { display: inline-block; text-decoration: none; border: 0; border-radius: 9px; padding: .5rem .85rem; font-weight: 700; cursor: pointer; }
-        .btn-primary { background: #0f7e93; color: #fff; }
-        .btn-light { background: #eef6fc; color: #1d4d71; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { text-align: left; padding: .55rem; border-bottom: 1px solid #e6eef7; }
-        form.inline { display: inline; }
-        .muted { color: #60758c; }
-        .messages { margin: .5rem 0; padding-left: 1rem; }
-        .shop-logo { max-height: 54px; width: auto; display: block; margin-top: .4rem; border: 1px solid #d7e5f3; border-radius: 8px; background: #fff; padding: .2rem; }
-    </style>
-</head>
-<body>
-    {% load i18n %}
-    {% trans "Delete this customer and all cars?" as confirm_delete_customer_and_cars %}
-    <main class="wrap">
-        <header class="top">
-            <div>
-                <h1>{% trans "Customers" %}</h1>
-                <p class="muted">{% trans "Shop:" %} <b>{{ shop.shop_name }}</b></p>
-                {% if current_shop_logo_url %}
-                    <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
-                {% endif %}
-            </div>
-            <div>
-                {% include "includes/back_to_dashboard_button.html" with button_class="btn btn-light" %}
-                <a class="btn btn-primary" href="{% url 'customer_create' %}">{% trans "Add Customer" %}</a>
-            </div>
-        </header>
+{% extends "base_shop.html" %}
+{% load i18n %}
 
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+{% trans "Delete this customer and all cars?" as confirm_delete_customer_and_cars %}
 
-        <section class="card">
-            <form method="get">
-                <label for="q"><b>{% trans "Search name:" %}</b></label>
-                <input id="q" name="q" value="{{ search }}" placeholder="{% trans 'Type customer name' %}">
-                <button class="btn btn-light" type="submit">{% trans "Search" %}</button>
+{% block title %}{% trans "Customers" %} | {{ shop.shop_name }}{% endblock %}
+{% block page_badge %}{% trans "Customers" %}{% endblock %}
+{% block page_title %}{% trans "Customer Directory" %}{% endblock %}
+{% block page_subtitle %}{% trans "Search, open, and manage customers for" %} <strong>{{ shop.shop_name }}</strong>{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="{% url 'customer_create' %}">{% trans "Add Customer" %}</a>
+{% endblock %}
+
+{% block content %}
+    <section class="card shop-form-card">
+        <h2 class="section-title">{% trans "Search" %}</h2>
+        <form method="get" class="compact-form">
+            <div class="search-grid">
+                <div class="field field--wide">
+                    <label for="q">{% trans "Search name" %}</label>
+                    <input id="q" name="q" value="{{ search }}" placeholder="{% trans 'Type customer name' %}">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-outline" type="submit">{% trans "Search" %}</button>
                 {% if search %}
-                    <a class="btn btn-light" href="{% url 'customer_list' %}">{% trans "Clear" %}</a>
+                    <a class="btn btn-outline" href="{% url 'customer_list' %}">{% trans "Clear" %}</a>
                 {% endif %}
-            </form>
-        </section>
+            </div>
+        </form>
+    </section>
 
-        <section class="card">
-            {% if customers %}
-                <table>
-                    <thead>
+    <section class="card">
+        <h2 class="section-title">{% trans "Customers" %}</h2>
+        {% if customers %}
+            <table class="shop-table">
+                <thead>
+                    <tr>
+                        <th>{% trans "Name" %}</th>
+                        <th>{% trans "Phone" %}</th>
+                        <th>{% trans "Email" %}</th>
+                        <th>{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
                         <tr>
-                            <th>{% trans "Name" %}</th>
-                            <th>{% trans "Phone" %}</th>
-                            <th>{% trans "Email" %}</th>
-                            <th>{% trans "Actions" %}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for customer in customers %}
-                            <tr>
-                                <td>{{ customer.full_name }}</td>
-                                <td>{{ customer.phone|default:"-" }}</td>
-                                <td>{{ customer.email|default:"-" }}</td>
-                                <td>
-                                    <a class="btn btn-light" href="{% url 'customer_detail' customer.id %}">{% trans "Open" %}</a>
-                                    <a class="btn btn-light" href="{% url 'customer_edit' customer.id %}">{% trans "Edit" %}</a>
-                                    <form class="inline" method="post" action="{% url 'customer_delete' customer.id %}">
+                            <td>{{ customer.full_name }}</td>
+                            <td>{{ customer.phone|default:"-" }}</td>
+                            <td>{{ customer.email|default:"-" }}</td>
+                            <td>
+                                <div class="table-actions">
+                                    <a class="btn btn-outline" href="{% url 'customer_detail' customer.id %}">{% trans "Open" %}</a>
+                                    <a class="btn btn-outline" href="{% url 'customer_edit' customer.id %}">{% trans "Edit" %}</a>
+                                    <form class="inline-form" method="post" action="{% url 'customer_delete' customer.id %}">
                                         {% csrf_token %}
-                                        <button class="btn btn-light" type="submit" onclick="return confirm('{{ confirm_delete_customer_and_cars|escapejs }}');">{% trans "Delete" %}</button>
+                                        <button class="btn btn-danger" type="submit" onclick="return confirm('{{ confirm_delete_customer_and_cars|escapejs }}');">{% trans "Delete" %}</button>
                                     </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p class="muted">{% trans "No customers found." %}</p>
-            {% endif %}
-        </section>
-    </main>
-</body>
-</html>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="muted">{% trans "No customers found." %}</p>
+        {% endif %}
+    </section>
+{% endblock %}

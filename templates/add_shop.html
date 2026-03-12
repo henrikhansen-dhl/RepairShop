@@ -1,323 +1,101 @@
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RepairShop | Add Shop</title>
-    <style>
-        :root {
-            --ink: #12243a;
-            --panel: #ffffff;
-            --line: #d6e6f5;
-            --soft: #f5fbff;
-            --brand: #0c7e93;
-            --brand-dark: #0a6475;
-            --ok-bg: #e9fce9;
-            --ok-text: #1d6e1d;
-        }
+{% extends "base_shop.html" %}
+{% load i18n %}
 
-        * { box-sizing: border-box; }
+{% trans "Credentials copied to clipboard." as copied_credentials_message %}
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            color: var(--ink);
-            background: linear-gradient(155deg, #f7fffb, #ebf3ff);
-            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
-            padding: 1.2rem;
-        }
+{% block title %}RepairShop | {% trans "Add Shop" %}{% endblock %}
+{% block page_badge %}{% trans "Administration" %}{% endblock %}
+{% block page_title %}{% trans "Add New Shop" %}{% endblock %}
+{% block page_subtitle %}{% trans "Create a shop account, login user, and tenant database alias." %}{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-outline" href="{% url 'shop_list' %}">{% trans "Manage Shops" %}</a>
+{% endblock %}
 
-        .wrap {
-            width: min(820px, 100%);
-            margin: 0 auto;
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: 16px;
-            padding: 1.2rem;
-            box-shadow: 0 14px 34px rgba(9, 31, 53, 0.12);
-        }
+{% block content %}
+    {% if created_credentials %}
+        <section class="notice-panel" aria-live="polite">
+            <strong>{% trans "New Shop Credentials" %}</strong>
+            {% trans "Shop:" %} {{ created_credentials.shop_name }}<br>
+            {% trans "Username:" %} {{ created_credentials.username }}<br>
+            {% trans "Password:" %} <span id="new-password">{{ created_credentials.password }}</span><br>
+            {% trans "Database:" %} {{ created_credentials.database_name }}<br>
+            <button class="btn btn-primary" style="margin-top:.6rem;" type="button" onclick="copyCredentials()">{% trans "Copy Credentials" %}</button>
+        </section>
+    {% endif %}
 
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: .8rem;
-            margin-bottom: .9rem;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: clamp(1.45rem, 4vw, 2rem);
-        }
-
-        .hint {
-            margin: .2rem 0 0;
-            color: #36516f;
-        }
-
-        .btn {
-            display: inline-block;
-            border: 0;
-            background: var(--brand);
-            color: #fff;
-            text-decoration: none;
-            font-weight: 700;
-            border-radius: 10px;
-            padding: .6rem .9rem;
-            cursor: pointer;
-        }
-
-        .btn:hover { background: var(--brand-dark); }
-
-        form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: .85rem;
-        }
-
-        .field {
-            background: var(--soft);
-            border: 1px solid var(--line);
-            border-radius: 10px;
-            padding: .7rem;
-        }
-
-        .field-wide { grid-column: 1 / -1; }
-
-        label {
-            display: block;
-            font-size: .9rem;
-            font-weight: 700;
-            margin-bottom: .3rem;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            border: 1px solid #b8cee2;
-            border-radius: 8px;
-            padding: .55rem .65rem;
-            font-size: .98rem;
-            background: #fff;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: .45rem;
-            margin-top: .35rem;
-        }
-
-        .feature-option {
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-            background: #fff;
-            border: 1px solid #cfe1ef;
-            border-radius: 9px;
-            padding: .55rem .7rem;
-            font-weight: 600;
-        }
-
-        .errorlist {
-            list-style: none;
-            margin: .45rem 0 0;
-            padding: .45rem .55rem;
-            border-radius: 8px;
-            background: #ffe8e8;
-            color: #8b1d1d;
-            font-size: .86rem;
-        }
-
-        .helptext {
-            display: block;
-            margin-top: .35rem;
-            color: #4c6784;
-            font-size: .82rem;
-        }
-
-        .messages {
-            margin-bottom: .8rem;
-        }
-
-        .message {
-            border-radius: 10px;
-            padding: .65rem .8rem;
-            background: var(--ok-bg);
-            color: var(--ok-text);
-            border: 1px solid #bde4bd;
-            font-weight: 600;
-        }
-
-        .credential-panel {
-            margin-bottom: .9rem;
-            border: 1px solid #bcdff0;
-            background: #eef8ff;
-            border-radius: 10px;
-            padding: .8rem;
-        }
-
-        .credential-panel h2 {
-            margin: 0 0 .5rem;
-            font-size: 1.05rem;
-        }
-
-        .credential-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: .5rem;
-        }
-
-        .credential-row {
-            background: #fff;
-            border: 1px solid #d4e7f4;
-            border-radius: 8px;
-            padding: .45rem .55rem;
-            font-size: .92rem;
-        }
-
-        .toolbar {
-            display: flex;
-            gap: .45rem;
-            flex-wrap: wrap;
-            margin-top: .65rem;
-        }
-
-        .btn-soft {
-            background: #dff2ff;
-            color: #0f4f68;
-        }
-
-        .btn-soft:hover {
-            background: #cfeafb;
-        }
-
-        .submit-row {
-            grid-column: 1 / -1;
-            display: flex;
-            justify-content: flex-end;
-        }
-    </style>
-</head>
-<body>
-    {% load i18n %}
-    {% trans "Credentials copied to clipboard." as copied_credentials_message %}
-    <main class="wrap">
-        <header class="top">
-            <div>
-                <h1>{% trans "Add New Shop" %}</h1>
-                <p class="hint">{% trans "Create a shop account, login user, and tenant database alias." %}</p>
-            </div>
-            <div class="toolbar">
-                <a class="btn btn-soft" href="{% url 'shop_list' %}">{% trans "Manage Shops" %}</a>
-                {% include "includes/back_to_dashboard_button.html" with button_class="btn" %}
-            </div>
-        </header>
-
-        {% if created_credentials %}
-            <section class="credential-panel" aria-live="polite">
-                <h2>{% trans "New Shop Credentials" %}</h2>
-                <div class="credential-grid">
-                    <div class="credential-row"><b>{% trans "Shop:" %}</b> {{ created_credentials.shop_name }}</div>
-                    <div class="credential-row"><b>{% trans "Username:" %}</b> {{ created_credentials.username }}</div>
-                    <div class="credential-row"><b>{% trans "Password:" %}</b> <span id="new-password">{{ created_credentials.password }}</span></div>
-                    <div class="credential-row"><b>{% trans "Database:" %}</b> {{ created_credentials.database_name }}</div>
-                </div>
-                <div class="toolbar">
-                    <button class="btn" type="button" onclick="copyCredentials()">{% trans "Copy Credentials" %}</button>
-                </div>
-            </section>
-        {% endif %}
-
-        {% if messages %}
-            <section class="messages" aria-live="polite">
-                {% for message in messages %}
-                    <div class="message">{{ message }}</div>
-                {% endfor %}
-            </section>
-        {% endif %}
-
+    <section class="card shop-form-card">
         <form method="post">
             {% csrf_token %}
 
-            <div class="field field-wide">
-                {{ form.non_field_errors }}
-            </div>
+            <div class="form-grid">
+                <div class="field field--wide">{{ form.non_field_errors }}</div>
 
-            <div class="field">
-                <label for="id_shop_name">{% trans "Shop name" %}</label>
-                {{ form.shop_name }}
-                {{ form.shop_name.errors }}
-            </div>
-
-            <div class="field">
-                <label for="id_username">{% trans "Login username" %}</label>
-                {{ form.username }}
-                {{ form.username.errors }}
-            </div>
-
-            <div class="field">
-                <label for="id_email">{% trans "Email (optional)" %}</label>
-                {{ form.email }}
-                {{ form.email.errors }}
-            </div>
-
-            <div class="field field-wide">
-                <label>{% trans "Paid functions" %}</label>
-                <div class="feature-grid">
-                    {% for checkbox in form.enabled_features %}
-                        <label class="feature-option">{{ checkbox.tag }} <span>{{ checkbox.choice_label }}</span></label>
-                    {% endfor %}
+                <div class="field">
+                    <label for="id_shop_name">{% trans "Shop name" %}</label>
+                    {{ form.shop_name }}
+                    {{ form.shop_name.errors }}
                 </div>
-                {{ form.enabled_features.errors }}
-                {% if form.enabled_features.help_text %}
-                    <span class="helptext">{{ form.enabled_features.help_text }}</span>
-                {% endif %}
+
+                <div class="field">
+                    <label for="id_username">{% trans "Login username" %}</label>
+                    {{ form.username }}
+                    {{ form.username.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_email">{% trans "Email (optional)" %}</label>
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+
+                <div class="field field--wide">
+                    <label>{% trans "Paid functions" %}</label>
+                    <div class="detail-grid">
+                        {% for checkbox in form.enabled_features %}
+                            <label class="meta-tile">{{ checkbox.tag }} <span>{{ checkbox.choice_label }}</span></label>
+                        {% endfor %}
+                    </div>
+                    {{ form.enabled_features.errors }}
+                    {% if form.enabled_features.help_text %}<div class="inline-note">{{ form.enabled_features.help_text }}</div>{% endif %}
+                </div>
+
+                <div class="field">
+                    <label for="id_database_name">{% trans "Database alias (optional)" %}</label>
+                    {{ form.database_name }}
+                    {{ form.database_name.errors }}
+                    {% if form.database_name.help_text %}<div class="inline-note">{{ form.database_name.help_text }}</div>{% endif %}
+                </div>
+
+                <div class="field">
+                    <label for="id_generate_password">{% trans "Generate strong password automatically" %}</label>
+                    {{ form.generate_password }}
+                    {{ form.generate_password.errors }}
+                    {% if form.generate_password.help_text %}<div class="inline-note">{{ form.generate_password.help_text }}</div>{% endif %}
+                </div>
+
+                <div class="field">
+                    <label for="id_password1">{% trans "Temporary password" %}</label>
+                    {{ form.password1 }}
+                    {{ form.password1.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_password2">{% trans "Confirm password" %}</label>
+                    {{ form.password2 }}
+                    {{ form.password2.errors }}
+                </div>
             </div>
 
-            <div class="field">
-                <label for="id_database_name">{% trans "Database alias (optional)" %}</label>
-                {{ form.database_name }}
-                {{ form.database_name.errors }}
-                {% if form.database_name.help_text %}
-                    <span class="helptext">{{ form.database_name.help_text }}</span>
-                {% endif %}
-            </div>
-
-            <div class="field">
-                <label for="id_generate_password">{% trans "Generate strong password automatically" %}</label>
-                {{ form.generate_password }}
-                {{ form.generate_password.errors }}
-                {% if form.generate_password.help_text %}
-                    <span class="helptext">{{ form.generate_password.help_text }}</span>
-                {% endif %}
-            </div>
-
-            <div class="field">
-                <label for="id_password1">{% trans "Temporary password" %}</label>
-                {{ form.password1 }}
-                {{ form.password1.errors }}
-            </div>
-
-            <div class="field">
-                <label for="id_password2">{% trans "Confirm password" %}</label>
-                {{ form.password2 }}
-                {{ form.password2.errors }}
-            </div>
-
-            <div class="submit-row">
-                <button class="btn" type="submit">{% trans "Create Shop" %}</button>
+            <div class="form-actions" style="margin-top:1rem; justify-content:flex-end;">
+                <button class="btn btn-primary" type="submit">{% trans "Create Shop" %}</button>
             </div>
         </form>
-    </main>
+    </section>
+{% endblock %}
 
+{% block extra_scripts %}
     <script>
         function copyCredentials() {
-            const panel = document.querySelector('.credential-panel');
-            if (!panel) return;
-
             const shop = '{{ created_credentials.shop_name|default:""|escapejs }}';
             const username = '{{ created_credentials.username|default:""|escapejs }}';
             const password = '{{ created_credentials.password|default:""|escapejs }}';
@@ -329,5 +107,4 @@
             });
         }
     </script>
-</body>
-</html>
+{% endblock %}

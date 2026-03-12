@@ -1,54 +1,38 @@
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ title }} | {{ shop.shop_name }}</title>
-    <style>
-        body { font-family: "Segoe UI", sans-serif; margin: 0; background: #f6fbff; color: #1d2f44; }
-        .wrap { width: min(760px, 94vw); margin: 2rem auto; }
-        .card { background: #fff; border: 1px solid #d7e5f3; border-radius: 14px; padding: 1rem; }
-        .row { margin-bottom: .75rem; }
-        label { display: block; font-weight: 700; margin-bottom: .2rem; }
-        input, select, textarea { width: 100%; padding: .48rem; border: 1px solid #c9d9ea; border-radius: 8px; font: inherit; }
-        .btn { display: inline-block; text-decoration: none; border: 0; border-radius: 9px; padding: .5rem .85rem; font-weight: 700; cursor: pointer; }
-        .btn-primary { background: #0f7e93; color: #fff; }
-        .btn-light { background: #eef6fc; color: #1d4d71; }
-        .errors { color: #8f1d1d; margin: .25rem 0 0; font-size: .9rem; }
-        .shop-logo { max-height: 54px; width: auto; display: block; margin-bottom: .6rem; border: 1px solid #d7e5f3; border-radius: 8px; background: #fff; padding: .2rem; }
-    </style>
-</head>
-<body>
-    {% load i18n %}
-    <main class="wrap">
-        {% include "includes/back_to_dashboard_button.html" with button_class="btn btn-light" %}
-        {% if current_shop_logo_url %}
-            <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
-        {% endif %}
-        <h1>{{ title }}</h1>
-        <p>{% trans "Shop:" %} <b>{{ shop.shop_name }}</b></p>
-        <section class="card">
-            <form method="post">
-                {% csrf_token %}
+{% extends "base_shop.html" %}
+{% load i18n %}
 
+{% block title %}{{ title }} | {{ shop.shop_name }}{% endblock %}
+{% block page_badge %}{% trans "Customers" %}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}{% trans "Manage customer details for" %} <strong>{{ shop.shop_name }}</strong>{% endblock %}
+{% block page_actions %}
+    {% if customer %}
+        <a class="btn btn-outline" href="{% url 'customer_detail' customer.id %}">{% trans "Cancel" %}</a>
+    {% else %}
+        <a class="btn btn-outline" href="{% url 'customer_list' %}">{% trans "Cancel" %}</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <section class="card shop-form-card">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-grid">
                 {% for field in form %}
-                    <div class="row">
+                    <div class="field{% if field.name == 'notes' %} field--wide{% endif %}">
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field }}
                         {% if field.errors %}
-                            <div class="errors">{{ field.errors|striptags }}</div>
+                            <div class="field-error">{{ field.errors|striptags }}</div>
                         {% endif %}
                     </div>
                 {% endfor %}
+            </div>
 
+            <div class="form-actions">
                 <button class="btn btn-primary" type="submit">{{ submit_label }}</button>
-                {% if customer %}
-                    <a class="btn btn-light" href="{% url 'customer_detail' customer.id %}">{% trans "Cancel" %}</a>
-                {% else %}
-                    <a class="btn btn-light" href="{% url 'customer_list' %}">{% trans "Cancel" %}</a>
-                {% endif %}
-            </form>
-        </section>
-    </main>
-</body>
-</html>
+            </div>
+        </form>
+    </section>
+{% endblock %}

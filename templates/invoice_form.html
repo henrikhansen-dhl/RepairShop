@@ -1,54 +1,43 @@
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ title }} | {{ shop.shop_name }}</title>
+{% extends "base_shop.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }} | {{ shop.shop_name }}{% endblock %}
+{% block extra_head %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/da.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js"></script>
-    <style>
-        body { margin: 0; background: #f5fbff; color: #14283f; font-family: "Segoe UI", sans-serif; }
-        .wrap { width: min(840px, 95vw); margin: 1.2rem auto; }
-        .card { margin-top: .9rem; background: #fff; border: 1px solid #d8e8f6; border-radius: 12px; padding: .9rem; }
-        .row { margin-bottom: .75rem; }
-        label { display: block; font-weight: 700; margin-bottom: .2rem; }
-        input, select, textarea { width: 100%; border: 1px solid #b9cfe4; border-radius: 8px; padding: .5rem .6rem; font: inherit; }
-        .btn { display: inline-block; text-decoration: none; border: 0; border-radius: 9px; padding: .52rem .84rem; font-weight: 700; cursor: pointer; }
-        .btn-main { background: #0f7e93; color: #fff; }
-        .btn-soft { background: #e9f4ff; color: #1c4f75; }
-        .errors { color: #8b1d1d; font-size: .9rem; margin-top: .25rem; }
-        .shop-logo { max-height: 56px; width: auto; display: block; margin-bottom: .5rem; border: 1px solid #d8e8f6; border-radius: 8px; background: #fff; padding: .2rem; }
-    </style>
-</head>
-<body>
-    {% load i18n %}
-    <main class="wrap">
-        {% include "includes/back_to_dashboard_button.html" %}
-        {% if current_shop_logo_url %}
-            <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
-        {% endif %}
-        <h1>{{ title }}</h1>
-        <div>{% trans "Shop:" %} <b>{{ shop.shop_name }}</b></div>
+{% endblock %}
+{% block page_badge %}{% trans "Invoices" %}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}{% trans "Create and edit invoices using the shared invoice form for" %} <strong>{{ shop.shop_name }}</strong>{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-outline" href="{% url 'invoice_list' %}">{% trans "Cancel" %}</a>
+{% endblock %}
 
-        <section class="card">
-            <form method="post">
-                {% csrf_token %}
+{% block content %}
+    <section class="card invoice-form-card">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-grid">
                 {% for field in form %}
-                    <div class="row">
+                    <div class="field{% if field.name == 'notes' %} field--wide{% endif %}">
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field }}
                         {% if field.errors %}
-                            <div class="errors">{{ field.errors|striptags }}</div>
+                            <div class="field-error">{{ field.errors|striptags }}</div>
                         {% endif %}
                     </div>
                 {% endfor %}
-                <button class="btn btn-main" type="submit">{{ submit_label }}</button>
-                <a class="btn btn-soft" href="{% url 'invoice_list' %}">{% trans "Cancel" %}</a>
-            </form>
-        </section>
-    </main>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">{{ submit_label }}</button>
+            </div>
+        </form>
+    </section>
+{% endblock %}
+
+{% block extra_scripts %}
 
     {{ customer_cars_json|json_script:"customer-cars-data" }}
     {{ customer_payment_terms_json|json_script:"customer-payment-terms-data" }}
@@ -224,5 +213,4 @@
             calculateDueDate();
         })();
     </script>
-</body>
-</html>
+{% endblock %}

@@ -315,7 +315,8 @@ class RepairWorkOrderLine(models.Model):
 
     @property
     def vat_amount(self):
-        return self.line_total * (self.vat_percent / 100)
+        vat_percent = self.vat_percent or Decimal("0")
+        return self.line_total * (vat_percent / Decimal("100"))
 
 class Customer(models.Model):
     PAYMENT_DUE_NONE = ""
@@ -641,4 +642,5 @@ class InvoiceLine(models.Model):
 
     @property
     def vat_amount(self):
-        return self.line_total * ((self.vat_percent or 0) / 100)
+        vat_percent = self.vat_percent or Decimal("0")
+        return self.line_total * (vat_percent / Decimal("100"))

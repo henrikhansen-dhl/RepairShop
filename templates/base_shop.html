@@ -1,0 +1,103 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ shop.shop_name|default:'RepairShop' }}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'repairshop/css/shop-base.css' %}">
+    <link rel="stylesheet" href="{% static 'repairshop/css/shop-components.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="shop-body{% block body_class %}{% endblock %}">
+    <div
+        class="shop-shell shop-theme"
+        style="--shop-primary: {{ shop.primary_color|default:'#0f7e93' }}; --shop-primary-strong: {{ shop.primary_color_dark|default:'#0b6474' }}; --shop-primary-soft: {{ shop.primary_color_soft|default:'#e8f7fb' }}; --shop-accent: {{ shop.accent_color|default:'#eef6fc' }}; --shop-page-bg: {{ shop.page_background|default:'#f4f8fc' }}; --shop-sidebar-bg: {{ shop.sidebar_color|default:'#173a56' }}; --shop-sidebar-bg-strong: {{ shop.sidebar_color_dark|default:'#10283f' }};"
+    >
+        <aside class="shop-sidebar">
+            <div class="shop-branding">
+                <span class="shop-branding__eyebrow">{% trans "RepairShop" %}</span>
+                <h2 class="shop-branding__title">{{ shop.shop_name|default:"RepairShop" }}</h2>
+                <p class="shop-branding__meta">{% trans "Workspace navigation and shared shop styling." %}</p>
+                {% if current_shop_logo_url %}
+                    <img class="shop-branding__logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name|default:'RepairShop' }} logo">
+                {% endif %}
+            </div>
+
+            <nav class="shop-nav" aria-label="{% trans 'Shop navigation' %}">
+                <a class="shop-nav__link{% if request.resolver_match.url_name == 'shop_dashboard' %} is-active{% endif %}" href="{% url 'shop_dashboard' %}">{% trans "Dashboard" %}</a>
+
+                {% if request.user.is_staff %}
+                    <a class="shop-nav__link{% if '/shops/' in request.path and '/users/' not in request.path %} is-active{% endif %}" href="{% url 'shop_list' %}">{% trans "Manage Shops" %}</a>
+                {% endif %}
+
+                {% if shop %}
+                    {% if request.user.is_staff or request.current_shop_features.customers %}
+                        <a class="shop-nav__link{% if '/shop/customers/' in request.path %} is-active{% endif %}" href="{% url 'customer_list' %}">{% trans "Customers" %}</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if shop %}
+                    {% if request.user.is_staff or request.current_shop_features.invoices %}
+                        <a class="shop-nav__link{% if '/shop/invoices/' in request.path %} is-active{% endif %}" href="{% url 'invoice_list' %}">{% trans "Invoices" %}</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if shop %}
+                    {% if request.user.is_staff or request.current_shop_features.repair_orders or request.current_shop_features.inspections %}
+                        <a class="shop-nav__link{% if '/shop/workorders/' in request.path or '/shop/repairs/' in request.path or '/shop/inspections/' in request.path %} is-active{% endif %}" href="{% url 'work_order_list_create' %}">{% trans "Repair Orders" %}</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if shop %}
+                    {% if request.user.is_staff or request.current_shop_features.inventory %}
+                        <a class="shop-nav__link{% if '/shop/inventory/' in request.path %} is-active{% endif %}" href="{% url 'manage_inventory' %}">{% trans "Inventory" %}</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if shop %}
+                    {% if request.user.is_staff or request.current_shop_features.reports %}
+                        <a class="shop-nav__link{% if '/shop/reports/' in request.path %} is-active{% endif %}" href="{% url 'view_reports' %}">{% trans "Reports" %}</a>
+                    {% endif %}
+                {% endif %}
+
+                {% if shop %}
+                    {% if request.user.is_staff or request.current_shop_rights.can_manage_users %}
+                        <a class="shop-nav__link{% if '/shops/' in request.path and '/users/' in request.path %} is-active{% endif %}" href="{% url 'manage_shop_users' shop.id %}">{% trans "Shop Users" %}</a>
+                    {% endif %}
+                {% endif %}
+            </nav>
+
+            <form class="shop-sidebar__logout" method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-secondary btn-block" type="submit">{% trans "Log out" %}</button>
+            </form>
+        </aside>
+
+        <main class="shop-main">
+            <header class="page-header">
+                <div class="page-header__copy">
+                    <span class="page-badge">{% block page_badge %}{% trans "Workspace" %}{% endblock %}</span>
+                    <h1 class="page-title">{% block page_title %}{{ shop.shop_name|default:"RepairShop" }}{% endblock %}</h1>
+                    <p class="page-subtitle">{% block page_subtitle %}{% if shop %}{% trans "Shop:" %} <strong>{{ shop.shop_name }}</strong>{% else %}{% trans "Administration workspace" %}{% endif %}{% endblock %}</p>
+                </div>
+                <div class="header-actions">
+                    {% block page_actions %}{% endblock %}
+                </div>
+            </header>
+
+            {% if messages %}
+                <section class="flash-stack" aria-label="{% trans 'Notifications' %}">
+                    {% for message in messages %}
+                        <div class="flash flash--{{ message.tags|default:'info' }}">{{ message }}</div>
+                    {% endfor %}
+                </section>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

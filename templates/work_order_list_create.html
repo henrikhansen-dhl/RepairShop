@@ -1,49 +1,29 @@
+{% extends "base_shop.html" %}
 {% load i18n %}
-{% trans "Unassigned" as unassigned_label %}
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RepairShop | {{ title }}</title>
+
+{% block title %}RepairShop | {{ title }}{% endblock %}
+{% block page_badge %}{% trans "Repair Orders" %}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}{{ description }}{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-outline" href="{% url 'shop_dashboard' %}">{% trans "Dashboard" %}</a>
+{% endblock %}
+
+{% block extra_head %}
     <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            color: #12243a;
-            background: linear-gradient(160deg, #f8fffc, #ebf3ff);
-            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
-            padding: 1.2rem;
+        .work-order-intro {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-start;
         }
 
-        .wrap {
-            width: min(840px, 100%);
-            margin: 0 auto;
-            background: #fff;
-            border: 1px solid #d6e6f5;
-            border-radius: 14px;
-            padding: 1rem;
-            box-shadow: 0 12px 30px rgba(8, 25, 42, 0.1);
+        .work-order-intro__copy {
+            max-width: 620px;
         }
 
-        .btn {
-            display: inline-block;
-            border: 0;
-            background: #0f7e93;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 9px;
-            padding: .55rem .85rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-secondary {
-            background: #e6f1fb;
-            color: #17476a;
-        }
-
-        .shop-logo {
+        .work-order-logo {
             max-height: 58px;
             width: auto;
             display: block;
@@ -54,322 +34,186 @@
             padding: .2rem;
         }
 
-        .section {
-            margin-top: 1.2rem;
-            border: 1px solid #d7e7f6;
-            border-radius: 12px;
-            background: #fbfdff;
-            padding: 1rem;
-        }
-
-        .section h2,
-        .section h3 {
-            margin: 0 0 1rem;
-        }
-
-        .intro {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: flex-start;
-        }
-
-        .intro-copy {
-            max-width: 620px;
-        }
-
-        .eyebrow {
-            display: inline-block;
-            margin-bottom: .5rem;
-            border-radius: 999px;
-            padding: .2rem .55rem;
-            font-size: .76rem;
-            font-weight: 800;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            color: #0f7e93;
-            background: #e7f7fb;
-        }
-
-        .chip-row {
+        .work-order-chip-row,
+        .work-order-card__badges,
+        .work-order-card__actions {
             display: flex;
             gap: .45rem;
             flex-wrap: wrap;
+        }
+
+        .work-order-chip-row {
             margin-top: .55rem;
         }
 
-        .chip {
-            display: inline-flex;
-            align-items: center;
-            border-radius: 999px;
-            padding: .26rem .6rem;
-            font-size: .82rem;
-            font-weight: 700;
-        }
-
-        .chip-info {
-            background: #ebf5ff;
-            color: #1b537d;
-        }
-
-        .chip-warn {
-            background: #fff3dc;
-            color: #8b5a00;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1rem;
-        }
-
-        .field-wide {
-            grid-column: 1 / -1;
-        }
-
-        .field {
-            display: grid;
-            gap: .35rem;
-        }
-
-        .field label {
-            font-weight: 700;
-        }
-
-        .field input,
-        .field select,
-        .field textarea {
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #bfd3e9;
-            border-radius: 10px;
-            padding: .72rem .8rem;
-            font: inherit;
-            background: #fff;
-            color: #12243a;
-        }
-
-        .field textarea {
-            min-height: 130px;
-            resize: vertical;
-        }
-
-        .errorlist {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            color: #a02828;
-            font-size: .92rem;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: .8rem;
-            align-items: center;
-            margin-top: 1rem;
-        }
-
-        .note {
-            border: 1px solid #d7e7f6;
-            border-radius: 10px;
-            background: #f5fbff;
-            padding: .75rem;
-        }
-
-        .message {
-            background: #e9fce9;
-            border: 1px solid #bde4bd;
-            border-radius: 8px;
-            padding: .55rem .65rem;
-            margin-top: .7rem;
-        }
-
-        .workorder-card {
-            border: 1px solid #d7e7f6;
-            border-radius: 10px;
-            background: #f8fbff;
-            margin-bottom: 1rem;
-            padding: 1rem;
-        }
-
-        .card-head {
-            display: flex;
-            justify-content: space-between;
-            gap: .8rem;
-            align-items: flex-start;
-            flex-wrap: wrap;
-        }
-
-        .badge-row {
-            display: flex;
-            gap: .45rem;
-            flex-wrap: wrap;
-            margin-top: .45rem;
-        }
-
-        .badge {
+        .work-order-chip,
+        .work-order-badge {
             display: inline-flex;
             align-items: center;
             border-radius: 999px;
             padding: .24rem .58rem;
-            font-size: .8rem;
+            font-size: .82rem;
             font-weight: 700;
         }
 
-        .badge-status {
-            background: #e7f4ff;
-            color: #1f5a86;
+        .work-order-chip--info,
+        .work-order-badge--status {
+            background: #ebf5ff;
+            color: #1b537d;
         }
 
-        .badge-priority {
-            background: #fff2d9;
-            color: #875500;
+        .work-order-chip--warn,
+        .work-order-badge--priority {
+            background: #fff3dc;
+            color: #8b5a00;
         }
 
-        .badge-invoice {
+        .work-order-badge--invoice {
             background: #eaf8ea;
             color: #2b6e33;
         }
 
-        .meta-grid {
+        .work-order-note {
+            border: 1px solid #d7e7f6;
+            border-radius: 10px;
+            background: #f5fbff;
+            padding: .75rem;
+            margin-bottom: 1rem;
+        }
+
+        .work-order-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .work-order-card__head {
+            display: flex;
+            justify-content: space-between;
+            gap: .8rem;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .work-order-card__meta {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: .55rem .8rem;
             margin-top: .75rem;
         }
 
-        .meta-grid div {
+        .work-order-card__meta div {
             min-width: 0;
         }
 
-        .muted {
-            color: #5a718a;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: .6rem;
-            flex-wrap: wrap;
-            margin-top: .8rem;
-        }
-
         @media (max-width: 720px) {
-            .form-grid,
-            .meta-grid {
+            .work-order-card__meta {
                 grid-template-columns: 1fr;
             }
         }
     </style>
-</head>
-<body>
-    <main class="wrap">
-        {% include "includes/back_to_dashboard_button.html" with button_class="btn" %}
-        <div class="intro">
-            <div class="intro-copy">
-                <span class="eyebrow">{% trans "Workshop Queue" %}</span>
-                <h1>{{ title }}</h1>
-                <p><b>{% trans "Shop:" %}</b> {{ shop_name }}</p>
-                <p>{{ description }}</p>
-                <div class="chip-row">
-                    <span class="chip chip-info">{% trans "Track services and parts in one work order" %}</span>
-                    <span class="chip chip-warn">{% trans "Ready for invoice after at least one line item" %}</span>
+{% endblock %}
+
+{% block content %}
+    <section class="card">
+        <div class="work-order-intro">
+            <div class="work-order-intro__copy">
+                <span class="page-badge">{% trans "Workshop Queue" %}</span>
+                <p style="margin:.8rem 0 0;"><b>{% trans "Shop:" %}</b> {{ shop_name }}</p>
+                <div class="work-order-chip-row">
+                    <span class="work-order-chip work-order-chip--info">{% trans "Track services and parts in one work order" %}</span>
+                    <span class="work-order-chip work-order-chip--warn">{% trans "Ready for invoice after at least one line item" %}</span>
                 </div>
             </div>
             {% if current_shop_logo_url %}
-                <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop_name }} logo">
+                <img class="work-order-logo" src="{{ current_shop_logo_url }}" alt="{{ shop_name }} logo">
             {% endif %}
         </div>
+    </section>
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="message">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+    <section class="card shop-form-card">
+        <h2 class="section-title">{% trans "New Work Order" %}</h2>
+        <div class="work-order-note">{% trans "Status is managed from the work-order detail page after creation." %}</div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
 
-        <section class="section">
-            <h2>{% trans "New Work Order" %}</h2>
-            <div class="note" style="margin-bottom: 1rem;">{% trans "Status is managed from the work-order detail page after creation." %}</div>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.non_field_errors }}
-
-                <div class="form-grid">
-                    <div class="field">
-                        <label for="{{ form.customer.id_for_label }}">{{ form.customer.label }}</label>
-                        {{ form.customer.errors }}
-                        {{ form.customer }}
-                    </div>
-
-                    <div class="field">
-                        <label for="{{ form.car.id_for_label }}">{{ form.car.label }}</label>
-                        {{ form.car.errors }}
-                        {{ form.car }}
-                    </div>
-
-                    <div class="field">
-                        <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
-                        {{ form.description.errors }}
-                        {{ form.description }}
-                    </div>
-
-                    <div class="field field-wide">
-                        <label for="{{ form.technician_notes.id_for_label }}">{{ form.technician_notes.label }}</label>
-                        {{ form.technician_notes.errors }}
-                        {{ form.technician_notes }}
-                    </div>
-
-                    <div class="field">
-                        <label for="{{ form.assigned_to.id_for_label }}">{{ form.assigned_to.label }}</label>
-                        {{ form.assigned_to.errors }}
-                        {{ form.assigned_to }}
-                    </div>
-
-                    <div class="field">
-                        <label for="{{ form.priority.id_for_label }}">{{ form.priority.label }}</label>
-                        {{ form.priority.errors }}
-                        {{ form.priority }}
-                    </div>
-
-                    <div class="field">
-                        <label for="{{ form.due_date.id_for_label }}">{{ form.due_date.label }}</label>
-                        {{ form.due_date.errors }}
-                        {{ form.due_date }}
-                    </div>
-
-                    <div class="field">
-                        <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
-                        {{ form.status.errors }}
-                        {{ form.status }}
-                    </div>
+            <div class="form-grid">
+                <div class="field">
+                    <label for="{{ form.customer.id_for_label }}">{{ form.customer.label }}</label>
+                    {{ form.customer.errors }}
+                    {{ form.customer }}
                 </div>
 
-                <div class="form-actions">
-                    <button class="btn" type="submit">{% trans "Create Work Order" %}</button>
-                    <a class="btn btn-secondary" href="{% url 'shop_dashboard' %}">{% trans "Cancel" %}</a>
+                <div class="field">
+                    <label for="{{ form.car.id_for_label }}">{{ form.car.label }}</label>
+                    {{ form.car.errors }}
+                    {{ form.car }}
                 </div>
-            </form>
-        </section>
 
-        <section class="section">
-            <h3>{% trans "Existing Work Orders" %}</h3>
+                <div class="field">
+                    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                    {{ form.description.errors }}
+                    {{ form.description }}
+                </div>
+
+                <div class="field field--wide">
+                    <label for="{{ form.technician_notes.id_for_label }}">{{ form.technician_notes.label }}</label>
+                    {{ form.technician_notes.errors }}
+                    {{ form.technician_notes }}
+                </div>
+
+                <div class="field">
+                    <label for="{{ form.assigned_to.id_for_label }}">{{ form.assigned_to.label }}</label>
+                    {{ form.assigned_to.errors }}
+                    {{ form.assigned_to }}
+                </div>
+
+                <div class="field">
+                    <label for="{{ form.priority.id_for_label }}">{{ form.priority.label }}</label>
+                    {{ form.priority.errors }}
+                    {{ form.priority }}
+                </div>
+
+                <div class="field">
+                    <label for="{{ form.due_date.id_for_label }}">{{ form.due_date.label }}</label>
+                    {{ form.due_date.errors }}
+                    {{ form.due_date }}
+                </div>
+
+                <div class="field">
+                    <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
+                    {{ form.status.errors }}
+                    {{ form.status }}
+                </div>
+            </div>
+
+            <div class="form-actions" style="margin-top:1rem;">
+                <button class="btn btn-primary" type="submit">{% trans "Create Work Order" %}</button>
+                <a class="btn btn-outline" href="{% url 'shop_dashboard' %}">{% trans "Cancel" %}</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2 class="section-title">{% trans "Existing Work Orders" %}</h2>
+        <div class="work-order-list">
             {% for order in work_orders %}
-                <div class="workorder-card">
-                    <div class="card-head">
+                <article class="card">
+                    <div class="work-order-card__head">
                         <div>
                             <strong>#{{ order.id }}</strong>
-                            <div class="badge-row">
-                                <span class="badge badge-status">{{ order.get_status_display }}</span>
-                                <span class="badge badge-priority">{{ order.get_priority_display }}</span>
+                            <div class="work-order-card__badges">
+                                <span class="work-order-badge work-order-badge--status">{{ order.get_status_display }}</span>
+                                <span class="work-order-badge work-order-badge--priority">{{ order.get_priority_display }}</span>
                                 {% if order.invoice %}
-                                    <span class="badge badge-invoice">{% trans "Invoice ready" %}</span>
+                                    <span class="work-order-badge work-order-badge--invoice">{% trans "Invoice ready" %}</span>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="muted"><b>{% trans "Created" %}:</b> {{ order.created_at|date:"SHORT_DATETIME_FORMAT" }}</div>
                     </div>
                     <div style="margin: .55rem 0;">{{ order.description|linebreaksbr }}</div>
-                    <div class="meta-grid">
+                    <div class="work-order-card__meta">
                         {% if order.customer %}
                             <div><b>{% trans "Customer" %}:</b> {{ order.customer.full_name }}</div>
                         {% endif %}
@@ -377,26 +221,35 @@
                             <div><b>{% trans "Car" %}:</b> {{ order.car }}</div>
                         {% endif %}
                         <div><b>{% trans "Due date" %}:</b> {{ order.due_date|default:"-" }}</div>
-                        <div><b>{% trans "Assigned to" %}:</b> {{ order.assigned_to|default:unassigned_label }}</div>
+                        <div>
+                            <b>{% trans "Assigned to" %}:</b>
+                            {% if order.assigned_to %}
+                                {{ order.assigned_to }}
+                            {% else %}
+                                {% trans "Unassigned" %}
+                            {% endif %}
+                        </div>
                         <div><b>{% trans "Line items" %}:</b> {{ order.service_lines.count }}</div>
                         {% if order.invoice %}
                             <div><b>{% trans "Invoice" %}:</b> {{ order.invoice.invoice_number }}</div>
                         {% endif %}
                         <div><b>{% trans "Created by" %}:</b> {{ order.created_by }}</div>
                     </div>
-                    <div class="card-actions">
-                        <a class="btn btn-secondary" href="{% url 'repair_work_order_detail' order.id %}">{% trans "Open Work Order" %}</a>
+                    <div class="work-order-card__actions" style="margin-top:.8rem;">
+                        <a class="btn btn-outline" href="{% url 'repair_work_order_detail' order.id %}">{% trans "Open Work Order" %}</a>
                         {% if order.invoice %}
-                            <a class="btn btn-secondary" href="{% url 'invoice_detail' order.invoice.id %}">{% trans "Open Invoice" %}</a>
+                            <a class="btn btn-outline" href="{% url 'invoice_detail' order.invoice.id %}">{% trans "Open Invoice" %}</a>
                         {% endif %}
                     </div>
-                </div>
+                </article>
             {% empty %}
-                <div class="note">{% trans "No work orders yet." %}</div>
+                <div class="work-order-note">{% trans "No work orders yet." %}</div>
             {% endfor %}
-        </section>
-    </main>
+        </div>
+    </section>
+{% endblock %}
 
+{% block extra_scripts %}
     {{ customer_cars_json|json_script:"customer-cars-data" }}
     <script>
         (function () {
@@ -445,5 +298,4 @@
             refillCars();
         })();
     </script>
-</body>
-</html>
+{% endblock %}

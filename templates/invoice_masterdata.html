@@ -1,62 +1,30 @@
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Invoice Masterdata | {{ shop.shop_name }}</title>
-    <style>
-        body { margin: 0; background: #f5fbff; color: #14283f; font-family: "Segoe UI", sans-serif; }
-        .wrap { width: min(920px, 95vw); margin: 1.2rem auto; }
-        .top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .6rem; }
-        .btn { display: inline-block; text-decoration: none; border: 0; border-radius: 9px; padding: .52rem .84rem; font-weight: 700; cursor: pointer; }
-        .btn-main { background: #0f7e93; color: #fff; }
-        .btn-soft { background: #e9f4ff; color: #1c4f75; }
-        .card { margin-top: .9rem; background: #fff; border: 1px solid #d8e8f6; border-radius: 12px; padding: .9rem; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .7rem; }
-        .row { margin-bottom: .68rem; }
-        label { display: block; font-weight: 700; margin-bottom: .2rem; }
-        input, select, textarea { width: 100%; border: 1px solid #b9cfe4; border-radius: 8px; padding: .48rem .58rem; font: inherit; }
-        .message { background: #e9fce9; border: 1px solid #bde4bd; border-radius: 8px; padding: .55rem .65rem; margin-top: .7rem; }
-        .shop-logo { max-height: 64px; width: auto; border: 1px solid #d8e8f6; border-radius: 8px; padding: .25rem; background: #fff; }
-    </style>
-</head>
-<body>
-    {% load i18n %}
-    <main class="wrap">
-        <header class="top">
-            <div>
-                <h1 style="margin:.1rem 0;">{% trans "Invoice Masterdata" %}</h1>
-                <div>{% trans "Shop:" %} <b>{{ shop.shop_name }}</b></div>
-                {% if current_shop_logo_url %}
-                    <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
-                {% endif %}
-            </div>
-            <div>
-                {% include "includes/back_to_dashboard_button.html" %}
-                <a class="btn btn-soft" href="{% url 'invoice_list' %}">{% trans "Back to Invoices" %}</a>
-            </div>
-        </header>
+{% extends "base_shop.html" %}
+{% load i18n %}
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="message">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+{% block title %}{% trans "Invoice Masterdata" %} | {{ shop.shop_name }}{% endblock %}
+{% block page_badge %}{% trans "Invoices" %}{% endblock %}
+{% block page_title %}{% trans "Invoice Masterdata" %}{% endblock %}
+{% block page_subtitle %}{% trans "Maintain sender details, logo, and invoice identity for" %} <strong>{{ shop.shop_name }}</strong>{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-outline" href="{% url 'invoice_list' %}">{% trans "Back to Invoices" %}</a>
+{% endblock %}
 
-        <section class="card">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="grid">
-                    {% for field in form %}
-                        <div class="row">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                        </div>
-                    {% endfor %}
-                </div>
-                <button class="btn btn-main" type="submit">{% trans "Save Masterdata" %}</button>
-            </form>
-        </section>
-    </main>
-</body>
-</html>
+{% block content %}
+    <section class="card invoice-panel">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-grid">
+                {% for field in form %}
+                    <div class="field{% if field.name == 'address_line1' or field.name == 'address_line2' %} field--wide{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<div class="field-error">{{ field.errors|striptags }}</div>{% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">{% trans "Save Masterdata" %}</button>
+            </div>
+        </form>
+    </section>
+{% endblock %}

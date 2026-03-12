@@ -1,9 +1,21 @@
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Invoice {{ invoice.invoice_number }} | {{ shop.shop_name }}</title>
+{% extends "base_shop.html" %}
+{% load i18n %}
+
+{% block title %}Invoice {{ invoice.invoice_number }} | {{ shop.shop_name }}{% endblock %}
+{% block page_badge %}{% trans "Invoices" %}{% endblock %}
+{% block page_title %}{{ invoice.invoice_number }}{% endblock %}
+{% block page_subtitle %}{% trans "Edit the invoice header at the top and manage detail lines below." %}{% endblock %}
+{% block page_actions %}
+    <div class="action-cluster">
+        <a class="btn btn-outline" href="{% url 'invoice_list' %}">{% trans "Back to Invoices" %}</a>
+        <a class="btn btn-outline" href="{% url 'invoice_price_table' %}">{% trans "Price Table" %}</a>
+        <a class="btn btn-outline" href="{% url 'invoice_masterdata' %}">{% trans "Masterdata" %}</a>
+        <a class="btn btn-outline" href="{% url 'invoice_email' invoice.id %}">{% trans "Email Invoice" %}</a>
+        <a class="btn btn-outline" href="{% url 'invoice_print' invoice.id %}" target="_blank">{% trans "Print / PDF" %}</a>
+    </div>
+{% endblock %}
+
+{% block extra_head %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/da.js"></script>
@@ -30,7 +42,8 @@
             margin: 0;
             background: var(--page-bg);
             color: var(--ink);
-            font-family: Georgia, "Times New Roman", serif;
+            font-family: "Segoe UI", sans-serif;
+            font-size: 1rem;
             min-height: 100vh;
         }
 
@@ -439,31 +452,10 @@
             }
         }
     </style>
-</head>
-<body>
-    {% load i18n %}
-    {% trans "Delete this line?" as confirm_delete_line %}
-    <main class="wrap">
-        <header class="topbar">
-            <div>
-                <div class="block-label">{% trans "Invoice Workspace" %}</div>
-                <div style="font-family:'Segoe UI', sans-serif; color:var(--muted); font-size:.92rem;">{% trans "Edit the invoice header at the top and manage detail lines below." %}</div>
-            </div>
-            <div class="action-group">
-                {% include "includes/back_to_dashboard_button.html" %}
-                <a class="btn btn-soft" href="{% url 'invoice_list' %}">{% trans "Back to Invoices" %}</a>
-                <a class="btn btn-soft" href="{% url 'invoice_price_table' %}">{% trans "Price Table" %}</a>
-                <a class="btn btn-soft" href="{% url 'invoice_masterdata' %}">{% trans "Masterdata" %}</a>
-                <a class="btn btn-soft" href="{% url 'invoice_email' invoice.id %}">{% trans "Email Invoice" %}</a>
-                <a class="btn btn-soft" href="{% url 'invoice_print' invoice.id %}" target="_blank">{% trans "Print / PDF" %}</a>
-            </div>
-        </header>
+{% endblock %}
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="message">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+{% block content %}
+    {% trans "Delete this line?" as confirm_delete_line %}
 
         <section class="sheet">
             <div class="sheet-head">
@@ -661,8 +653,9 @@
                 </form>
             </div>
         </div>
-    </main>
+{% endblock %}
 
+{% block extra_scripts %}
     {{ customer_cars_json|json_script:"customer-cars-data" }}
     {{ customer_payment_terms_json|json_script:"customer-payment-terms-data" }}
     {{ invoice_price_items_json|json_script:"invoice-price-items-data" }}
@@ -964,5 +957,4 @@
             });
         })();
     </script>
-</body>
-</html>
+{% endblock %}

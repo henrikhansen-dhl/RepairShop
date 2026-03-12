@@ -1,41 +1,146 @@
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Invoice {{ invoice.invoice_number }}</title>
+{% extends "base_shop.html" %}
+{% load i18n %}
+
+{% block title %}Invoice {{ invoice.invoice_number }}{% endblock %}
+{% block page_badge %}{% trans "Invoices" %}{% endblock %}
+{% block page_title %}{% trans "Print Invoice" %} {{ invoice.invoice_number }}{% endblock %}
+{% block page_subtitle %}{% trans "Generate a print-friendly invoice view for" %} <strong>{{ invoice.customer.full_name }}</strong>{% endblock %}
+{% block page_actions %}
+    <div class="action-cluster print-toolbar">
+        <a class="btn btn-outline" href="{% url 'invoice_detail' invoice.id %}">{% trans "Back to Invoice" %}</a>
+        <button class="btn btn-primary" type="button" onclick="window.print()">{% trans "Print / Save PDF" %}</button>
+    </div>
+{% endblock %}
+
+{% block extra_head %}
     <style>
-        body { font-family: Georgia, "Times New Roman", serif; color: #122238; margin: 0; background: #fff; }
-        .wrap { width: min(980px, 95vw); margin: 1rem auto; }
-        .toolbar { margin-bottom: .8rem; }
-        .btn { border: 0; border-radius: 6px; padding: .45rem .8rem; background: #0f7e93; color: #fff; cursor: pointer; text-decoration: none; display: inline-block; }
-        .meta { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-bottom: .8rem; }
-        .box { border: 1px solid #c9d8e7; border-radius: 8px; padding: .6rem; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border-bottom: 1px solid #d8e4ef; text-align: left; padding: .45rem; }
-        .totals { margin-top: .8rem; margin-left: auto; width: min(360px, 100%); }
-        .totals p { margin: .2rem 0; display: flex; justify-content: space-between; }
-        .shop-logo { max-height: 72px; width: auto; display: block; margin-bottom: .45rem; }
+        .print-sheet {
+            display: grid;
+            gap: .85rem;
+        }
+
+        .print-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .8rem;
+        }
+
+        .print-box {
+            border: 1px solid #c9d8e7;
+            border-radius: 12px;
+            padding: .8rem;
+            background: rgba(255, 255, 255, 0.96);
+        }
+
+        .print-box p {
+            margin: .2rem 0;
+        }
+
+        .print-logo {
+            max-height: 72px;
+            width: auto;
+            display: block;
+            margin-bottom: .45rem;
+        }
+
+        .print-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .print-table th,
+        .print-table td {
+            border-bottom: 1px solid #d8e4ef;
+            text-align: left;
+            padding: .55rem;
+            vertical-align: top;
+        }
+
+        .print-table th {
+            color: var(--shop-muted);
+            font-size: .82rem;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+        }
+
+        .print-numeric {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .print-totals {
+            margin-top: .8rem;
+            margin-left: auto;
+            width: min(360px, 100%);
+        }
+
+        .print-totals p {
+            margin: .2rem 0;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .print-totals .grand {
+            font-size: 1.06rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 720px) {
+            .print-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media print {
-            .toolbar { display: none; }
-            .wrap { width: 100%; margin: 0; }
+            body.shop-body {
+                background: #fff;
+            }
+
+            .shop-sidebar,
+            .page-header,
+            .flash-stack,
+            .print-toolbar {
+                display: none !important;
+            }
+
+            .shop-shell {
+                display: block;
+                min-height: auto;
+            }
+
+            .shop-main {
+                padding: 0;
+            }
+
+            .card,
+            .print-box {
+                box-shadow: none;
+                background: #fff;
+            }
+
+            .card {
+                border: 0;
+                padding: 0;
+            }
+
+            .print-box {
+                border-radius: 0;
+                break-inside: avoid;
+            }
         }
     </style>
-</head>
-<body>
-    {% load i18n %}
-    <main class="wrap">
-        <div class="toolbar">
-            {% include "includes/back_to_dashboard_button.html" with button_class="btn" %}
-            <button class="btn" onclick="window.print()">{% trans "Print / Save PDF" %}</button>
-        </div>
+{% endblock %}
 
-        <h1 style="margin:.1rem 0;">{% trans "Invoice" %} {{ invoice.invoice_number }}</h1>
-        <div class="meta">
-            <section class="box">
+{% block content %}
+    <section class="card print-sheet">
+        <h2 class="section-title" style="margin-bottom:0;">{% trans "Invoice" %} {{ invoice.invoice_number }}</h2>
+
+        <div class="print-meta">
+            <section class="print-box">
                 <b>{% trans "From" %}</b><br>
                 {% if master_data.company_logo %}
-                    <img class="shop-logo" src="{{ master_data.company_logo.url }}" alt="{{ shop.shop_name }} logo">
+                    <img class="print-logo" src="{{ master_data.company_logo.url }}" alt="{{ shop.shop_name }} logo">
                 {% endif %}
                 {% if master_data.legal_name %}{{ master_data.legal_name }}{% else %}{{ shop.shop_name }}{% endif %}<br>
                 {% if master_data.address_line1 %}{{ master_data.address_line1 }}<br>{% endif %}
@@ -49,7 +154,8 @@
                 {% if master_data.vat_number %}VAT: {{ master_data.vat_number }}<br>{% endif %}
                 {% trans "Printed:" %} {{ printed_at|date:"SHORT_DATETIME_FORMAT" }}
             </section>
-            <section class="box">
+
+            <section class="print-box">
                 <b>{% trans "To" %}</b><br>
                 {{ invoice.customer.full_name }}<br>
                 {% if invoice.customer.address %}
@@ -61,37 +167,37 @@
             </section>
         </div>
 
-        <section class="box">
-            <p style="margin:.2rem 0;"><b>{% trans "Issue Date:" %}</b> {{ invoice.issue_date }}</p>
-            <p style="margin:.2rem 0;"><b>{% trans "Due Date:" %}</b> {{ invoice.due_date|default:"-" }}</p>
-            <p style="margin:.2rem 0;"><b>{% trans "Status:" %}</b> {{ invoice.get_status_display }}</p>
+        <section class="print-box">
+            <p><b>{% trans "Issue Date:" %}</b> {{ invoice.issue_date }}</p>
+            <p><b>{% trans "Due Date:" %}</b> {{ invoice.due_date|default:"-" }}</p>
+            <p><b>{% trans "Status:" %}</b> {{ invoice.get_status_display }}</p>
         </section>
 
-        <section class="box" style="margin-top:.7rem;">
-            <table>
+        <section class="print-box">
+            <table class="print-table">
                 <thead>
                     <tr>
                         <th>{% trans "Description" %}</th>
-                        <th>{% trans "Qty" %}</th>
-                        <th>{% trans "Unit" %}</th>
-                        <th>VAT %</th>
-                        <th>{% trans "Rebate" %}</th>
-                        <th>{% trans "Total ex VAT" %}</th>
+                        <th class="print-numeric">{% trans "Qty" %}</th>
+                        <th class="print-numeric">{% trans "Unit" %}</th>
+                        <th class="print-numeric">VAT %</th>
+                        <th class="print-numeric">{% trans "Rebate" %}</th>
+                        <th class="print-numeric">{% trans "Total ex VAT" %}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for line in lines %}
                         <tr>
                             <td>{{ line.description }}</td>
-                            <td>{{ line.quantity }}</td>
-                            <td>{{ line.unit_price|floatformat:2 }}</td>
-                            <td>{{ line.vat_percent|floatformat:2 }}</td>
-                            <td>
+                            <td class="print-numeric">{{ line.quantity }}</td>
+                            <td class="print-numeric">{{ line.unit_price|floatformat:2 }}</td>
+                            <td class="print-numeric">{{ line.vat_percent|floatformat:2 }}</td>
+                            <td class="print-numeric">
                                 {% if line.rebate_type == 'percent' %}{{ line.rebate_value }}%
                                 {% elif line.rebate_type == 'amount' %}{{ line.rebate_value|floatformat:2 }}
                                 {% else %}-{% endif %}
                             </td>
-                            <td>{{ line.line_total|floatformat:2 }}</td>
+                            <td class="print-numeric">{{ line.line_total|floatformat:2 }}</td>
                         </tr>
                     {% empty %}
                         <tr><td colspan="6">{% trans "No lines." %}</td></tr>
@@ -99,7 +205,7 @@
                 </tbody>
             </table>
 
-            <div class="totals">
+            <div class="print-totals">
                 <p><span>{% trans "Subtotal" %}</span><span>{{ invoice.subtotal|floatformat:2 }}</span></p>
                 {% if invoice.line_rebate_amount %}
                     <p><span>{% trans "Line Rebate" %}</span><span>{{ invoice.line_rebate_amount|floatformat:2 }}</span></p>
@@ -110,16 +216,15 @@
                 <p><span>{% trans "Total Rebate" %}</span><span>{{ invoice.total_rebate_amount|floatformat:2 }}</span></p>
                 <p><span>{% trans "Total ex VAT" %}</span><span>{{ invoice.grand_total|floatformat:2 }}</span></p>
                 <p><span>{% trans "VAT Total" %}</span><span>{{ invoice.vat_total|floatformat:2 }}</span></p>
-                <p><b>{% trans "Grand Total incl VAT" %}</b><b>{{ invoice.grand_total_incl_vat|floatformat:2 }}</b></p>
+                <p class="grand"><b>{% trans "Grand Total incl VAT" %}</b><b>{{ invoice.grand_total_incl_vat|floatformat:2 }}</b></p>
             </div>
         </section>
 
         {% if invoice.notes %}
-            <section class="box" style="margin-top:.7rem;">
+            <section class="print-box">
                 <b>{% trans "Notes" %}</b><br>
                 {{ invoice.notes|linebreaksbr }}
             </section>
         {% endif %}
-    </main>
-</body>
-</html>
+    </section>
+{% endblock %}

@@ -1,61 +1,43 @@
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Email Invoice {{ invoice.invoice_number }}</title>
-    <style>
-        body { margin: 0; background: #f5fbff; color: #14283f; font-family: "Segoe UI", sans-serif; }
-        .wrap { width: min(840px, 95vw); margin: 1.2rem auto; }
-        .card { margin-top: .9rem; background: #fff; border: 1px solid #d8e8f6; border-radius: 12px; padding: .9rem; }
-        .notice { margin-top: .9rem; background: #eef6fc; border: 1px solid #c8dcef; border-radius: 12px; padding: .85rem .95rem; color: #22435f; }
-        .row { margin-bottom: .7rem; }
-        label { display: block; font-weight: 700; margin-bottom: .2rem; }
-        input, textarea { width: 100%; border: 1px solid #b9cfe4; border-radius: 8px; padding: .5rem .6rem; font: inherit; }
-        .btn { display: inline-block; text-decoration: none; border: 0; border-radius: 9px; padding: .52rem .84rem; font-weight: 700; cursor: pointer; }
-        .btn-main { background: #0f7e93; color: #fff; }
-        .btn-soft { background: #e9f4ff; color: #1c4f75; }
-        .errors { color: #8b1d1d; font-size: .9rem; margin-top: .25rem; }
-        .shop-logo { max-height: 56px; width: auto; display: block; margin: .4rem 0; border: 1px solid #d8e8f6; border-radius: 8px; background: #fff; padding: .2rem; }
-    </style>
-</head>
-<body>
-    {% load i18n %}
-    <main class="wrap">
-        {% include "includes/back_to_dashboard_button.html" %}
-        <h1>{% trans "Email Invoice" %} {{ invoice.invoice_number }}</h1>
-        <div>{% trans "Customer:" %} <b>{{ invoice.customer.full_name }}</b></div>
-        {% if current_shop_logo_url %}
-            <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
-        {% endif %}
+{% extends "base_shop.html" %}
+{% load i18n %}
 
-        {% if is_file_backend %}
-            <section class="notice">
-                <b>{% trans "Development email mode" %}</b><br>
-                {% trans "Emails are written to local files instead of being delivered." %}<br>
-                <span>{{ email_file_path }}</span>
-            </section>
-        {% elif is_console_backend %}
-            <section class="notice">
-                <b>{% trans "Development email mode" %}</b><br>
-                {% trans "Emails are written to the runserver console instead of being delivered." %}
-            </section>
-        {% endif %}
+{% block title %}{% trans "Email Invoice" %} {{ invoice.invoice_number }}{% endblock %}
+{% block page_badge %}{% trans "Invoices" %}{% endblock %}
+{% block page_title %}{% trans "Email Invoice" %} {{ invoice.invoice_number }}{% endblock %}
+{% block page_subtitle %}{% trans "Customer:" %} <strong>{{ invoice.customer.full_name }}</strong> · {% trans "Shop:" %} <strong>{{ shop.shop_name }}</strong>{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-outline" href="{% url 'invoice_detail' invoice.id %}">{% trans "Cancel" %}</a>
+{% endblock %}
 
-        <section class="card">
-            <form method="post">
-                {% csrf_token %}
+{% block content %}
+    {% if is_file_backend %}
+        <section class="notice-panel">
+            <strong>{% trans "Development email mode" %}</strong>
+            {% trans "Emails are written to local files instead of being delivered." %}<br>
+            <span>{{ email_file_path }}</span>
+        </section>
+    {% elif is_console_backend %}
+        <section class="notice-panel">
+            <strong>{% trans "Development email mode" %}</strong>
+            {% trans "Emails are written to the runserver console instead of being delivered." %}
+        </section>
+    {% endif %}
+
+    <section class="card invoice-form-card">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-grid">
                 {% for field in form %}
-                    <div class="row">
+                    <div class="field{% if field.name == 'message' %} field--wide{% endif %}">
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field }}
-                        {% if field.errors %}<div class="errors">{{ field.errors|striptags }}</div>{% endif %}
+                        {% if field.errors %}<div class="field-error">{{ field.errors|striptags }}</div>{% endif %}
                     </div>
                 {% endfor %}
-                <button class="btn btn-main" type="submit">{% trans "Send Email" %}</button>
-                <a class="btn btn-soft" href="{% url 'invoice_detail' invoice.id %}">{% trans "Cancel" %}</a>
-            </form>
-        </section>
-    </main>
-</body>
-</html>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">{% trans "Send Email" %}</button>
+            </div>
+        </form>
+    </section>
+{% endblock %}

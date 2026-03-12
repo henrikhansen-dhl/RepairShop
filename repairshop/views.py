@@ -160,7 +160,14 @@ def landing_page(request):
 @login_required
 def shop_dashboard(request):
     shop_context = get_shop_context_for_user(request.user)
-    return render(request, "shop_dashboard.html", {"shop_context": shop_context})
+    return render(
+        request,
+        "shop_dashboard.html",
+        {
+            "shop_context": shop_context,
+            "shop": shop_context["shop"] if shop_context else None,
+        },
+    )
 
 
 @require_shop_right("can_create_repair_order", required_feature=ShopProfile.FEATURE_REPAIR_ORDERS)
@@ -786,16 +793,38 @@ def invoice_price_table(request):
     if not shop:
         return HttpResponseForbidden("Invoice management is available for shop users only.")
 
+    edit_item = None
+    edit_item_id = request.GET.get("edit")
+    if edit_item_id:
+        edit_item = get_object_or_404(InvoicePriceItem, pk=edit_item_id, shop=shop)
+
     if request.method == "POST":
-        form = InvoicePriceItemForm(request.POST)
+        action = request.POST.get("action", "save")
+
+        if action == "delete":
+            item = get_object_or_404(InvoicePriceItem, pk=request.POST.get("item_id"), shop=shop)
+            item_description = item.description
+            item.delete()
+            messages.success(request, _("Price item '%(description)s' deleted.") % {"description": item_description})
+            return redirect("invoice_price_table")
+
+        item_id = request.POST.get("item_id")
+        form_instance = get_object_or_404(InvoicePriceItem, pk=item_id, shop=shop) if item_id else None
+        form = InvoicePriceItemForm(request.POST, instance=form_instance)
         if form.is_valid():
             item = form.save(commit=False)
             item.shop = shop
             item.save()
-            messages.success(request, f"Price item '{item.description}' saved.")
+            message_text = (
+                _("Price item '%(description)s' updated.")
+                if form_instance
+                else _("Price item '%(description)s' saved.")
+            )
+            messages.success(request, message_text % {"description": item.description})
             return redirect("invoice_price_table")
+        edit_item = form_instance
     else:
-        form = InvoicePriceItemForm()
+        form = InvoicePriceItemForm(instance=edit_item)
 
     items = InvoicePriceItem.objects.filter(shop=shop).order_by("item_type", "description")
     return render(
@@ -805,6 +834,7 @@ def invoice_price_table(request):
             "shop": shop,
             "form": form,
             "items": items,
+            "active_edit_item_id": edit_item.id if edit_item else None,
         },
     )
 

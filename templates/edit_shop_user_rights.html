@@ -1,166 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RepairShop | Edit User Rights</title>
-    <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: linear-gradient(155deg, #f7fffb, #ebf3ff);
-            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
-            color: #12243a;
-            padding: 1.2rem;
-        }
+{% extends "base_shop.html" %}
+{% load i18n %}
 
-        .wrap {
-            width: min(760px, 100%);
-            margin: 0 auto;
-            background: #fff;
-            border: 1px solid #d6e6f5;
-            border-radius: 14px;
-            padding: 1rem;
-            box-shadow: 0 12px 30px rgba(8, 25, 42, 0.1);
-        }
+{% block title %}RepairShop | {% trans "Edit User Rights" %}{% endblock %}
+{% block page_badge %}{% trans "Shop Users" %}{% endblock %}
+{% block page_title %}{% blocktrans with username=access.user.username %}Edit Rights: {{ username }}{% endblocktrans %}{% endblock %}
+{% block page_subtitle %}{% trans "Shop:" %} <strong>{{ shop.shop_name }}</strong>{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-outline" href="{% url 'manage_shop_users' shop.pk %}">{% trans "Back to Users" %}</a>
+{% endblock %}
 
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: .7rem;
-            margin-bottom: .8rem;
-        }
-
-        .btn {
-            display: inline-block;
-            border: 0;
-            border-radius: 9px;
-            text-decoration: none;
-            font-weight: 700;
-            padding: .55rem .85rem;
-            cursor: pointer;
-            background: #0f7e93;
-            color: #fff;
-        }
-
-        .btn-soft {
-            background: #e7f5ff;
-            color: #0f4e68;
-            border: 1px solid #c9e2f3;
-        }
-
-        form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: .7rem;
-        }
-
-        .field {
-            background: #fff;
-            border: 1px solid #d8e7f4;
-            border-radius: 10px;
-            padding: .65rem;
-        }
-
-        .field-wide { grid-column: 1 / -1; }
-
-        label {
-            display: block;
-            font-size: .88rem;
-            font-weight: 700;
-            margin-bottom: .3rem;
-        }
-
-        input, select {
-            width: 100%;
-            border: 1px solid #b8cee2;
-            border-radius: 8px;
-            padding: .5rem .6rem;
-            font-size: .95rem;
-            background: #fff;
-        }
-
-        .errorlist {
-            list-style: none;
-            margin: .4rem 0 0;
-            padding: .45rem .55rem;
-            border-radius: 8px;
-            background: #ffe8e8;
-            color: #8b1d1d;
-            font-size: .85rem;
-        }
-        .shop-logo { max-height: 56px; width: auto; display: block; margin-top: .4rem; border: 1px solid #d6e6f5; border-radius: 8px; background: #fff; padding: .2rem; }
-    </style>
-</head>
-<body>
-    {% load i18n %}
-    <main class="wrap">
-        <header class="top">
-            <div>
-                <h1 style="margin:0;">{% blocktrans with username=access.user.username %}Edit Rights: {{ username }}{% endblocktrans %}</h1>
-                <div>{% trans "Shop:" %} <b>{{ shop.shop_name }}</b></div>
-                {% if current_shop_logo_url %}
-                    <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
-                {% endif %}
-            </div>
-            <div style="display:flex; gap:.45rem; flex-wrap:wrap;">
-                {% include "includes/back_to_dashboard_button.html" %}
-                <a class="btn btn-soft" href="{% url 'manage_shop_users' shop.pk %}">{% trans "Back to Users" %}</a>
-            </div>
-        </header>
-
+{% block content %}
+    <section class="card invoice-panel">
         <form method="post">
             {% csrf_token %}
-            <div class="field field-wide">{{ form.non_field_errors }}</div>
+            <div class="form-grid">
+                <div class="field field--wide">{{ form.non_field_errors }}</div>
 
-            <div class="field">
-                <label for="id_role">{% trans "Role" %}</label>
-                {{ form.role }}
-                {{ form.role.errors }}
+                <div class="field">
+                    <label for="id_role">{% trans "Role" %}</label>
+                    {{ form.role }}
+                    {{ form.role.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_preferred_language">{% trans "Preferred language" %}</label>
+                    {{ form.preferred_language }}
+                    {{ form.preferred_language.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_can_manage_users">{% trans "Can manage users" %}</label>
+                    {{ form.can_manage_users }}
+                    {{ form.can_manage_users.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_can_create_repair_order">{% trans "Can create repair orders" %}</label>
+                    {{ form.can_create_repair_order }}
+                    {{ form.can_create_repair_order.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_can_manage_inventory">{% trans "Can manage inventory" %}</label>
+                    {{ form.can_manage_inventory }}
+                    {{ form.can_manage_inventory.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_can_view_reports">{% trans "Can view reports" %}</label>
+                    {{ form.can_view_reports }}
+                    {{ form.can_view_reports.errors }}
+                </div>
+
+                <div class="field">
+                    <label for="id_is_active">{% trans "Access active" %}</label>
+                    {{ form.is_active }}
+                    {{ form.is_active.errors }}
+                </div>
             </div>
 
-            <div class="field">
-                <label for="id_preferred_language">{% trans "Preferred language" %}</label>
-                {{ form.preferred_language }}
-                {{ form.preferred_language.errors }}
-            </div>
-
-            <div class="field">
-                <label for="id_can_manage_users">{% trans "Can manage users" %}</label>
-                {{ form.can_manage_users }}
-                {{ form.can_manage_users.errors }}
-            </div>
-
-            <div class="field">
-                <label for="id_can_create_repair_order">{% trans "Can create repair orders" %}</label>
-                {{ form.can_create_repair_order }}
-                {{ form.can_create_repair_order.errors }}
-            </div>
-
-            <div class="field">
-                <label for="id_can_manage_inventory">{% trans "Can manage inventory" %}</label>
-                {{ form.can_manage_inventory }}
-                {{ form.can_manage_inventory.errors }}
-            </div>
-
-            <div class="field">
-                <label for="id_can_view_reports">{% trans "Can view reports" %}</label>
-                {{ form.can_view_reports }}
-                {{ form.can_view_reports.errors }}
-            </div>
-
-            <div class="field">
-                <label for="id_is_active">{% trans "Access active" %}</label>
-                {{ form.is_active }}
-                {{ form.is_active.errors }}
-            </div>
-
-            <div class="field field-wide" style="display:flex; justify-content:flex-end;">
-                <button class="btn" type="submit">{% trans "Save Rights" %}</button>
+            <div class="form-actions" style="margin-top:1rem; justify-content:flex-end;">
+                <button class="btn btn-primary" type="submit">{% trans "Save Rights" %}</button>
             </div>
         </form>
-    </main>
-</body>
-</html>
+    </section>
+{% endblock %}

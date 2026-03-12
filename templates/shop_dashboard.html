@@ -1,287 +1,108 @@
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RepairShop | Shop Functions</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
-            color: #12243a;
-            background: linear-gradient(160deg, #f8fffc, #ebf3ff);
-            min-height: 100vh;
-        }
+{% extends "base_shop.html" %}
+{% load i18n %}
 
-        .wrap {
-            width: min(960px, 92vw);
-            margin: 0 auto;
-            padding: 2rem 0;
-        }
+{% block title %}RepairShop | {% trans "Shop Functions" %}{% endblock %}
+{% block page_badge %}{% trans "Dashboard" %}{% endblock %}
+{% block page_title %}{% trans "Shop Functions" %}{% endblock %}
+{% block page_subtitle %}
+    {% blocktrans with username=request.user.username %}Welcome, {{ username }}.{% endblocktrans %}
+    {% if shop_context %}
+        {% blocktrans with shop_name=shop_context.shop.shop_name %}Active shop: <strong>{{ shop_name }}</strong>{% endblocktrans %}
+    {% endif %}
+{% endblock %}
+{% block page_actions %}
+    {% if request.user.is_staff %}
+        <div class="action-cluster">
+            <a class="btn btn-outline" href="{% url 'shop_list' %}">{% trans "Manage Shops" %}</a>
+            <a class="btn btn-primary" href="{% url 'add_shop' %}">{% trans "Add New Shop" %}</a>
+        </div>
+    {% endif %}
+{% endblock %}
 
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
+{% block content %}
+    <section class="card">
+        <div class="stack-sm">
+            <h2 class="section-title">{% trans "Operations" %}</h2>
+            <p class="muted">{% trans "Only paid functions with matching user rights are visible in the dashboard." %}</p>
+        </div>
 
-        .hero-copy {
-            max-width: 640px;
-        }
-
-        .eyebrow {
-            display: inline-block;
-            margin-bottom: .5rem;
-            font-size: .76rem;
-            font-weight: 800;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            color: #0f7e93;
-            background: #e7f7fb;
-            border-radius: 999px;
-            padding: .22rem .55rem;
-        }
-
-        .hero-copy p {
-            margin: .35rem 0 0;
-            color: #30506d;
-            line-height: 1.45;
-        }
-
-        .actions {
-            display: flex;
-            gap: .55rem;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            align-items: center;
-        }
-
-        .card {
-            margin-top: 1rem;
-            background: #fff;
-            border: 1px solid #d7e7f6;
-            border-radius: 16px;
-            padding: 1.1rem;
-            box-shadow: 0 18px 36px rgba(18, 36, 58, 0.06);
-        }
-
-        .section-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            gap: .8rem;
-            flex-wrap: wrap;
-        }
-
-        .section-head p {
-            margin: 0;
-            color: #48627e;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: .8rem;
-            margin-top: .8rem;
-        }
-
-        .tile {
-            background: #f4fbff;
-            border: 1px solid #d5e8f5;
-            border-radius: 12px;
-            padding: .9rem;
-            transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-        }
-
-        .tile:hover {
-            transform: translateY(-2px);
-            border-color: #bfdced;
-            box-shadow: 0 10px 20px rgba(15, 126, 147, 0.08);
-        }
-
-        .tile a {
-            color: #0d5f78;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .tile p {
-            margin: .35rem 0 0;
-            color: #30506d;
-            font-size: .92rem;
-        }
-
-        .locked {
-            background: #f6f7fa;
-            border-color: #e2e7ee;
-            color: #6a7787;
-        }
-
-        .chip {
-            display: inline-block;
-            margin-top: .35rem;
-            border-radius: 999px;
-            padding: .14rem .45rem;
-            font-size: .76rem;
-            font-weight: 700;
-            background: #e8f7ec;
-            color: #1b6b35;
-        }
-
-        .chip-lock {
-            background: #eef1f6;
-            color: #5f6d7d;
-        }
-
-        .btn {
-            border: 0;
-            text-decoration: none;
-            color: #fff;
-            background: #0f7e93;
-            padding: .55rem .9rem;
-            border-radius: 9px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-secondary {
-            background: #153a56;
-        }
-
-        .inline-form { margin: 0; }
-        .shop-logo { max-height: 58px; width: auto; display: block; margin-top: .4rem; border: 1px solid #d7e7f6; border-radius: 8px; background: #fff; padding: .2rem; }
-
-        @media (max-width: 680px) {
-            .actions {
-                width: 100%;
-                justify-content: stretch;
-            }
-
-            .actions .btn,
-            .actions form,
-            .actions form .btn {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body>
-    {% load i18n %}
-    <main class="wrap">
-        <header class="top">
-            <div class="hero-copy">
-                <span class="eyebrow">{% trans "Dashboard" %}</span>
-                <h1>{% trans "Shop Functions" %}</h1>
-                <p>
-                    {% blocktrans with username=request.user.username %}Welcome, {{ username }}.{% endblocktrans %}
-                    {% if shop_context %}
-                        {% blocktrans with shop_name=shop_context.shop.shop_name %}Active shop: <b>{{ shop_name }}</b>{% endblocktrans %}
-                    {% endif %}
-                </p>
-                <p>{% trans "Only paid shop functions that your current user is allowed to use are shown here." %}</p>
-                {% if current_shop_logo_url %}
-                    <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop_context.shop.shop_name }} logo">
-                {% endif %}
-            </div>
-            <div class="actions">
-                {% if request.user.is_staff %}
-                    <a class="btn btn-secondary" href="{% url 'shop_list' %}">{% trans "Manage Shops" %}</a>
-                    <a class="btn" href="{% url 'add_shop' %}">{% trans "Add New Shop" %}</a>
-                {% endif %}
-                <form class="inline-form" method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn">{% trans "Log out" %}</button>
-                </form>
-            </div>
-        </header>
-
-        <section class="card">
-            <div class="section-head">
-                <h2>{% trans "Operations" %}</h2>
-                <p>{% trans "Only paid functions with matching user rights are visible in the dashboard." %}</p>
-            </div>
-            <div class="grid">
-                {% if shop_context and shop_context.features.repair_orders %}
-                    {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
-                        <article class="tile">
-                            <a href="{% url 'create_repair_order' %}">{% trans "Create Repair Order" %}</a>
-                            <p>{% trans "Create and assign repair work orders." %}</p>
-                            <span class="chip">{% trans "Allowed" %}</span>
-                        </article>
-                    {% endif %}
-                {% endif %}
-
-                {% if shop_context and shop_context.features.inspections %}
-                    {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
-                        <article class="tile">
-                            <a href="{% url 'schedule_inspection' %}">{% trans "Schedule Vehicle Inspection" %}</a>
-                            <p>{% trans "Plan incoming inspections and workload." %}</p>
-                            <span class="chip">{% trans "Allowed" %}</span>
-                        </article>
-                    {% endif %}
-                {% endif %}
-
-                {% if shop_context and shop_context.features.inventory %}
-                    {% if request.user.is_staff or shop_context.rights.can_manage_inventory %}
-                        <article class="tile">
-                            <a href="{% url 'manage_inventory' %}">{% trans "Manage Parts Inventory" %}</a>
-                            <p>{% trans "Track stock, receiving, and part usage." %}</p>
-                            <span class="chip">{% trans "Allowed" %}</span>
-                        </article>
-                    {% endif %}
-                {% endif %}
-
-                {% if shop_context and shop_context.features.reports %}
-                    {% if request.user.is_staff or shop_context.rights.can_view_reports %}
-                        <article class="tile">
-                            <a href="{% url 'view_reports' %}">{% trans "View Reports" %}</a>
-                            <p>{% trans "Open business and performance reports." %}</p>
-                            <span class="chip">{% trans "Allowed" %}</span>
-                        </article>
-                    {% endif %}
-                {% endif %}
-
-                {% if shop_context and shop_context.features.invoices %}
-                    {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
-                        <article class="tile">
-                            <a href="{% url 'invoice_list' %}">{% trans "Invoices" %}</a>
-                            <p>{% trans "Create invoices from price table items or manual lines." %}</p>
-                            <span class="chip">{% trans "Allowed" %}</span>
-                        </article>
-                    {% endif %}
-                {% endif %}
-
-                {% if shop_context and shop_context.features.customers %}
-                    {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
-                        <article class="tile">
-                            <a href="{% url 'customer_list' %}">{% trans "Customers" %}</a>
-                            <p>{% trans "Manage customer profiles and their vehicles." %}</p>
-                            <span class="chip">{% trans "Allowed" %}</span>
-                        </article>
-                    {% endif %}
-                {% endif %}
-
-                {% if shop_context and shop_context.features.user_management %}
-                    {% if request.user.is_staff or shop_context.rights.can_manage_users %}
-                        <article class="tile">
-                            <a href="{% url 'manage_shop_users' shop_context.shop.pk %}">{% trans "Manage Shop Users" %}</a>
-                            <p>{% trans "Add staff and configure role-based rights." %}</p>
-                            <span class="chip">{% trans "Allowed" %}</span>
-                        </article>
-                    {% endif %}
-                {% endif %}
-
-                {% if not shop_context %}
-                    <article class="tile locked">
-                        <b>{% trans "No active shop" %}</b>
-                        <p>{% trans "Your account does not currently have an active shop context." %}</p>
-                        <span class="chip chip-lock">{% trans "Unavailable" %}</span>
+        <div class="customer-vehicle-grid" style="margin-top:1rem;">
+            {% if shop_context and shop_context.features.repair_orders %}
+                {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
+                    <article class="vehicle-card">
+                        <div class="vehicle-card__header"><h3>{% trans "Create Repair Order" %}</h3><span class="status-pill is-success">{% trans "Allowed" %}</span></div>
+                        <div class="vehicle-card__body"><p>{% trans "Create and assign repair work orders." %}</p></div>
+                        <div class="vehicle-card__actions"><a class="btn btn-outline" href="{% url 'create_repair_order' %}">{% trans "Open" %}</a></div>
                     </article>
                 {% endif %}
-            </div>
-        </section>
-    </main>
-</body>
-</html>
+            {% endif %}
+
+            {% if shop_context and shop_context.features.inspections %}
+                {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
+                    <article class="vehicle-card">
+                        <div class="vehicle-card__header"><h3>{% trans "Schedule Vehicle Inspection" %}</h3><span class="status-pill is-success">{% trans "Allowed" %}</span></div>
+                        <div class="vehicle-card__body"><p>{% trans "Plan incoming inspections and workload." %}</p></div>
+                        <div class="vehicle-card__actions"><a class="btn btn-outline" href="{% url 'schedule_inspection' %}">{% trans "Open" %}</a></div>
+                    </article>
+                {% endif %}
+            {% endif %}
+
+            {% if shop_context and shop_context.features.inventory %}
+                {% if request.user.is_staff or shop_context.rights.can_manage_inventory %}
+                    <article class="vehicle-card">
+                        <div class="vehicle-card__header"><h3>{% trans "Manage Parts Inventory" %}</h3><span class="status-pill is-success">{% trans "Allowed" %}</span></div>
+                        <div class="vehicle-card__body"><p>{% trans "Track stock, receiving, and part usage." %}</p></div>
+                        <div class="vehicle-card__actions"><a class="btn btn-outline" href="{% url 'manage_inventory' %}">{% trans "Open" %}</a></div>
+                    </article>
+                {% endif %}
+            {% endif %}
+
+            {% if shop_context and shop_context.features.reports %}
+                {% if request.user.is_staff or shop_context.rights.can_view_reports %}
+                    <article class="vehicle-card">
+                        <div class="vehicle-card__header"><h3>{% trans "View Reports" %}</h3><span class="status-pill is-success">{% trans "Allowed" %}</span></div>
+                        <div class="vehicle-card__body"><p>{% trans "Open business and performance reports." %}</p></div>
+                        <div class="vehicle-card__actions"><a class="btn btn-outline" href="{% url 'view_reports' %}">{% trans "Open" %}</a></div>
+                    </article>
+                {% endif %}
+            {% endif %}
+
+            {% if shop_context and shop_context.features.invoices %}
+                {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
+                    <article class="vehicle-card">
+                        <div class="vehicle-card__header"><h3>{% trans "Invoices" %}</h3><span class="status-pill is-success">{% trans "Allowed" %}</span></div>
+                        <div class="vehicle-card__body"><p>{% trans "Create invoices from price table items or manual lines." %}</p></div>
+                        <div class="vehicle-card__actions"><a class="btn btn-outline" href="{% url 'invoice_list' %}">{% trans "Open" %}</a></div>
+                    </article>
+                {% endif %}
+            {% endif %}
+
+            {% if shop_context and shop_context.features.customers %}
+                {% if request.user.is_staff or shop_context.rights.can_create_repair_order %}
+                    <article class="vehicle-card">
+                        <div class="vehicle-card__header"><h3>{% trans "Customers" %}</h3><span class="status-pill is-success">{% trans "Allowed" %}</span></div>
+                        <div class="vehicle-card__body"><p>{% trans "Manage customer profiles and their vehicles." %}</p></div>
+                        <div class="vehicle-card__actions"><a class="btn btn-outline" href="{% url 'customer_list' %}">{% trans "Open" %}</a></div>
+                    </article>
+                {% endif %}
+            {% endif %}
+
+            {% if shop_context and shop_context.features.user_management %}
+                {% if request.user.is_staff or shop_context.rights.can_manage_users %}
+                    <article class="vehicle-card">
+                        <div class="vehicle-card__header"><h3>{% trans "Manage Shop Users" %}</h3><span class="status-pill is-success">{% trans "Allowed" %}</span></div>
+                        <div class="vehicle-card__body"><p>{% trans "Add staff and configure role-based rights." %}</p></div>
+                        <div class="vehicle-card__actions"><a class="btn btn-outline" href="{% url 'manage_shop_users' shop_context.shop.pk %}">{% trans "Open" %}</a></div>
+                    </article>
+                {% endif %}
+            {% endif %}
+
+            {% if not shop_context %}
+                <article class="vehicle-card">
+                    <div class="vehicle-card__header"><h3>{% trans "No active shop" %}</h3><span class="status-pill is-muted">{% trans "Unavailable" %}</span></div>
+                    <div class="vehicle-card__body"><p>{% trans "Your account does not currently have an active shop context." %}</p></div>
+                </article>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

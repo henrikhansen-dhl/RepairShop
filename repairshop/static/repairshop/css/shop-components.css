@@ -1,0 +1,172 @@
+.search-grid,
+.form-grid,
+.detail-grid,
+.customer-vehicle-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.search-grid,
+.detail-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.form-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.field--wide {
+    grid-column: 1 / -1;
+}
+
+.compact-form {
+    display: grid;
+    gap: 1rem;
+}
+
+.meta-tile,
+.vehicle-card,
+.notice-panel,
+.lookup-panel {
+    border: 1px solid #e4edf8;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff, #fbfdff);
+}
+
+.meta-tile {
+    padding: .9rem;
+}
+
+.meta-tile b {
+    display: block;
+    margin-bottom: .3rem;
+}
+
+.customer-vehicle-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.vehicle-card {
+    display: grid;
+    gap: .9rem;
+    padding: 1rem;
+    box-shadow: 0 10px 24px rgba(17, 37, 58, 0.05);
+}
+
+.vehicle-card__header {
+    display: flex;
+    justify-content: space-between;
+    gap: .75rem;
+    align-items: flex-start;
+}
+
+.vehicle-card__header h3 {
+    margin: 0;
+}
+
+.vehicle-card__body p {
+    margin: 0;
+    line-height: 1.55;
+}
+
+.vehicle-card__actions {
+    display: flex;
+    gap: .55rem;
+    flex-wrap: wrap;
+}
+
+.tire-storage-card {
+    padding: .95rem;
+    border-radius: 14px;
+    border: 1px solid color-mix(in srgb, var(--shop-primary) 18%, #dfe9f5);
+    background: linear-gradient(135deg, var(--shop-primary-soft), #ffffff 72%);
+}
+
+.tire-storage-card h4 {
+    margin: 0 0 .5rem;
+    font-size: 1rem;
+}
+
+.tire-storage-meta {
+    display: grid;
+    gap: .45rem;
+    color: var(--shop-muted);
+}
+
+.shop-form-card,
+.invoice-panel,
+.invoice-form-card {
+    padding: 1rem;
+}
+
+.shop-form-card form,
+.invoice-form-card form,
+.invoice-panel form {
+    display: grid;
+    gap: 1rem;
+}
+
+.notice-panel {
+    padding: .95rem 1rem;
+    background: linear-gradient(135deg, var(--shop-accent), #fafdff);
+    color: #22435f;
+}
+
+.notice-panel strong,
+.notice-panel b {
+    display: block;
+    margin-bottom: .25rem;
+}
+
+.lookup-tools {
+    display: flex;
+    gap: .65rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.lookup-tools > *:first-child {
+    flex: 1 1 220px;
+}
+
+.lookup-status {
+    color: #30506d;
+    font-size: .92rem;
+}
+
+.code-box {
+    margin-top: 1rem;
+    padding: .8rem;
+    border: 1px solid #dfe9f5;
+    border-radius: 12px;
+    background: #f8fbff;
+    max-height: 220px;
+    overflow: auto;
+    font-family: Consolas, monospace;
+    font-size: .84rem;
+    white-space: pre-wrap;
+}
+
+.inline-note {
+    margin: 0;
+    color: var(--shop-muted);
+}
+
+.stack-sm {
+    display: grid;
+    gap: .75rem;
+}
+
+@media (max-width: 640px) {
+    .vehicle-card__actions,
+    .lookup-tools {
+        width: 100%;
+    }
+
+    .vehicle-card__actions .btn,
+    .vehicle-card__actions form,
+    .vehicle-card__actions form .btn,
+    .lookup-tools .btn {
+        width: 100%;
+    }
+}

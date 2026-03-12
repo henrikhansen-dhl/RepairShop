@@ -1,84 +1,59 @@
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Car | {{ customer.full_name }}</title>
-    <style>
-        body { font-family: "Segoe UI", sans-serif; margin: 0; background: #f6fbff; color: #1d2f44; }
-        .wrap { width: min(760px, 94vw); margin: 2rem auto; }
-        .card { background: #fff; border: 1px solid #d7e5f3; border-radius: 14px; padding: 1rem; }
-        .row { margin-bottom: .75rem; }
-        label { display: block; font-weight: 700; margin-bottom: .2rem; }
-        input, textarea { width: 100%; padding: .48rem; border: 1px solid #c9d9ea; border-radius: 8px; font: inherit; }
-        .btn { display: inline-block; text-decoration: none; border: 0; border-radius: 9px; padding: .5rem .85rem; font-weight: 700; cursor: pointer; }
-        .btn-primary { background: #0f7e93; color: #fff; }
-        .btn-light { background: #eef6fc; color: #1d4d71; }
-        .errors { color: #8f1d1d; margin: .25rem 0 0; font-size: .9rem; }
-        .inline-tools { display: flex; gap: .55rem; align-items: center; flex-wrap: wrap; }
-        .status { margin-top: .4rem; font-size: .9rem; color: #30506d; }
-        .result-box {
-            margin-top: .75rem;
-            border: 1px solid #dfe9f5;
-            border-radius: 8px;
-            background: #f8fbff;
-            padding: .6rem;
-            max-height: 220px;
-            overflow: auto;
-            font-family: Consolas, monospace;
-            font-size: .84rem;
-            white-space: pre-wrap;
-        }
-        .shop-logo { max-height: 54px; width: auto; display: block; margin-bottom: .6rem; border: 1px solid #d7e5f3; border-radius: 8px; background: #fff; padding: .2rem; }
-    </style>
-</head>
-<body>
-    {% load i18n %}
-    {% trans "Enter a plate before lookup." as msg_enter_plate_before_lookup %}
-    {% trans "Looking up vehicle data..." as msg_lookup_in_progress %}
-    {% trans "Lookup failed." as msg_lookup_failed %}
-    {% trans "Vehicle data loaded. Review and save the car." as msg_vehicle_loaded %}
-    {% trans "Lookup request failed. Please try again." as msg_lookup_request_failed %}
-    <main class="wrap">
-        {% include "includes/back_to_dashboard_button.html" with button_class="btn btn-light" %}
-        {% if current_shop_logo_url %}
-            <img class="shop-logo" src="{{ current_shop_logo_url }}" alt="{{ shop.shop_name }} logo">
-        {% endif %}
-        <h1>{% if is_create %}{% trans "Add Car" %}{% else %}{% trans "Edit Car" %}{% endif %}</h1>
-        <p>{% trans "Customer:" %} <b>{{ customer.full_name }}</b> | {% trans "Shop:" %} <b>{{ shop.shop_name }}</b></p>
-        <section class="card">
-            <form method="post">
-                {% csrf_token %}
+{% extends "base_shop.html" %}
+{% load i18n %}
 
+{% trans "Enter a plate before lookup." as msg_enter_plate_before_lookup %}
+{% trans "Looking up vehicle data..." as msg_lookup_in_progress %}
+{% trans "Lookup failed." as msg_lookup_failed %}
+{% trans "Vehicle data loaded. Review and save the car." as msg_vehicle_loaded %}
+{% trans "Lookup request failed. Please try again." as msg_lookup_request_failed %}
+
+{% block title %}{% if is_create %}{% trans "Add Car" %}{% else %}{% trans "Edit Car" %}{% endif %} | {{ customer.full_name }}{% endblock %}
+{% block page_badge %}{% trans "Vehicles" %}{% endblock %}
+{% block page_title %}{% if is_create %}{% trans "Add Car" %}{% else %}{% trans "Edit Car" %}{% endif %}{% endblock %}
+{% block page_subtitle %}{% trans "Customer:" %} <strong>{{ customer.full_name }}</strong> · {% trans "Shop:" %} <strong>{{ shop.shop_name }}</strong>{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-outline" href="{% url 'customer_detail' customer.id %}">{% trans "Cancel" %}</a>
+{% endblock %}
+
+{% block content %}
+    <section class="card shop-form-card">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-grid">
                 {% for field in form %}
                     {% if field.is_hidden %}
                         {{ field }}
                     {% else %}
-                        <div class="row">
+                        <div class="field{% if field.name == 'notes' or field.name == 'tire_hotel_notes' %} field--wide{% endif %}">
                             <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                             {% if field.name == 'plate_number' %}
-                                <div class="inline-tools">
+                                <div class="lookup-tools">
                                     {{ field }}
-                                    <button id="lookup-plate-btn" class="btn btn-light" type="button">{% trans "Lookup Plate" %}</button>
+                                    <button id="lookup-plate-btn" class="btn btn-outline" type="button">{% trans "Lookup Plate" %}</button>
                                 </div>
-                                <div id="lookup-status" class="status">{% trans "Enter a Danish plate and click \"Lookup Plate\"." %}</div>
+                                <div id="lookup-status" class="lookup-status">{% trans "Enter a Danish plate and click \"Lookup Plate\"." %}</div>
                             {% else %}
                                 {{ field }}
                             {% endif %}
                             {% if field.errors %}
-                                <div class="errors">{{ field.errors|striptags }}</div>
+                                <div class="field-error">{{ field.errors|striptags }}</div>
                             {% endif %}
                         </div>
                     {% endif %}
                 {% endfor %}
+            </div>
 
+            <div class="form-actions">
                 <button class="btn btn-primary" type="submit">{% if is_create %}{% trans "Add Car" %}{% else %}{% trans "Save Car" %}{% endif %}</button>
-                <a class="btn btn-light" href="{% url 'customer_detail' customer.id %}">{% trans "Cancel" %}</a>
-            </form>
-            <div id="lookup-result" class="result-box" hidden></div>
-        </section>
-    </main>
+            </div>
+        </form>
 
+        <div id="lookup-result" class="code-box" hidden></div>
+    </section>
+{% endblock %}
+
+{% block extra_scripts %}
     <script>
         // Auto-fill car fields from MotorAPI by plate number.
         (function () {
@@ -204,5 +179,4 @@
             });
         })();
     </script>
-</body>
-</html>
+{% endblock %}

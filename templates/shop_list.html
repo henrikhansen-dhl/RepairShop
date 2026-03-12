@@ -1,134 +1,20 @@
-<!DOCTYPE html>
-<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RepairShop | Manage Shops</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: "Segoe UI", "Trebuchet MS", sans-serif;
-            color: #12243a;
-            background: linear-gradient(160deg, #f8fffc, #ebf3ff);
-            min-height: 100vh;
-            padding: 1.2rem;
-        }
+{% extends "base_shop.html" %}
+{% load i18n %}
 
-        .wrap {
-            width: min(980px, 100%);
-            margin: 0 auto;
-            background: #fff;
-            border: 1px solid #d5e6f5;
-            border-radius: 14px;
-            padding: 1rem;
-            box-shadow: 0 12px 32px rgba(8, 25, 42, 0.1);
-        }
+{% block title %}RepairShop | {% trans "Manage Shops" %}{% endblock %}
+{% block page_badge %}{% trans "Administration" %}{% endblock %}
+{% block page_title %}{% trans "Manage Shops" %}{% endblock %}
+{% block page_subtitle %}{% trans "Review tenant shops, access status, and login ownership." %}{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="{% url 'add_shop' %}">{% trans "Add New Shop" %}</a>
+{% endblock %}
 
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: .7rem;
-            margin-bottom: .8rem;
-        }
-
-        h1 { margin: 0; }
-
-        .btn {
-            display: inline-block;
-            border: 0;
-            text-decoration: none;
-            color: #fff;
-            background: #0f7e93;
-            border-radius: 9px;
-            padding: .55rem .85rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-soft {
-            background: #e7f5ff;
-            color: #0f4e68;
-            border: 1px solid #c9e2f3;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: .95rem;
-        }
-
-        th, td {
-            padding: .6rem;
-            border-bottom: 1px solid #e4eef8;
-            text-align: left;
-            vertical-align: top;
-        }
-
-        .shop-logo {
-            max-height: 42px;
-            width: auto;
-            border: 1px solid #d5e6f5;
-            border-radius: 7px;
-            background: #fff;
-            padding: .12rem;
-            display: block;
-        }
-
-        th { color: #274763; }
-
-        .pill {
-            display: inline-block;
-            padding: .15rem .55rem;
-            border-radius: 999px;
-            font-size: .8rem;
-            font-weight: 700;
-        }
-
-        .active { background: #e5f8e5; color: #1f6f1f; }
-        .inactive { background: #ffe8e8; color: #8e1f1f; }
-
-        .actions {
-            display: flex;
-            gap: .45rem;
-            flex-wrap: wrap;
-        }
-
-        .inline-form { margin: 0; }
-
-        .message {
-            margin-bottom: .65rem;
-            border-radius: 8px;
-            padding: .55rem .7rem;
-            background: #e9fce9;
-            border: 1px solid #bde4bd;
-            color: #1c681c;
-            font-weight: 600;
-        }
-    </style>
-</head>
-<body>
-    {% load i18n %}
-    <main class="wrap">
-        <header class="top">
-            <h1>{% trans "Manage Shops" %}</h1>
-            <div class="actions">
-                <a class="btn" href="{% url 'add_shop' %}">{% trans "Add New Shop" %}</a>
-                {% include "includes/back_to_dashboard_button.html" %}
-            </div>
-        </header>
-
-        {% if messages %}
-            {% for message in messages %}
-                <div class="message">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-
-        <table>
+{% block content %}
+    <section class="card">
+        <table class="shop-table">
             <thead>
                 <tr>
-                    <th>Shop</th>
+                    <th>{% trans "Shop" %}</th>
                     <th>{% trans "Logo" %}</th>
                     <th>{% trans "Login Username" %}</th>
                     <th>{% trans "Database Alias" %}</th>
@@ -143,7 +29,7 @@
                         <td>{{ shop.shop_name }}</td>
                         <td>
                             {% if shop.logo_url %}
-                                <img class="shop-logo" src="{{ shop.logo_url }}" alt="{{ shop.shop_name }} logo">
+                                <img class="shop-branding__logo" src="{{ shop.logo_url }}" alt="{{ shop.shop_name }} logo" style="max-height:42px; margin:0;">
                             {% else %}
                                 -
                             {% endif %}
@@ -153,33 +39,30 @@
                         <td>{{ shop.enabled_feature_summary }}</td>
                         <td>
                             {% if shop.is_active %}
-                                <span class="pill active">{% trans "Active" %}</span>
+                                <span class="status-pill is-success">{% trans "Active" %}</span>
                             {% else %}
-                                <span class="pill inactive">{% trans "Inactive" %}</span>
+                                <span class="status-pill is-muted">{% trans "Inactive" %}</span>
                             {% endif %}
                         </td>
                         <td>
-                            <div class="actions">
-                                <a class="btn btn-soft" href="{% url 'edit_shop' shop.pk %}">{% trans "Edit" %}</a>
-                                <a class="btn btn-soft" href="{% url 'manage_shop_users' shop.pk %}">{% trans "Users & Rights" %}</a>
+                            <div class="table-actions">
+                                <a class="btn btn-outline" href="{% url 'edit_shop' shop.pk %}">{% trans "Edit" %}</a>
+                                <a class="btn btn-outline" href="{% url 'manage_shop_users' shop.pk %}">{% trans "Users & Rights" %}</a>
                                 <form class="inline-form" method="post" action="{% url 'toggle_shop_active' shop.pk %}">
                                     {% csrf_token %}
                                     {% if shop.is_active %}
-                                        <button class="btn" type="submit">{% trans "Deactivate" %}</button>
+                                        <button class="btn btn-danger" type="submit">{% trans "Deactivate" %}</button>
                                     {% else %}
-                                        <button class="btn" type="submit">{% trans "Activate" %}</button>
+                                        <button class="btn btn-primary" type="submit">{% trans "Activate" %}</button>
                                     {% endif %}
                                 </form>
                             </div>
                         </td>
                     </tr>
                 {% empty %}
-                    <tr>
-                        <td colspan="7">{% trans "No shops yet. Create your first one." %}</td>
-                    </tr>
+                    <tr><td colspan="7" class="muted">{% trans "No shops yet. Create your first one." %}</td></tr>
                 {% endfor %}
             </tbody>
         </table>
-    </main>
-</body>
-</html>
+    </section>
+{% endblock %}
