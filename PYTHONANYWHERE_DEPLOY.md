@@ -157,8 +157,41 @@ Typical commands in a PythonAnywhere Bash console:
 cd ~/RepairShop
 source /home/yourusername/.virtualenvs/repairshop-venv/bin/activate
 pip install -r requirements.txt
-python manage.py migrate
+# Important: Bash console does NOT automatically inherit env vars from the WSGI file.
+# Export production DB vars here (or source a secrets file) before migrate.
+
+# Verify you are targeting MySQL (not sqlite fallback) before running migrations:
+python manage.py shell -c "from django.conf import settings; print(settings.DATABASES['default']['ENGINE'], settings.DATABASES['default']['NAME'])"
+
+# Apply shared-app migrations (including shops) on default:
+python manage.py migrate --database=default
+
+# Optional: confirm shops migrations are applied (0015 adds shop_profile.enabled_features):
+python manage.py showmigrations shops --database=default
+
 python manage.py collectstatic --noinput
+```
+
+### One-command deploy helper (recommended)
+
+This repo now includes a guarded deploy script:
+
+```bash
+./deploy_pythonanywhere.sh
+```
+
+What it does:
+
+- Loads secrets from `/home/yourusername/.secrets/repairshop.env` (or a path you pass in).
+- Verifies Django is using MySQL (fails if it is still on sqlite fallback).
+- Runs `migrate --database=default`.
+- Shows `shops` migration status.
+- Runs `collectstatic --noinput`.
+
+Custom secrets path example:
+
+```bash
+./deploy_pythonanywhere.sh /home/yourusername/.secrets/repairshop.env
 ```
 
 ## Static files on PythonAnywhere
