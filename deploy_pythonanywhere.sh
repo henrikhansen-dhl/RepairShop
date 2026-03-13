@@ -35,11 +35,42 @@ if [[ ! -f "$SECRETS_FILE" ]]; then
   exit 1
 fi
 
-# Export all variables from secrets file for this shell.
-set -a
-# shellcheck disable=SC1090
-source "$SECRETS_FILE"
-set +a
+# Load key=value pairs from dotenv file without shell expansion.
+while IFS= read -r raw_line || [[ -n "$raw_line" ]]; do
+  line="${raw_line%$'\r'}"
+
+  # Skip blank lines and comments.
+  [[ -z "${line//[[:space:]]/}" ]] && continue
+  [[ "$line" =~ ^[[:space:]]*# ]] && continue
+
+  if [[ "$line" != *=* ]]; then
+    echo "WARN: skipping invalid line in secrets file: $line"
+    continue
+  fi
+
+  key="${line%%=*}"
+  value="${line#*=}"
+
+  # Trim surrounding whitespace.
+  key="${key#${key%%[![:space:]]*}}"
+  key="${key%${key##*[![:space:]]}}"
+  value="${value#${value%%[![:space:]]*}}"
+  value="${value%${value##*[![:space:]]}}"
+
+  # Strip one pair of surrounding quotes if present.
+  if [[ "$value" =~ ^".*"$ ]]; then
+    value="${value:1:${#value}-2}"
+  elif [[ "$value" =~ ^\'.*\'$ ]]; then
+    value="${value:1:${#value}-2}"
+  fi
+
+  if [[ ! "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+    echo "WARN: skipping invalid variable name in secrets file: $key"
+    continue
+  fi
+
+  export "$key=$value"
+done < "$SECRETS_FILE"
 
 echo "Checking active database engine..."
 python manage.py shell -c "from django.conf import settings; import sys; e=settings.DATABASES['default']['ENGINE']; n=settings.DATABASES['default']['NAME']; print(e, n); sys.exit(0 if e=='django.db.backends.mysql' else 1)"
