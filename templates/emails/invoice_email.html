@@ -16,7 +16,7 @@
     <p style="margin:6px 0 0;"><b>{% trans "Total (incl VAT):" %} {{ invoice.grand_total_incl_vat|floatformat:2 }}</b></p>
 
     <p style="margin-top:14px;">
-        <a href="{{ invoice_print_url }}">{% trans "View / print invoice" %}</a>
+        <a href="{{ invoice_public_url }}">{% trans "View / print invoice" %}</a>
     </p>
 
     <hr style="margin:14px 0; border:none; border-top:1px solid #d8e4ef;">

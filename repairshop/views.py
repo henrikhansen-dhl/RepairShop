@@ -10,6 +10,7 @@ from urllib import request as urllib_request
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.core import signing
 from django.conf import settings as django_settings
 from django.core.mail import EmailMultiAlternatives
 from django.http import JsonResponse
@@ -38,6 +39,127 @@ from shops.forms import (
     ShopUserAccessEditForm,
 )
 from shops.models import Customer, CustomerCar, Invoice, InvoiceLine, InvoicePriceItem, RepairWorkOrder, RepairWorkOrderLine, ShopMasterData, ShopProfile, ShopUserAccess
+
+
+INVOICE_PUBLIC_LINK_SALT = "invoice-public-link"
+INVOICE_PUBLIC_LINK_MAX_AGE_SECONDS = 60 * 60 * 24 * 90  # 90 days
+
+
+def _build_public_invoice_token(invoice_id: int) -> str:
+    return signing.dumps({"invoice_id": invoice_id}, salt=INVOICE_PUBLIC_LINK_SALT, compress=True)
+
+
+def _load_public_invoice_token(token: str) -> dict:
+    return signing.loads(
+        token,
+        salt=INVOICE_PUBLIC_LINK_SALT,
+        max_age=INVOICE_PUBLIC_LINK_MAX_AGE_SECONDS,
+    )
+
+
+def _generate_invoice_pdf_bytes(*, shop, master_data, invoice, lines, printed_at):
+    """Build a simple A4 invoice PDF in memory for email attachment."""
+    try:
+        from reportlab.lib.pagesizes import A4
+        from reportlab.pdfgen import canvas
+    except Exception as exc:
+        raise RuntimeError("PDF generation dependency is missing. Install reportlab.") from exc
+
+    buffer = io.BytesIO()
+    pdf = canvas.Canvas(buffer, pagesize=A4)
+    width, height = A4
+    margin = 40
+    y = height - margin
+
+    def draw_line(text, *, size=10, gap=14):
+        nonlocal y
+        if y < 60:
+            pdf.showPage()
+            y = height - margin
+        pdf.setFont("Helvetica", size)
+        pdf.drawString(margin, y, text)
+        y -= gap
+
+    def draw_pair(label, value):
+        nonlocal y
+        if y < 60:
+            pdf.showPage()
+            y = height - margin
+        pdf.setFont("Helvetica-Bold", 10)
+        pdf.drawString(margin, y, f"{label}:")
+        pdf.setFont("Helvetica", 10)
+        pdf.drawString(margin + 110, y, str(value or "-"))
+        y -= 14
+
+    sender_name = master_data.legal_name or shop.shop_name
+
+    draw_line(f"Invoice {invoice.invoice_number}", size=16, gap=22)
+    draw_pair("Issue Date", invoice.issue_date)
+    draw_pair("Due Date", invoice.due_date or "-")
+    draw_pair("Status", invoice.get_status_display())
+    y -= 4
+
+    draw_line("From", size=12, gap=16)
+    draw_line(sender_name)
+    if master_data.address_line1:
+        draw_line(master_data.address_line1)
+    if master_data.address_line2:
+        draw_line(master_data.address_line2)
+    city_line = f"{master_data.postal_code or ''} {master_data.city or ''}".strip()
+    if city_line:
+        draw_line(city_line)
+    if master_data.country:
+        draw_line(master_data.country)
+    if master_data.phone:
+        draw_line(f"Phone: {master_data.phone}")
+    if master_data.email:
+        draw_line(f"Email: {master_data.email}")
+    if master_data.vat_number:
+        draw_line(f"VAT: {master_data.vat_number}")
+    y -= 4
+
+    draw_line("To", size=12, gap=16)
+    draw_line(invoice.customer.full_name)
+    if invoice.customer.address:
+        for address_line in str(invoice.customer.address).splitlines():
+            draw_line(address_line)
+    if invoice.customer.phone:
+        draw_line(f"Phone: {invoice.customer.phone}")
+    if invoice.customer.email:
+        draw_line(f"Email: {invoice.customer.email}")
+    if invoice.car:
+        draw_line(f"Car: {invoice.car}")
+    y -= 6
+
+    draw_line("Lines", size=12, gap=16)
+    for line in lines:
+        desc = (line.description or "")[:64]
+        qty = line.quantity
+        unit = f"{line.unit_price:.2f}"
+        total = f"{line.line_total:.2f}"
+        draw_line(f"- {desc}")
+        draw_line(f"  Qty: {qty}  Unit: {unit}  VAT%: {line.vat_percent}  Total ex VAT: {total}")
+
+    y -= 6
+    draw_pair("Subtotal", f"{invoice.subtotal:.2f}")
+    if invoice.line_rebate_amount:
+        draw_pair("Line Rebate", f"{invoice.line_rebate_amount:.2f}")
+    if invoice.invoice_rebate_amount:
+        draw_pair("Invoice Rebate", f"{invoice.invoice_rebate_amount:.2f}")
+    draw_pair("Total Rebate", f"{invoice.total_rebate_amount:.2f}")
+    draw_pair("Total ex VAT", f"{invoice.grand_total:.2f}")
+    draw_pair("VAT Total", f"{invoice.vat_total:.2f}")
+    draw_pair("Grand Total incl VAT", f"{invoice.grand_total_incl_vat:.2f}")
+    draw_pair("Printed", printed_at.strftime("%Y-%m-%d %H:%M"))
+
+    if invoice.notes:
+        y -= 6
+        draw_line("Notes", size=12, gap=16)
+        for note_line in str(invoice.notes).splitlines():
+            draw_line(note_line)
+
+    pdf.save()
+    return buffer.getvalue()
 
 
 PLATE_REGEX = re.compile(r"^[A-Z]{2}\d{5}$")
@@ -677,6 +799,37 @@ def invoice_print(request, invoice_id):
         pk=invoice_id,
         shop=shop,
     )
+
+
+def invoice_public(request, token):
+    try:
+        payload = _load_public_invoice_token(token)
+    except signing.SignatureExpired:
+        return HttpResponseForbidden("This invoice link has expired.")
+    except signing.BadSignature:
+        return HttpResponseForbidden("Invalid invoice link.")
+
+    invoice_id = payload.get("invoice_id")
+    if not invoice_id:
+        return HttpResponseForbidden("Invalid invoice link payload.")
+
+    invoice = get_object_or_404(
+        Invoice.objects.select_related("shop", "customer", "car").prefetch_related("lines"),
+        pk=invoice_id,
+    )
+    master_data, _ = ShopMasterData.objects.get_or_create(shop=invoice.shop)
+
+    return render(
+        request,
+        "invoice_public.html",
+        {
+            "shop": invoice.shop,
+            "master_data": master_data,
+            "invoice": invoice,
+            "lines": invoice.lines.all(),
+            "printed_at": timezone.localtime(),
+        },
+    )
     master_data, _ = ShopMasterData.objects.get_or_create(shop=shop)
 
     return render(
@@ -711,8 +864,8 @@ def invoice_email(request, invoice_id):
     default_subject = f"Invoice {invoice.invoice_number} from {shop.shop_name}"
     default_message = (
         "Dear customer,\n\n"
-        f"Please find invoice {invoice.invoice_number} available from the link in this email message. "
-        "You can also view/print it from the provided link.\n\n"
+        f"Please find invoice {invoice.invoice_number} attached as PDF. "
+        "You can also view/print it from the secure link in this email.\n\n"
         "Best regards"
     )
 
@@ -722,14 +875,18 @@ def invoice_email(request, invoice_id):
             recipient = form.cleaned_data["recipient_email"]
             subject = form.cleaned_data["subject"]
             custom_message = form.cleaned_data.get("message", "")
+            attach_pdf = form.cleaned_data.get("attach_pdf", True)
+            lines = invoice.lines.all()
 
             context = {
                 "shop": shop,
                 "master_data": master_data,
                 "invoice": invoice,
-                "lines": invoice.lines.all(),
+                "lines": lines,
                 "custom_message": custom_message,
-                "invoice_print_url": request.build_absolute_uri(reverse("invoice_print", kwargs={"invoice_id": invoice.pk})),
+                "invoice_public_url": request.build_absolute_uri(
+                    reverse("invoice_public", kwargs={"token": _build_public_invoice_token(invoice.pk)})
+                ),
             }
 
             text_body = render_to_string("emails/invoice_email.txt", context)
@@ -742,6 +899,37 @@ def invoice_email(request, invoice_id):
                 to=[recipient],
             )
             email.attach_alternative(html_body, "text/html")
+
+            if attach_pdf:
+                try:
+                    pdf_bytes = _generate_invoice_pdf_bytes(
+                        shop=shop,
+                        master_data=master_data,
+                        invoice=invoice,
+                        lines=lines,
+                        printed_at=timezone.localtime(),
+                    )
+                except Exception as exc:
+                    messages.error(request, f"Invoice PDF could not be generated: {exc}")
+                    return render(
+                        request,
+                        "invoice_email_form.html",
+                        {
+                            "shop": shop,
+                            "invoice": invoice,
+                            "form": form,
+                            "email_backend": email_backend,
+                            "email_file_path": str(django_settings.EMAIL_FILE_PATH),
+                            "is_file_backend": is_file_backend,
+                            "is_console_backend": is_console_backend,
+                        },
+                    )
+
+                email.attach(
+                    f"invoice-{invoice.invoice_number}.pdf",
+                    pdf_bytes,
+                    "application/pdf",
+                )
             try:
                 email.send(fail_silently=False)
             except Exception as exc:

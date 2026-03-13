@@ -7,7 +7,7 @@
 {% trans "Total (incl VAT):" %} {{ invoice.grand_total_incl_vat|floatformat:2 }}
 
 {% trans "View / print invoice:" %}
-{{ invoice_print_url }}
+{{ invoice_public_url }}
 
 {% trans "From:" %}
 {% if master_data.legal_name %}{{ master_data.legal_name }}{% else %}{{ shop.shop_name }}{% endif %}

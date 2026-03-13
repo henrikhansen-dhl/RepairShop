@@ -759,3 +759,4 @@ class InvoiceEmailForm(forms.Form):
     recipient_email = forms.EmailField(label=_("Recipient email"))
     subject = forms.CharField(max_length=220, label=_("Subject"))
     message = forms.CharField(widget=forms.Textarea, required=False, label=_("Message"))
+    attach_pdf = forms.BooleanField(required=False, initial=True, label=_("Attach PDF copy"))
