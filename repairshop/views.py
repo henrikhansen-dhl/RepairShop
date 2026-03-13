@@ -58,107 +58,197 @@ def _load_public_invoice_token(token: str) -> dict:
 
 
 def _generate_invoice_pdf_bytes(*, shop, master_data, invoice, lines, printed_at):
-    """Build a simple A4 invoice PDF in memory for email attachment."""
+    """Build a styled A4 invoice PDF in memory for email attachment."""
     try:
+        from reportlab.lib import colors
+        from reportlab.lib.enums import TA_RIGHT
         from reportlab.lib.pagesizes import A4
-        from reportlab.pdfgen import canvas
+        from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+        from reportlab.lib.units import mm
+        from reportlab.platypus import Image, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
     except Exception as exc:
         raise RuntimeError("PDF generation dependency is missing. Install reportlab.") from exc
 
     buffer = io.BytesIO()
-    pdf = canvas.Canvas(buffer, pagesize=A4)
-    width, height = A4
-    margin = 40
-    y = height - margin
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        leftMargin=14 * mm,
+        rightMargin=14 * mm,
+        topMargin=14 * mm,
+        bottomMargin=14 * mm,
+    )
 
-    def draw_line(text, *, size=10, gap=14):
-        nonlocal y
-        if y < 60:
-            pdf.showPage()
-            y = height - margin
-        pdf.setFont("Helvetica", size)
-        pdf.drawString(margin, y, text)
-        y -= gap
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle("InvoiceTitle", parent=styles["Heading1"], fontSize=18, leading=22, spaceAfter=8)
+    label_style = ParagraphStyle("Label", parent=styles["Normal"], fontName="Helvetica-Bold", fontSize=10)
+    body_style = ParagraphStyle("Body", parent=styles["Normal"], fontSize=9.5, leading=12)
+    small_style = ParagraphStyle("Small", parent=styles["Normal"], fontSize=9)
+    right_style = ParagraphStyle("Right", parent=body_style, alignment=TA_RIGHT)
 
-    def draw_pair(label, value):
-        nonlocal y
-        if y < 60:
-            pdf.showPage()
-            y = height - margin
-        pdf.setFont("Helvetica-Bold", 10)
-        pdf.drawString(margin, y, f"{label}:")
-        pdf.setFont("Helvetica", 10)
-        pdf.drawString(margin + 110, y, str(value or "-"))
-        y -= 14
+    def money(value):
+        return f"{value:.2f}"
 
-    sender_name = master_data.legal_name or shop.shop_name
+    def card_table(data, col_widths):
+        t = Table(data, colWidths=col_widths)
+        t.setStyle(
+            TableStyle(
+                [
+                    ("BACKGROUND", (0, 0), (-1, -1), colors.white),
+                    ("BOX", (0, 0), (-1, -1), 0.8, colors.HexColor("#c9d8e7")),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 8),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+                    ("TOPPADDING", (0, 0), (-1, -1), 7),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
+                    ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ]
+            )
+        )
+        return t
 
-    draw_line(f"Invoice {invoice.invoice_number}", size=16, gap=22)
-    draw_pair("Issue Date", invoice.issue_date)
-    draw_pair("Due Date", invoice.due_date or "-")
-    draw_pair("Status", invoice.get_status_display())
-    y -= 4
-
-    draw_line("From", size=12, gap=16)
-    draw_line(sender_name)
-    if master_data.address_line1:
-        draw_line(master_data.address_line1)
-    if master_data.address_line2:
-        draw_line(master_data.address_line2)
+    sender_lines = []
+    if getattr(master_data, "company_logo", None) and getattr(master_data.company_logo, "path", None) and os.path.exists(master_data.company_logo.path):
+        sender_lines.append(Image(master_data.company_logo.path, width=38 * mm, height=18 * mm, kind="proportional"))
+        sender_lines.append(Spacer(1, 4))
+    sender_lines.append(Paragraph(f"<b>{master_data.legal_name or shop.shop_name}</b>", body_style))
+    for value in [master_data.address_line1, master_data.address_line2]:
+        if value:
+            sender_lines.append(Paragraph(str(value), body_style))
     city_line = f"{master_data.postal_code or ''} {master_data.city or ''}".strip()
     if city_line:
-        draw_line(city_line)
+        sender_lines.append(Paragraph(city_line, body_style))
     if master_data.country:
-        draw_line(master_data.country)
+        sender_lines.append(Paragraph(str(master_data.country), body_style))
     if master_data.phone:
-        draw_line(f"Phone: {master_data.phone}")
+        sender_lines.append(Paragraph(f"Phone: {master_data.phone}", body_style))
     if master_data.email:
-        draw_line(f"Email: {master_data.email}")
+        sender_lines.append(Paragraph(f"Email: {master_data.email}", body_style))
     if master_data.vat_number:
-        draw_line(f"VAT: {master_data.vat_number}")
-    y -= 4
+        sender_lines.append(Paragraph(f"VAT: {master_data.vat_number}", body_style))
+    sender_lines.append(Paragraph(f"Printed: {printed_at.strftime('%Y-%m-%d %H:%M')}", small_style))
 
-    draw_line("To", size=12, gap=16)
-    draw_line(invoice.customer.full_name)
+    customer_lines = [Paragraph(f"<b>{invoice.customer.full_name}</b>", body_style)]
     if invoice.customer.address:
         for address_line in str(invoice.customer.address).splitlines():
-            draw_line(address_line)
+            customer_lines.append(Paragraph(address_line, body_style))
     if invoice.customer.phone:
-        draw_line(f"Phone: {invoice.customer.phone}")
+        customer_lines.append(Paragraph(f"Phone: {invoice.customer.phone}", body_style))
     if invoice.customer.email:
-        draw_line(f"Email: {invoice.customer.email}")
+        customer_lines.append(Paragraph(f"Email: {invoice.customer.email}", body_style))
     if invoice.car:
-        draw_line(f"Car: {invoice.car}")
-    y -= 6
+        customer_lines.append(Paragraph(f"Car: {invoice.car}", body_style))
 
-    draw_line("Lines", size=12, gap=16)
+    story = [
+        Paragraph(f"Invoice {invoice.invoice_number}", title_style),
+        card_table(
+            [
+                [
+                    Paragraph("<b>From</b>", label_style),
+                    Paragraph("<b>To</b>", label_style),
+                ],
+                [sender_lines, customer_lines],
+            ],
+            col_widths=[90 * mm, 90 * mm],
+        ),
+        Spacer(1, 8),
+        card_table(
+            [
+                [Paragraph("<b>Issue Date</b>", label_style), Paragraph(str(invoice.issue_date), body_style)],
+                [Paragraph("<b>Due Date</b>", label_style), Paragraph(str(invoice.due_date or "-"), body_style)],
+                [Paragraph("<b>Status</b>", label_style), Paragraph(str(invoice.get_status_display()), body_style)],
+            ],
+            col_widths=[40 * mm, 140 * mm],
+        ),
+        Spacer(1, 8),
+    ]
+
+    lines_table_data = [
+        [
+            Paragraph("<b>Description</b>", small_style),
+            Paragraph("<b>Qty</b>", right_style),
+            Paragraph("<b>Unit</b>", right_style),
+            Paragraph("<b>VAT %</b>", right_style),
+            Paragraph("<b>Rebate</b>", right_style),
+            Paragraph("<b>Total ex VAT</b>", right_style),
+        ]
+    ]
     for line in lines:
-        desc = (line.description or "")[:64]
-        qty = line.quantity
-        unit = f"{line.unit_price:.2f}"
-        total = f"{line.line_total:.2f}"
-        draw_line(f"- {desc}")
-        draw_line(f"  Qty: {qty}  Unit: {unit}  VAT%: {line.vat_percent}  Total ex VAT: {total}")
+        rebate_value = "-"
+        if line.rebate_type == "percent":
+            rebate_value = f"{line.rebate_value}%"
+        elif line.rebate_type == "amount":
+            rebate_value = money(line.rebate_value)
+        lines_table_data.append(
+            [
+                Paragraph(str(line.description), body_style),
+                Paragraph(str(line.quantity), right_style),
+                Paragraph(money(line.unit_price), right_style),
+                Paragraph(money(line.vat_percent), right_style),
+                Paragraph(rebate_value, right_style),
+                Paragraph(money(line.line_total), right_style),
+            ]
+        )
 
-    y -= 6
-    draw_pair("Subtotal", f"{invoice.subtotal:.2f}")
+    lines_table = Table(
+        lines_table_data,
+        colWidths=[72 * mm, 16 * mm, 20 * mm, 18 * mm, 20 * mm, 30 * mm],
+        repeatRows=1,
+    )
+    lines_table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#f3f8fd")),
+                ("LINEBELOW", (0, 0), (-1, 0), 0.8, colors.HexColor("#c9d8e7")),
+                ("LINEBELOW", (0, 1), (-1, -1), 0.4, colors.HexColor("#e2ebf4")),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 6),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+                ("TOPPADDING", (0, 0), (-1, -1), 5),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+            ]
+        )
+    )
+    story.append(card_table([[lines_table]], col_widths=[180 * mm]))
+
+    totals_data = [
+        [Paragraph("Subtotal", body_style), Paragraph(money(invoice.subtotal), right_style)],
+    ]
     if invoice.line_rebate_amount:
-        draw_pair("Line Rebate", f"{invoice.line_rebate_amount:.2f}")
+        totals_data.append([Paragraph("Line Rebate", body_style), Paragraph(money(invoice.line_rebate_amount), right_style)])
     if invoice.invoice_rebate_amount:
-        draw_pair("Invoice Rebate", f"{invoice.invoice_rebate_amount:.2f}")
-    draw_pair("Total Rebate", f"{invoice.total_rebate_amount:.2f}")
-    draw_pair("Total ex VAT", f"{invoice.grand_total:.2f}")
-    draw_pair("VAT Total", f"{invoice.vat_total:.2f}")
-    draw_pair("Grand Total incl VAT", f"{invoice.grand_total_incl_vat:.2f}")
-    draw_pair("Printed", printed_at.strftime("%Y-%m-%d %H:%M"))
+        totals_data.append([Paragraph("Invoice Rebate", body_style), Paragraph(money(invoice.invoice_rebate_amount), right_style)])
+    totals_data.extend(
+        [
+            [Paragraph("Total Rebate", body_style), Paragraph(money(invoice.total_rebate_amount), right_style)],
+            [Paragraph("Total ex VAT", body_style), Paragraph(money(invoice.grand_total), right_style)],
+            [Paragraph("VAT Total", body_style), Paragraph(money(invoice.vat_total), right_style)],
+            [Paragraph("<b>Grand Total incl VAT</b>", label_style), Paragraph(f"<b>{money(invoice.grand_total_incl_vat)}</b>", right_style)],
+        ]
+    )
+    totals_table = Table(totals_data, colWidths=[45 * mm, 30 * mm], hAlign="RIGHT")
+    totals_table.setStyle(
+        TableStyle(
+            [
+                ("LINEABOVE", (0, -1), (-1, -1), 0.8, colors.HexColor("#b9cadc")),
+                ("LEFTPADDING", (0, 0), (-1, -1), 5),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 5),
+                ("TOPPADDING", (0, 0), (-1, -1), 3),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+            ]
+        )
+    )
+    story.append(Spacer(1, 8))
+    story.append(totals_table)
 
     if invoice.notes:
-        y -= 6
-        draw_line("Notes", size=12, gap=16)
-        for note_line in str(invoice.notes).splitlines():
-            draw_line(note_line)
+        story.append(Spacer(1, 10))
+        notes_table = card_table(
+            [[Paragraph("<b>Notes</b>", label_style)], [Paragraph(str(invoice.notes).replace("\n", "<br/>"), body_style)]],
+            col_widths=[180 * mm],
+        )
+        story.append(notes_table)
 
-    pdf.save()
+    doc.build(story)
     return buffer.getvalue()
 
 
