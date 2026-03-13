@@ -169,10 +169,10 @@ class RepairWorkOrder(models.Model):
     PRIORITY_HIGH = "high"
     PRIORITY_URGENT = "urgent"
     PRIORITY_CHOICES = [
-        (PRIORITY_LOW, "Low"),
-        (PRIORITY_NORMAL, "Normal"),
-        (PRIORITY_HIGH, "High"),
-        (PRIORITY_URGENT, "Urgent"),
+        (PRIORITY_LOW, _("Low")),
+        (PRIORITY_NORMAL, _("Normal")),
+        (PRIORITY_HIGH, _("High")),
+        (PRIORITY_URGENT, _("Urgent")),
     ]
 
     STATUS_NEW = "new"
@@ -182,12 +182,12 @@ class RepairWorkOrder(models.Model):
     STATUS_COMPLETED = "completed"
     STATUS_CANCELLED = "cancelled"
     STATUS_CHOICES = [
-        (STATUS_NEW, "New"),
-        (STATUS_ASSIGNED, "Assigned"),
-        (STATUS_IN_PROGRESS, "In Progress"),
-        (STATUS_READY, "Ready for Invoice"),
-        (STATUS_COMPLETED, "Completed"),
-        (STATUS_CANCELLED, "Cancelled"),
+        (STATUS_NEW, _("New")),
+        (STATUS_ASSIGNED, _("Assigned")),
+        (STATUS_IN_PROGRESS, _("In Progress")),
+        (STATUS_READY, _("Ready for Invoice")),
+        (STATUS_COMPLETED, _("Completed")),
+        (STATUS_CANCELLED, _("Cancelled")),
     ]
 
     shop = models.ForeignKey(
@@ -278,8 +278,8 @@ class RepairWorkOrderLine(models.Model):
     TYPE_SERVICE = "service"
     TYPE_PART = "part"
     TYPE_CHOICES = [
-        (TYPE_SERVICE, "Service"),
-        (TYPE_PART, "Part"),
+        (TYPE_SERVICE, _("Service")),
+        (TYPE_PART, _("Part")),
     ]
 
     work_order = models.ForeignKey(
@@ -485,9 +485,9 @@ class Invoice(models.Model):
     REBATE_PERCENT = "percent"
     REBATE_AMOUNT = "amount"
     REBATE_TYPE_CHOICES = [
-        (REBATE_NONE, "No rebate"),
-        (REBATE_PERCENT, "Percent (%)"),
-        (REBATE_AMOUNT, "Fixed amount"),
+        (REBATE_NONE, _("No rebate")),
+        (REBATE_PERCENT, _("Percent (%)")),
+        (REBATE_AMOUNT, _("Fixed amount")),
     ]
 
     STATUS_DRAFT = "draft"
@@ -495,10 +495,10 @@ class Invoice(models.Model):
     STATUS_PAID = "paid"
     STATUS_CANCELLED = "cancelled"
     STATUS_CHOICES = [
-        (STATUS_DRAFT, "Draft"),
-        (STATUS_ISSUED, "Issued"),
-        (STATUS_PAID, "Paid"),
-        (STATUS_CANCELLED, "Cancelled"),
+        (STATUS_DRAFT, _("Draft")),
+        (STATUS_ISSUED, _("Issued")),
+        (STATUS_PAID, _("Paid")),
+        (STATUS_CANCELLED, _("Cancelled")),
     ]
 
     shop = models.ForeignKey(
@@ -588,9 +588,9 @@ class InvoiceLine(models.Model):
     REBATE_PERCENT = "percent"
     REBATE_AMOUNT = "amount"
     REBATE_TYPE_CHOICES = [
-        (REBATE_NONE, "No rebate"),
-        (REBATE_PERCENT, "Percent (%)"),
-        (REBATE_AMOUNT, "Fixed amount"),
+        (REBATE_NONE, _("No rebate")),
+        (REBATE_PERCENT, _("Percent (%)")),
+        (REBATE_AMOUNT, _("Fixed amount")),
     ]
 
     invoice = models.ForeignKey(

@@ -1,933 +1,1984 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: RepairShop\n"
-"POT-Creation-Date: 2026-03-09 09:40+0000\n"
-"PO-Revision-Date: 2026-03-09 09:40+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-13 04:55+0000\n"
+"PO-Revision-Date: 2026-03-13 06:31+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.2\n"
 
-msgid "Shop Functions"
-msgstr "Værkstedsfunktioner"
-
-msgid "Welcome, %(username)s."
-msgstr "Velkommen, %(username)s."
-
-msgid "Active shop: <b>%(shop_name)s</b>"
-msgstr "Aktivt værksted: <b>%(shop_name)s</b>"
-
-msgid "Manage Shops"
-msgstr "Administrer værksteder"
-
-msgid "Add New Shop"
-msgstr "Tilføj nyt værksted"
-
-msgid "Log out"
-msgstr "Log ud"
-
-msgid "Operations"
-msgstr "Operationer"
-
+#: repairshop/views.py:218 templates/shop_dashboard.html:33
 msgid "Create Repair Order"
 msgstr "Opret reparationsordre"
 
-msgid "Create and assign repair work orders."
-msgstr "Opret og tildel reparationsordrer."
-
-msgid "Allowed"
-msgstr "Tilladt"
-
-msgid "Your account does not include this right."
-msgstr "Din konto har ikke denne rettighed."
-
-msgid "Locked"
-msgstr "Last"
-
-msgid "Schedule Vehicle Inspection"
-msgstr "Planlæg syn"
-
-msgid "Plan incoming inspections and workload."
-msgstr "Planlæg kommende syn og arbejdsbelastning."
-
-msgid "Manage Parts Inventory"
-msgstr "Administrer reservedelslager"
-
-msgid "Track stock, receiving, and part usage."
-msgstr "Spor lager, modtagelse og reservedelsforbrug."
-
-msgid "View Reports"
-msgstr "Se rapporter"
-
-msgid "Open business and performance reports."
-msgstr "Åbn virksomheds- og performance-rapporter."
-
-msgid "Invoices"
-msgstr "Fakturaer"
-
-msgid "Create invoices from price table items or manual lines."
-msgstr "Opret fakturaer fra pristabellen eller manuelle linjer."
-
-msgid "Customers"
-msgstr "Kunder"
-
-msgid "Manage customer profiles and their vehicles."
-msgstr "Administrer kundeprofiler og deres biler."
-
-msgid "Manage Shop Users"
-msgstr "Administrer værkstedsbrugere"
-
-msgid "Add staff and configure role-based rights."
-msgstr "Tilføj medarbejdere og konfigurer rollebaserede rettigheder."
-
-msgid "Shop:"
-msgstr "Værksted:"
-
-msgid "Back to Shop"
-msgstr "Tilbage til værksted"
-
-msgid "Price Table"
-msgstr "Pristabel"
-
-msgid "Invoice Masterdata"
-msgstr "Faktura masterdata"
-
-msgid "New Invoice"
-msgstr "Ny faktura"
-
-msgid "Invoice #"
-msgstr "Faktura #"
-
-msgid "Date"
-msgstr "Dato"
-
-msgid "Customer"
-msgstr "Kunde"
-
-msgid "Car"
-msgstr "Bil"
-
-msgid "Status"
-msgstr "Status"
-
-msgid "Total"
-msgstr "Total"
-
-msgid "Action"
-msgstr "Handling"
-
-msgid "Open"
-msgstr "Åbn"
-
-msgid "No invoices yet."
-msgstr "Ingen fakturaer endnu."
-
-msgid "Back to Dashboard"
-msgstr "Tilbage til dashboard"
-
-msgid "Add Customer"
-msgstr "Tilføj kunde"
-
-msgid "Search name:"
-msgstr "Søg navn:"
-
-msgid "Type customer name"
-msgstr "Indtast kundenavn"
-
-msgid "Search"
-msgstr "Søg"
-
-msgid "Clear"
-msgstr "Ryd"
-
-msgid "Name"
-msgstr "Navn"
-
-msgid "Phone"
-msgstr "Telefon"
-
-msgid "Email"
-msgstr "E-mail"
-
-msgid "Actions"
-msgstr "Handlinger"
-
-msgid "Edit"
-msgstr "Rediger"
-
-msgid "Delete"
-msgstr "Slet"
-
-msgid "Delete this customer and all cars?"
-msgstr "Slet denne kunde og alle biler?"
-
-msgid "No customers found."
-msgstr "Ingen kunder fundet."
-
-msgid "Users and Rights: %(shop_name)s"
-msgstr "Brugere og rettigheder: %(shop_name)s"
-
-msgid "Database alias:"
-msgstr "Database-alias:"
-
-msgid "Back to Shops"
-msgstr "Tilbage til værksteder"
-
-msgid "Back to My Shop"
-msgstr "Tilbage til mit værksted"
-
-msgid "New user credentials"
-msgstr "Nye brugeroplysninger"
-
-msgid "Username:"
-msgstr "Brugernavn:"
-
-msgid "Password:"
-msgstr "Adgangskode:"
-
-msgid "Copy Credentials"
-msgstr "Kopier oplysninger"
-
-msgid "Add User to Shop"
-msgstr "Tilføj bruger til værksted"
-
-msgid "Preferred language"
-msgstr "Foretrukket sprog"
-
-msgid "Current Users"
-msgstr "Nuværende brugere"
-
-msgid "User"
-msgstr "Bruger"
-
-msgid "Language"
-msgstr "Sprog"
-
-msgid "Manage Users"
-msgstr "Administrer brugere"
-
-msgid "Create Orders"
-msgstr "Opret ordrer"
-
-msgid "Inventory"
-msgstr "Lager"
-
-msgid "Reports"
-msgstr "Rapporter"
-
-msgid "Yes"
-msgstr "Ja"
-
-msgid "No"
-msgstr "Nej"
-
-msgid "Active"
-msgstr "Aktiv"
-
-msgid "Inactive"
-msgstr "Inaktiv"
-
-msgid "Edit Rights"
-msgstr "Rediger rettigheder"
-
-msgid "No users assigned to this shop yet."
-msgstr "Ingen brugere er endnu tildelt dette værksted."
-
-msgid "Credentials copied to clipboard."
-msgstr "Oplysninger kopieret til udklipsholder."
-
-msgid "Edit Rights: %(username)s"
-msgstr "Rediger rettigheder: %(username)s"
-
-msgid "Back to Users"
-msgstr "Tilbage til brugere"
-
-msgid "Save Rights"
-msgstr "Gem rettigheder"
-
-msgid "Back to Customers"
-msgstr "Tilbage til kunder"
-
-msgid "Edit Customer"
-msgstr "Rediger kunde"
-
-msgid "Invoice Customer"
-msgstr "Fakturer kunde"
-
-msgid "Delete Customer"
-msgstr "Slet kunde"
-
-msgid "Customer Details"
-msgstr "Kundeoplysninger"
-
-msgid "Cars linked:"
-msgstr "Tilknyttede biler:"
-
-msgid "Address"
-msgstr "Adresse"
-
-msgid "Notes:"
-msgstr "Noter:"
-
-msgid "Cars"
-msgstr "Biler"
-
-msgid "Plate:"
-msgstr "Nummerplade:"
-
-msgid "VIN:"
-msgstr "Stelnummer:"
-
-msgid "Color:"
-msgstr "Farve:"
-
-msgid "Inspection"
-msgstr "Syn"
-
-msgid "Type:"
-msgstr "Type:"
-
-msgid "Result:"
-msgstr "Resultat:"
-
-msgid "Status Date:"
-msgstr "Statusdato:"
-
-msgid "Mileage:"
-msgstr "Kilometertal:"
-
-msgid "Next:"
-msgstr "Næste:"
-
-msgid "Tire Hotel"
-msgstr "Dækhotel"
-
-msgid "Location:"
-msgstr "Placering:"
-
-msgid "Labels:"
-msgstr "Etiketter:"
-
-msgid "Edit Car"
-msgstr "Rediger bil"
-
-msgid "Invoice This Car"
-msgstr "Fakturer denne bil"
-
-msgid "Print Tire Labels"
-msgstr "Udskriv dæketiketter"
-
-msgid "Delete Car"
-msgstr "Slet bil"
-
-msgid "Delete this car?"
-msgstr "Slet denne bil?"
-
-msgid "No cars saved yet for this customer."
-msgstr "Ingen biler er gemt for denne kunde endnu."
-
-msgid "Cancel"
-msgstr "Annuller"
-
-msgid "Lookup Plate"
-msgstr "Søg nummerplade"
-
-msgid "Save Car"
-msgstr "Gem bil"
-
-msgid "Enter a plate before lookup."
-msgstr "Indtast en nummerplade for sogning."
-
-msgid "Looking up vehicle data..."
-msgstr "Søger efter bildata..."
-
-msgid "Lookup failed."
-msgstr "Søgning mislykkedes."
-
-msgid "Vehicle data loaded. Review and save the car."
-msgstr "Bildata indlæst. Gennemgå og gem bilen."
-
-msgid "Lookup request failed. Please try again."
-msgstr "Søgningsanmodning mislykkedes. Prøv igen."
-
-msgid "Back to Invoices"
-msgstr "Tilbage til fakturaer"
-
-msgid "Masterdata"
-msgstr "Masterdata"
-
-msgid "Email Invoice"
-msgstr "Send faktura"
-
-msgid "Print / PDF"
-msgstr "Udskriv / PDF"
-
-msgid "Status Actions"
-msgstr "Statushandlinger"
-
-msgid "Set"
-msgstr "Sæt"
-
-msgid "Invoice Header"
-msgstr "Fakturahoved"
-
-msgid "Locked:"
-msgstr "Last:"
-
-msgid "This invoice is not draft and cannot be edited."
-msgstr "Denne faktura er ikke et kladdeudkast og kan ikke redigeres."
-
-msgid "Update Invoice"
-msgstr "Opdater faktura"
-
-msgid "Add Invoice Line"
-msgstr "Tilføj fakturalinje"
-
-msgid "Add Line"
-msgstr "Tilføj linje"
-
-msgid "Invoice Lines"
-msgstr "Fakturalinjer"
-
-msgid "Description"
-msgstr "Beskrivelse"
-
-msgid "Qty"
-msgstr "Antal"
-
-msgid "Line Rebate"
-msgstr "Linjerabat"
-
-msgid "Line Total"
-msgstr "Linjetotal"
-
-msgid "Delete this line?"
-msgstr "Slet denne linje?"
-
-msgid "No lines added yet."
-msgstr "Ingen linjer tilføjet endnu."
-
-msgid "Subtotal:"
-msgstr "Subtotal:"
-
-msgid "Total Rebate:"
-msgstr "Samlet rabat:"
-
-msgid "Total ex VAT:"
-msgstr "Total ekskl. moms:"
-
-msgid "VAT Total:"
-msgstr "Moms total:"
-
-msgid "Grand Total incl VAT:"
-msgstr "Total inkl. moms:"
-
-msgid "Add Price Item"
-msgstr "Tilføj prislinje"
-
-msgid "Save Item"
-msgstr "Gem vare"
-
-msgid "Current Items"
-msgstr "Nuværende varer"
-
-msgid "Type"
-msgstr "Type"
-
-msgid "Code"
-msgstr "Kode"
-
-msgid "No price items yet."
-msgstr "Ingen prislinjer endnu."
-
-msgid "Save Masterdata"
-msgstr "Gem masterdata"
-
-msgid "Send Email"
-msgstr "Send e-mail"
-
-msgid "Feature scaffold is ready. Plug your domain models and workflows into this page."
-msgstr "Funktionsskabelon er klar. Tilslut dine domanemodeller og workflows pa denne side."
-
+#: repairshop/views.py:219
 msgid "This is where you create and dispatch repair orders."
 msgstr "Her opretter og udsender du reparationsordrer."
 
+#: repairshop/views.py:418 templates/shop_dashboard.html:43
+msgid "Schedule Vehicle Inspection"
+msgstr "Planlæg syn"
+
+#: repairshop/views.py:419
 msgid "This is where your team can schedule and track inspections."
 msgstr "Her kan dit team planlagge og følge syn."
 
+#: repairshop/views.py:431 templates/shop_dashboard.html:53
+msgid "Manage Parts Inventory"
+msgstr "Administrer reservedelslager"
+
+#: repairshop/views.py:432
 msgid "This is where stock movements and part catalogs are managed."
 msgstr "Her administreres lagerbevaegelser og reservedelskataloger."
 
-msgid "This is where KPI, revenue, and technician productivity reports are shown."
+#: repairshop/views.py:444 templates/shop_dashboard.html:63
+msgid "View Reports"
+msgstr "Se rapporter"
+
+#: repairshop/views.py:445
+msgid ""
+"This is where KPI, revenue, and technician productivity reports are shown."
 msgstr "Her vises KPI-, omsætnings- og produktivitetsrapporter."
 
-msgid "Logo"
-msgstr "Logo"
-
-msgid "Database Alias"
-msgstr "Database-alias"
-
-msgid "Users & Rights"
-msgstr "Brugere og rettigheder"
-
-msgid "Deactivate"
-msgstr "Deaktiver"
-
-msgid "Activate"
-msgstr "Aktiver"
-
-msgid "No shops yet. Create your first one."
-msgstr "Ingen værksteder endnu. Opret din første."
-
-msgid "RepairShop Cloud"
-msgstr "RepairShop Cloud"
-
-msgid "Every Garage,"
-msgstr "Ethvert værksted,"
-
-msgid "One Fast Workflow."
-msgstr "Et hurtigt workflow."
-
-msgid "Run estimates, jobs, and customer records per shop with isolated databases."
-msgstr "Håndter tilbud, opgaver og kundedata per værksted med isolerede databaser."
-
-msgid "Sign in to access your shop-specific dashboard and daily repair operations."
-msgstr "Log ind for at åbne dit værkstedsspecifikke dashboard og daglige opgaver."
-
-msgid "Open My Shop Functions"
-msgstr "Åbn mine værkstedsfunktioner"
-
-msgid "Log in to My Shop"
-msgstr "Log ind på mit værksted"
-
-msgid "Admin Access"
-msgstr "Admin-adgang"
-
-msgid "Tenant Isolation"
-msgstr "Tenant-isolation"
-
-msgid "Shop data routed to its own database."
-msgstr "Værkstedsdata sendes til sin egen database."
-
-msgid "Secure Access"
-msgstr "Sikker adgang"
-
-msgid "Users only open their shop workspace."
-msgstr "Brugere kan kun åbne deres eget værkstedsarbejdsområde."
-
-msgid "Cloud Ready"
-msgstr "Cloud-klar"
-
-msgid "Log in to your shop"
-msgstr "Log ind på dit værksted"
-
-msgid "Use your RepairShop account to open shop-specific functions."
-msgstr "Brug din RepairShop-konto til at åbne værkstedsspecifikke funktioner."
-
-msgid "Continue"
-msgstr "Fortsæt"
-
-msgid "Back to landing page"
-msgstr "Tilbage til forsiden"
-
-msgid "Print / Save PDF"
-msgstr "Udskriv / gem PDF"
-
-msgid "From"
-msgstr "Fra"
-
-msgid "To"
-msgstr "Til"
-
-msgid "Unit"
-msgstr "Enhed"
-
-msgid "Rebate"
-msgstr "Rabat"
-
-msgid "No lines."
-msgstr "Ingen linjer."
-
-msgid "Subtotal"
-msgstr "Subtotal"
-
-msgid "Total Rebate"
-msgstr "Samlet rabat"
-
-msgid "VAT Total"
-msgstr "Moms total"
-
-msgid "Grand Total incl VAT"
-msgstr "Total inkl. moms"
-
-msgid "Notes"
-msgstr "Noter"
-
-msgid "Print"
-msgstr "Udskriv"
-
-msgid "Back to Customer"
-msgstr "Tilbage til kunde"
-
-msgid "Format:"
-msgstr "Format:"
-
-msgid "Preset"
-msgstr "Forvalg"
-
-msgid "Count"
-msgstr "Antal"
-
-msgid "Apply"
-msgstr "Anvend"
-
-msgid "Label"
-msgstr "Etiket"
-
-msgid "Invoice Number:"
-msgstr "Fakturanummer:"
-
-msgid "Total (incl VAT):"
-msgstr "Total (inkl. moms):"
-
-msgid "View / print invoice"
-msgstr "Se / udskriv faktura"
-
-msgid "View / print invoice:"
-msgstr "Se / udskriv faktura:"
-
-msgid "Create a shop account, login user, and tenant database alias."
-msgstr "Opret en værkstedskonto, en loginbruger og et tenant-databasealias."
-
-msgid "New Shop Credentials"
-msgstr "Nye værkstedsoplysninger"
-
-msgid "Database:"
-msgstr "Database:"
-
-msgid "Shop name"
-msgstr "Værkstedsnavn"
-
-msgid "Login username"
-msgstr "Loginbrugernavn"
-
-msgid "Email (optional)"
-msgstr "E-mail (valgfri)"
-
-msgid "Database alias (optional)"
-msgstr "Database-alias (valgfri)"
-
-msgid "Generate strong password automatically"
-msgstr "Generer automatisk en stærk adgangskode"
-
-msgid "Temporary password"
-msgstr "Midlertidig adgangskode"
-
-msgid "Confirm password"
-msgstr "Bekræft adgangskode"
-
-msgid "Create Shop"
-msgstr "Opret værksted"
-
+#: repairshop/views.py:512 repairshop/views.py:513
 msgid "Create Invoice"
 msgstr "Opret faktura"
 
-msgid "Back to Shop List"
-msgstr "Tilbage til værkstedsliste"
-
-msgid "Temporary password reset"
-msgstr "Midlertidig nulstilling af adgangskode"
-
-msgid "Database alias"
-msgstr "Database-alias"
-
-msgid "Shop is active"
-msgstr "Værkstedet er aktivt"
-
-msgid "Owner user is active"
-msgstr "Ejerbruger er aktiv"
-
-msgid "Reset password to a new random value"
-msgstr "Nulstil adgangskode til en ny tilfældig værdi"
-
-msgid "Save Changes"
-msgstr "Gem ændringer"
-
-msgid "New username"
-msgstr "Nyt brugernavn"
-
-msgid "New user email"
-msgstr "Ny bruger e-mail"
-
-msgid "Generate password"
-msgstr "Generer adgangskode"
-
-msgid "Create new user account"
-msgstr "Opret ny brugerkonto"
-
-msgid "Existing user"
-msgstr "Eksisterende bruger"
-
-msgid "Choose an existing user when not creating a new account."
-msgstr "Vælg en eksisterende bruger, hvis du ikke opretter en ny konto."
-
-msgid "Enter a username for the new user."
-msgstr "Indtast et brugernavn for den nye bruger."
-
-msgid "Select an existing user or create a new one."
-msgstr "Vælg en eksisterende bruger eller opret en ny."
-
-msgid "Make"
-msgstr "Mærke"
-
-msgid "Model"
-msgstr "Model"
-
-msgid "Year"
-msgstr "År"
-
-msgid "Plate number"
-msgstr "Nummerplade"
-
-msgid "Tire hotel enabled"
-msgstr "Dækhotel aktiveret"
-
-msgid "Tire hotel location"
-msgstr "Dækhotel placering"
-
-msgid "Tire hotel notes"
-msgstr "Dækhotel noter"
-
-msgid "Tire label count"
-msgstr "Antal dæketiketter"
-
-msgid "Inspection type"
-msgstr "Synstype"
-
-msgid "Inspection date"
-msgstr "Synsdato"
-
-msgid "Inspection result"
-msgstr "Synsresultat"
-
-msgid "Inspection status"
-msgstr "Synsstatus"
-
-msgid "Inspection status date"
-msgstr "Synsstatus dato"
-
-msgid "Inspection mileage"
-msgstr "Kilometertal ved syn"
-
-msgid "Next inspection date"
-msgstr "Næste synsdato"
-
-msgid "Total rebate type"
-msgstr "Samlet rabat type"
-
-msgid "Total rebate value"
-msgstr "Samlet rabat værdi"
-
-msgid "Selected car does not belong to this shop."
-msgstr "Valgt bil tilhører ikke dette værksted."
-
-msgid "Selected customer does not belong to this shop."
-msgstr "Valgt kunde tilhører ikke dette værksted."
-
-msgid "Selected car does not belong to the chosen customer."
-msgstr "Valgt bil tilhører ikke den valgte kunde."
-
-msgid "Price item"
-msgstr "Prislinje"
-
-msgid "Rebate type"
-msgstr "Rabat type"
-
-msgid "Rebate value"
-msgstr "Rabat værdi"
-
-msgid "Selected price item does not belong to this shop."
-msgstr "Valgt prislinje tilhører ikke dette værksted."
-
-msgid "Provide a manual description or choose a price item."
-msgstr "Angiv en manuel beskrivelse eller vælg en prislinje."
-
-msgid "Provide a unit price for manual lines."
-msgstr "Angiv en enhedspris for manuelle linjer."
-
-msgid "Legal name"
-msgstr "Juridisk navn"
-
-msgid "Address line 1"
-msgstr "Adresselinje 1"
-
-msgid "Address line 2"
-msgstr "Adresselinje 2"
-
-msgid "Postal code"
-msgstr "Postnummer"
-
-msgid "City"
-msgstr "By"
-
-msgid "Country"
-msgstr "Land"
-
-msgid "VAT number"
-msgstr "Momsnummer"
-
-msgid "Company logo"
-msgstr "Firma logo"
-
-msgid "Recipient email"
-msgstr "Modtager e-mail"
-
-msgid "Subject"
-msgstr "Emne"
-
-msgid "Message"
-msgstr "Besked"
-
-msgid "Active shop: <strong>%(shop_name)s</strong>"
-msgstr "Aktivt værksted: <strong>%(shop_name)s</strong>"
-
-msgid "Administration workspace"
-msgstr "Administrationsarbejdsområde"
-
-msgid "Back to Invoice"
-msgstr "Tilbage til faktura"
-
-msgid "Change status"
-msgstr "Skift status"
-
-msgid "Create Invoice From Work Order"
-msgstr "Opret faktura fra reparationsordre"
-
-msgid "Customer, dates, status, rebate, and notes."
-msgstr "Kunde, datoer, status, rabat og noter."
-
-msgid "Dashboard"
-msgstr "Dashboard"
-
-msgid "Edit Invoice Line"
-msgstr "Rediger fakturalinje"
-
-msgid "Edit Price Item"
-msgstr "Rediger prislinje"
-
-msgid "Edit the header here, then continue with the lines below."
-msgstr "Rediger hovedet her, og fortsæt derefter med linjerne nedenfor."
-
-msgid "Generate a print-friendly invoice view for"
-msgstr "Generer en udskriftsvenlig fakturavisning for"
-
-msgid "Invoice ready"
-msgstr "Faktura klar"
-
-msgid "Labor, diagnostics, and workshop tasks."
-msgstr "Arbejde, diagnostik og værkstedsopgaver."
-
-msgid "Line items"
-msgstr "Linjer"
-
-msgid "Manage reusable service and part pricing for"
-msgstr "Administrer genanvendelige service- og reservedelspriser for"
-
-msgid "No active shop"
-msgstr "Intet aktivt værksted"
-
-msgid "No part lines added yet."
-msgstr "Ingen reservedelslinjer tilføjet endnu."
-
-msgid "No service lines added yet."
-msgstr "Ingen servicelinjer tilføjet endnu."
-
-msgid "Paid Functions"
-msgstr "Betalte funktioner"
-
-msgid "Paid functions"
-msgstr "Betalte funktioner"
-
-msgid "Part"
-msgstr "Reservedel"
-
-msgid "Parts:"
-msgstr "Reservedele:"
-
-msgid "Payment due condition"
-msgstr "Betalingsbetingelse"
-
-msgid "Payment due days"
-msgstr "Betalingsdage"
-
-msgid "Print A4 2x7"
-msgstr "Udskriv A4 2x7"
-
-msgid "Print Invoice"
-msgstr "Udskriv faktura"
-
-msgid "Priority"
-msgstr "Prioritet"
-
-msgid "Repair Orders"
-msgstr "Reparationsordrer"
-
-msgid "Role"
-msgstr "Rolle"
-
+#: repairshop/views.py:815
+#, python-format
+msgid "Price item '%(description)s' deleted."
+msgstr "Pris enhed '%(description)s' slettet."
+
+#: repairshop/views.py:826
+#, python-format
+msgid "Price item '%(description)s' updated."
+msgstr "Pris enhed '%(description)s' opdateret."
+
+#: repairshop/views.py:828
+#, python-format
+msgid "Price item '%(description)s' saved."
+msgstr ""
+
+#: shops/forms.py:29 templates/work_order_detail.html:70
+#: templates/work_order_detail.html:153
 msgid "Service"
 msgstr "Service"
 
-msgid "Services:"
-msgstr "Service:"
+#: shops/forms.py:29 templates/work_order_detail.html:71
+#: templates/work_order_detail.html:154
+msgid "Part"
+msgstr "Reservedel"
 
-msgid "Shop Users"
-msgstr "Værkstedsbrugere"
+#: shops/forms.py:40 shops/forms.py:338 templates/add_shop.html:34
+#: templates/edit_shop.html:33
+msgid "Shop name"
+msgstr "Værkstedsnavn"
 
-msgid "Unit Price"
+#: shops/forms.py:41 shops/forms.py:318 templates/add_shop.html:40
+#: templates/edit_shop.html:45
+msgid "Login username"
+msgstr "Loginbrugernavn"
+
+#: shops/forms.py:42 shops/forms.py:319 shops/forms.py:517 shops/forms.py:752
+#: templates/customer_detail.html:34 templates/customer_list.html:41
+#: templates/edit_shop.html:51
+msgid "Email"
+msgstr "E-mail"
+
+#: shops/forms.py:48 shops/forms.py:324 shops/forms.py:341
+#: templates/add_shop.html:52 templates/edit_shop.html:69
+msgid "Paid functions"
+msgstr "Betalte funktioner"
+
+#: shops/forms.py:49 shops/forms.py:325
+msgid "Only selected functions will be visible and usable for this shop."
+msgstr ""
+
+#: shops/forms.py:54 templates/add_shop.html:70
+msgid "Generate strong password automatically"
+msgstr "Generer automatisk en stærk adgangskode"
+
+#: shops/forms.py:55
+msgid "If checked, the system generates a strong temporary password."
+msgstr "Hvis valgt, Systemet genererer et stærkt midlertidigt password."
+
+#: shops/forms.py:57 templates/add_shop.html:77
+msgid "Temporary password"
+msgstr "Midlertidig adgangskode"
+
+#: shops/forms.py:58 shops/forms.py:399 templates/add_shop.html:83
+#: templates/manage_shop_users.html:71
+msgid "Confirm password"
+msgstr "Bekræft adgangskode"
+
+#: shops/forms.py:62 templates/add_shop.html:63
+msgid "Database alias (optional)"
+msgstr "Database-alias (valgfri)"
+
+#: shops/forms.py:63
+msgid "Optional alias, for example: downtown_db. Leave blank to auto-generate."
+msgstr ""
+
+#: shops/forms.py:70 shops/forms.py:357 shops/forms.py:419
+msgid "This username already exists."
+msgstr ""
+
+#: shops/forms.py:86 shops/forms.py:440
+msgid "Enter a password or enable auto-generation."
+msgstr ""
+
+#: shops/forms.py:88 shops/forms.py:442
+msgid "Use at least 8 characters."
+msgstr ""
+
+#: shops/forms.py:90 shops/forms.py:444
+msgid "Passwords do not match."
+msgstr ""
+
+#: shops/forms.py:101 shops/forms.py:363
+msgid "This database alias is already in use."
+msgstr ""
+
+#: shops/forms.py:179 shops/forms.py:611 templates/customer_detail.html:8
+#: templates/invoice_list.html:24 templates/work_order_detail.html:90
+#: templates/work_order_list_create.html:218
+msgid "Customer"
+msgstr "Kunde"
+
+#: shops/forms.py:180 shops/forms.py:612 templates/invoice_list.html:25
+#: templates/work_order_list_create.html:221
+msgid "Car"
+msgstr "Bil"
+
+#: shops/forms.py:181 shops/forms.py:586 shops/forms.py:691
+#: templates/invoice_detail.html:555 templates/invoice_price_table.html:50
+#: templates/invoice_print.html:180 templates/work_order_detail.html:195
+#: templates/work_order_detail.html:264
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: shops/forms.py:182
+msgid "Mechanic notes"
+msgstr "Mekanikernoter"
+
+#: shops/forms.py:183 templates/work_order_detail.html:98
+#: templates/work_order_list_create.html:225
+msgid "Assigned to"
+msgstr "Tildelt til"
+
+#: shops/forms.py:184 templates/work_order_detail.html:77
+msgid "Priority"
+msgstr "Prioritet"
+
+#: shops/forms.py:185 templates/work_order_list_create.html:223
+msgid "Due date"
+msgstr "Forfaldsdato"
+
+#: shops/forms.py:241 shops/forms.py:669
+msgid "Selected car does not belong to the chosen customer."
+msgstr "Valgt bil tilhører ikke den valgte kunde."
+
+#: shops/forms.py:269
+msgid "Line type"
+msgstr "Linjetype"
+
+#: shops/forms.py:270 shops/forms.py:288 shops/forms.py:690
+msgid "Price item"
+msgstr "Prislinje"
+
+#: shops/forms.py:271
+msgid "Line description"
+msgstr "Linjebeskrivelse"
+
+#: shops/forms.py:272
+msgid "Quantity"
+msgstr "Antal"
+
+#: shops/forms.py:273
+msgid "Unit price"
 msgstr "Enhedspris"
 
-msgid "Unassigned"
-msgstr "Ikke tildelt"
-
-msgid "Unavailable"
-msgstr "Ikke tilgængelig"
-
-msgid "Update Invoice Header"
-msgstr "Opdater fakturahoved"
-
-msgid "Update Item"
-msgstr "Opdater linje"
-
-msgid "Update Line"
-msgstr "Opdater linje"
-
+#: shops/forms.py:274 shops/forms.py:588 shops/forms.py:694
 msgid "VAT %"
 msgstr "Moms %"
 
-msgid "Vehicle"
-msgstr "Køretøj"
+#: shops/forms.py:291
+msgid "Choose a price item"
+msgstr "Vælg en prislinje"
 
-msgid "Work Order Details"
-msgstr "Reparationsordredetaljer"
+#: shops/forms.py:309
+msgid "Enter a description or choose a price item."
+msgstr "Angiv en manuel beskrivelse eller vælg en prislinje."
 
-msgid "Workspace"
-msgstr "Arbejdsområde"
+#: shops/forms.py:311
+msgid "Enter a unit price or choose a price item."
+msgstr "Angiv en manuel beskrivelse eller vælg en prislinje."
 
+#: shops/forms.py:327 templates/edit_shop.html:63
+msgid "Owner user is active"
+msgstr "Ejerbruger er aktiv"
+
+#: shops/forms.py:330 templates/edit_shop.html:80
+msgid "Reset password to a new random value"
+msgstr "Nulstil adgangskode til en ny tilfældig værdi"
+
+#: shops/forms.py:331
+msgid "Generate a new temporary password for this shop user."
+msgstr ""
+
+#: shops/forms.py:339 templates/edit_shop.html:39
+msgid "Database alias"
+msgstr "Database-alias"
+
+#: shops/forms.py:340 templates/edit_shop.html:57
+msgid "Shop is active"
+msgstr "Værkstedet er aktivt"
+
+#: shops/forms.py:388 templates/manage_shop_users.html:35
+msgid "Create new user account"
+msgstr "Opret ny brugerkonto"
+
+#: shops/forms.py:392 templates/manage_shop_users.html:41
+msgid "Existing user"
+msgstr "Eksisterende bruger"
+
+#: shops/forms.py:393
+msgid "Choose an existing user when not creating a new account."
+msgstr "Vælg en eksisterende bruger, hvis du ikke opretter en ny konto."
+
+#: shops/forms.py:395 templates/manage_shop_users.html:47
+msgid "New username"
+msgstr "Nyt brugernavn"
+
+#: shops/forms.py:396 templates/manage_shop_users.html:53
+msgid "New user email"
+msgstr "Ny bruger e-mail"
+
+#: shops/forms.py:397 templates/manage_shop_users.html:59
+msgid "Generate password"
+msgstr "Generer adgangskode"
+
+#: shops/forms.py:398 templates/manage_shop_users.html:65
+#: templates/registration/login.html:120
+msgid "Password"
+msgstr "Adgangskode:."
+
+#: shops/forms.py:400 shops/forms.py:497
+#: templates/edit_shop_user_rights.html:20 templates/manage_shop_users.html:77
+#: templates/manage_shop_users.html:131
+msgid "Role"
+msgstr "Rolle"
+
+#: shops/forms.py:401 shops/forms.py:498
+#: templates/edit_shop_user_rights.html:26 templates/manage_shop_users.html:83
+msgid "Preferred language"
+msgstr "Foretrukket sprog"
+
+#: shops/forms.py:402 shops/forms.py:499
+#: templates/edit_shop_user_rights.html:32 templates/manage_shop_users.html:89
+msgid "Can manage users"
+msgstr "Kan administrer brugere"
+
+#: shops/forms.py:403 shops/forms.py:500
+#: templates/edit_shop_user_rights.html:38 templates/manage_shop_users.html:95
+msgid "Can create repair orders"
+msgstr "Kan oprete reparationsordre"
+
+#: shops/forms.py:404 shops/forms.py:501
+#: templates/edit_shop_user_rights.html:44 templates/manage_shop_users.html:101
+msgid "Can manage inventory"
+msgstr "Kan administrer reservedelslager"
+
+#: shops/forms.py:405 shops/forms.py:502
+#: templates/edit_shop_user_rights.html:50 templates/manage_shop_users.html:107
+msgid "Can view reports"
+msgstr "Kan se rapporter"
+
+#: shops/forms.py:406 shops/forms.py:503
+#: templates/edit_shop_user_rights.html:56 templates/manage_shop_users.html:113
+msgid "Access active"
+msgstr "Er Aktiv"
+
+#: shops/forms.py:417
+msgid "Enter a username for the new user."
+msgstr "Indtast et brugernavn for den nye bruger."
+
+#: shops/forms.py:427
+msgid "Select an existing user or create a new one."
+msgstr "Vælg en eksisterende bruger eller opret en ny."
+
+#: shops/forms.py:515 templates/customer_list.html:39
+msgid "Name"
+msgstr "Navn"
+
+#: shops/forms.py:516 shops/forms.py:751 templates/customer_detail.html:33
+#: templates/customer_list.html:40
+msgid "Phone"
+msgstr "Telefon"
+
+#: shops/forms.py:518 templates/customer_detail.html:35
+msgid "Address"
+msgstr "Adresse"
+
+#: shops/forms.py:519
+msgid "Payment due date condition"
+msgstr "Betalingsbetingelse"
+
+#: shops/forms.py:520 templates/customer_detail.html:37
+msgid "Payment due days"
+msgstr "Betalingsdage"
+
+#: shops/forms.py:521 shops/forms.py:564 shops/forms.py:618
+#: templates/invoice_print.html:225
+msgid "Notes"
+msgstr "Noter"
+
+#: shops/forms.py:558
+msgid "Make"
+msgstr "Mærke"
+
+#: shops/forms.py:559
+msgid "Model"
+msgstr "Model"
+
+#: shops/forms.py:560
+msgid "Year"
+msgstr "År"
+
+#: shops/forms.py:561
+msgid "Plate number"
+msgstr "Nummerplade"
+
+#: shops/forms.py:562
+msgid "VIN"
+msgstr "Stelnummer"
+
+#: shops/forms.py:563
+msgid "Color"
+msgstr "Farve"
+
+#: shops/forms.py:565
+msgid "Tire hotel enabled"
+msgstr "Dækhotel aktiveret"
+
+#: shops/forms.py:566
+msgid "Tire hotel location"
+msgstr "Dækhotel placering"
+
+#: shops/forms.py:567
+msgid "Tire hotel notes"
+msgstr "Dækhotel noter"
+
+#: shops/forms.py:568
+msgid "Tire label count"
+msgstr "Antal dæketiketter"
+
+#: shops/forms.py:569
+msgid "Inspection type"
+msgstr "Synstype"
+
+#: shops/forms.py:570
+msgid "Inspection date"
+msgstr "Synsdato"
+
+#: shops/forms.py:571
+msgid "Inspection result"
+msgstr "Synsresultat"
+
+#: shops/forms.py:572
+msgid "Inspection status"
+msgstr "Synsstatus"
+
+#: shops/forms.py:573
+msgid "Inspection status date"
+msgstr "Synsstatus dato"
+
+#: shops/forms.py:574
+msgid "Inspection mileage"
+msgstr "Kilometertal ved syn"
+
+#: shops/forms.py:575
+msgid "Next inspection date"
+msgstr "Næste synsdato"
+
+#: shops/forms.py:584 templates/invoice_price_table.html:48
+msgid "Type"
+msgstr "Type"
+
+#: shops/forms.py:585 templates/invoice_price_table.html:49
+msgid "Code"
+msgstr "Kode"
+
+#: shops/forms.py:587 shops/forms.py:693 templates/invoice_detail.html:557
+#: templates/invoice_price_table.html:51 templates/work_order_detail.html:197
+#: templates/work_order_detail.html:266
+msgid "Unit Price"
+msgstr "Enhedspris"
+
+#: shops/forms.py:589 templates/invoice_price_table.html:53
+#: templates/manage_shop_users.html:151 templates/shop_list.html:42
+msgid "Active"
+msgstr "Aktiv"
+
+#: shops/forms.py:613
+msgid "Issue Date"
+msgstr "Fakturadato"
+
+#: shops/forms.py:614
+msgid "Due Date"
+msgstr "Forfaldsdato"
+
+#: shops/forms.py:615 templates/invoice_detail.html:475
+#: templates/invoice_list.html:26 templates/manage_shop_users.html:137
+#: templates/shop_list.html:22 templates/work_order_detail.html:76
+msgid "Status"
+msgstr "Status"
+
+#: shops/forms.py:616
+msgid "Total rebate type"
+msgstr "Samlet rabat type"
+
+#: shops/forms.py:617
+msgid "Total rebate value"
+msgstr "Samlet rabat værdi"
+
+#: shops/forms.py:658
+msgid "Selected car does not belong to this shop."
+msgstr "Valgt bil tilhører ikke dette værksted."
+
+#: shops/forms.py:667
+msgid "Selected customer does not belong to this shop."
+msgstr "Valgt kunde tilhører ikke dette værksted."
+
+#: shops/forms.py:692 templates/invoice_detail.html:556
+#: templates/invoice_print.html:181 templates/work_order_detail.html:196
+#: templates/work_order_detail.html:265
+msgid "Qty"
+msgstr "Antal"
+
+#: shops/forms.py:695
+msgid "Rebate type"
+msgstr "Rabat type"
+
+#: shops/forms.py:696
+msgid "Rebate value"
+msgstr "Rabat værdi"
+
+#: shops/forms.py:715
+msgid "Selected price item does not belong to this shop."
+msgstr "Valgt prislinje tilhører ikke dette værksted."
+
+#: shops/forms.py:718
+msgid "Provide a manual description or choose a price item."
+msgstr "Angiv en manuel beskrivelse eller vælg en prislinje."
+
+#: shops/forms.py:721
+msgid "Provide a unit price for manual lines."
+msgstr "Angiv en enhedspris for manuelle linjer."
+
+#: shops/forms.py:745
+msgid "Legal name"
+msgstr "Juridisk navn"
+
+#: shops/forms.py:746
+msgid "Address line 1"
+msgstr "Adresselinje 1"
+
+#: shops/forms.py:747
+msgid "Address line 2"
+msgstr "Adresselinje 2"
+
+#: shops/forms.py:748
+msgid "Postal code"
+msgstr "Postnummer"
+
+#: shops/forms.py:749
+msgid "City"
+msgstr "By"
+
+#: shops/forms.py:750
+msgid "Country"
+msgstr "Land"
+
+#: shops/forms.py:753
+msgid "VAT number"
+msgstr "Momsnummer"
+
+#: shops/forms.py:754
+msgid "Company logo"
+msgstr "Firma logo"
+
+#: shops/forms.py:759
+msgid "Recipient email"
+msgstr "Modtager e-mail"
+
+#: shops/forms.py:760
+msgid "Subject"
+msgstr "Emne"
+
+#: shops/forms.py:761
+msgid "Message"
+msgstr "Besked"
+
+#: shops/models.py:39 templates/base_shop.html:48
+#: templates/work_order_detail.html:5 templates/work_order_list_create.html:5
+msgid "Repair Orders"
+msgstr "Reparationsordrer"
+
+#: shops/models.py:40
+msgid "Vehicle Inspections"
+msgstr "Planlæg Bilsyn"
+
+#: shops/models.py:41
+msgid "Inventory Management"
+msgstr "Lager administration"
+
+#: shops/models.py:42 templates/base_shop.html:60
+#: templates/manage_shop_users.html:136
+msgid "Reports"
+msgstr "Rapporter"
+
+#: shops/models.py:43 templates/base_shop.html:42
+#: templates/invoice_detail.html:5 templates/invoice_email_form.html:5
+#: templates/invoice_form.html:11 templates/invoice_list.html:4
+#: templates/invoice_list.html:5 templates/invoice_list.html:18
+#: templates/invoice_masterdata.html:5 templates/invoice_price_table.html:7
+#: templates/invoice_print.html:5 templates/shop_dashboard.html:73
+msgid "Invoices"
+msgstr "Fakturaer"
+
+#: shops/models.py:44
+#, fuzzy
+#| msgid "Customer Details"
+msgid "Customers & Vehicles"
+msgstr "Kundeoplysninger"
+
+#: shops/models.py:45
+msgid "Shop User Management"
+msgstr "Værkstedsnavn"
+
+#: shops/models.py:329
+msgid "No automatic due date"
+msgstr "Ingen automatisk forfaldsdato"
+
+#: shops/models.py:330
+msgid "+day"
+msgstr "+dag"
+
+#: shops/models.py:331
+msgid "running week"
+msgstr "løbende uge"
+
+#: shops/models.py:332
+msgid "running month"
+msgstr "løbende måned"
+
+#: shops/models.py:333
+msgid "running week + days"
+msgstr "løbende uge + dage"
+
+#: shops/models.py:334
+msgid "running month + days"
+msgstr "løbende måned + dage"
+
+#: shops/models.py:488 shops/models.py:591
+msgid "No rebate"
+msgstr "Ingen rabat"
+
+#: shops/models.py:489 shops/models.py:592
+msgid "Percent (%)"
+msgstr "Procent (%)"
+
+#: shops/models.py:490 shops/models.py:593
+msgid "Fixed amount"
+msgstr "Fast beløb"
+
+#: shops/models.py:498
+msgid "Draft"
+msgstr "Kladde"
+
+#: shops/models.py:499
+msgid "Issued"
+msgstr "Udstedt"
+
+#: shops/models.py:500
+msgid "Paid"
+msgstr "Betalt"
+
+#: shops/models.py:501
+msgid "Cancelled"
+msgstr "Annulleret"
+
+#: shops/models.py:174
+msgid "Low"
+msgstr "Lav"
+
+#: shops/models.py:175
+msgid "Normal"
+msgstr "Normal"
+
+#: shops/models.py:176
+msgid "High"
+msgstr "Høj"
+
+#: shops/models.py:177
+msgid "Urgent"
+msgstr "Akut"
+
+#: shops/models.py:187
+msgid "New"
+msgstr "Ny"
+
+#: shops/models.py:188
+msgid "Assigned"
+msgstr "Tildelt"
+
+#: shops/models.py:189
+msgid "In Progress"
+msgstr "I gang"
+
+#: shops/models.py:190
+msgid "Ready for Invoice"
+msgstr "Klar til fakturering"
+
+#: shops/models.py:191
+msgid "Completed"
+msgstr "Fuldført"
+
+#: templates/add_shop.html:4 templates/edit_shop.html:4
+#: templates/manage_shop_users.html:4
+msgid "Credentials copied to clipboard."
+msgstr "Oplysninger kopieret til udklipsholder."
+
+#: templates/add_shop.html:6
+#, fuzzy
+#| msgid "Add New Shop"
+msgid "Add Shop"
+msgstr "Tilføj nyt værksted"
+
+#: templates/add_shop.html:7 templates/edit_shop.html:7
+#: templates/shop_list.html:5
+#, fuzzy
+#| msgid "Administration workspace"
+msgid "Administration"
+msgstr "Administrationsarbejdsområde"
+
+#: templates/add_shop.html:8 templates/landing.html:162
+#: templates/shop_dashboard.html:17 templates/shop_list.html:9
+msgid "Add New Shop"
+msgstr "Tilføj nyt værksted"
+
+#: templates/add_shop.html:9
+msgid "Create a shop account, login user, and tenant database alias."
+msgstr "Opret en værkstedskonto, en loginbruger og et tenant-databasealias."
+
+#: templates/add_shop.html:11 templates/base_shop.html:31
+#: templates/landing.html:161 templates/shop_dashboard.html:16
+#: templates/shop_list.html:4 templates/shop_list.html:6
+msgid "Manage Shops"
+msgstr "Administrer værksteder"
+
+#: templates/add_shop.html:17
+msgid "New Shop Credentials"
+msgstr "Nye værkstedsoplysninger"
+
+#: templates/add_shop.html:18 templates/base_shop.html:82
+#: templates/customer_car_form.html:13 templates/edit_shop_user_rights.html:7
+#: templates/invoice_email_form.html:7 templates/manage_shop_users.html:20
+#: templates/shop_operation.html:53 templates/work_order_list_create.html:121
+msgid "Shop:"
+msgstr "Værksted:"
+
+#: templates/add_shop.html:19 templates/edit_shop.html:19
+#: templates/manage_shop_users.html:21
+msgid "Username:"
+msgstr "Brugernavn:"
+
+#: templates/add_shop.html:20 templates/edit_shop.html:20
+#: templates/manage_shop_users.html:22
+msgid "Password:"
+msgstr "Adgangskode:"
+
+#: templates/add_shop.html:21
+msgid "Database:"
+msgstr "Database:"
+
+#: templates/add_shop.html:22 templates/edit_shop.html:21
+#: templates/manage_shop_users.html:23
+msgid "Copy Credentials"
+msgstr "Kopier oplysninger"
+
+#: templates/add_shop.html:46
+msgid "Email (optional)"
+msgstr "E-mail (valgfri)"
+
+#: templates/add_shop.html:90
+msgid "Create Shop"
+msgstr "Opret værksted"
+
+#: templates/base_shop.html:19
+#, fuzzy
+#| msgid "RepairShop Cloud"
+msgid "RepairShop"
+msgstr "RepairShop Cloud"
+
+#: templates/base_shop.html:21
 msgid "Workspace navigation and shared shop styling."
 msgstr "Arbejdsområdenavigation og delt værkstedsdesign."
 
-msgid "Workshop Queue"
-msgstr "Værkstedskø"
+#: templates/base_shop.html:27
+#, fuzzy
+#| msgid "Shop Functions"
+msgid "Shop navigation"
+msgstr "Værkstedsfunktioner"
 
-msgid "Add Service Item"
-msgstr "Tilføj servicelinje"
+#: templates/base_shop.html:28 templates/shop_dashboard.html:5
+#: templates/work_order_list_create.html:9
+msgid "Dashboard"
+msgstr "Dashboard"
 
-msgid "Only paid functions with matching user rights are visible in the dashboard."
-msgstr "Kun betalte funktioner med tilhørende brugerrettigheder er synlige i dashboardet."
+#: templates/base_shop.html:36 templates/customer_form.html:5
+#: templates/customer_list.html:6 templates/customer_list.html:7
+#: templates/customer_list.html:34 templates/shop_dashboard.html:83
+msgid "Customers"
+msgstr "Kunder"
 
+#: templates/base_shop.html:54 templates/manage_shop_users.html:135
+msgid "Inventory"
+msgstr "Lager"
+
+#: templates/base_shop.html:66 templates/edit_shop_user_rights.html:5
+#: templates/manage_shop_users.html:7
+msgid "Shop Users"
+msgstr "Værkstedsbrugere"
+
+#: templates/base_shop.html:73 templates/landing.html:166
+msgid "Log out"
+msgstr "Log ud"
+
+#: templates/base_shop.html:80
+msgid "Workspace"
+msgstr "Arbejdsområde"
+
+#: templates/base_shop.html:82
+msgid "Administration workspace"
+msgstr "Administrationsarbejdsområde"
+
+#: templates/base_shop.html:90
+#, fuzzy
+#| msgid "Location:"
+msgid "Notifications"
+msgstr "Placering:"
+
+#: templates/customer_car_form.html:4
+msgid "Enter a plate before lookup."
+msgstr "Indtast en nummerplade for sogning."
+
+#: templates/customer_car_form.html:5
+msgid "Looking up vehicle data..."
+msgstr "Søger efter bildata..."
+
+#: templates/customer_car_form.html:6
+msgid "Lookup failed."
+msgstr "Søgning mislykkedes."
+
+#: templates/customer_car_form.html:7
+msgid "Vehicle data loaded. Review and save the car."
+msgstr "Bildata indlæst. Gennemgå og gem bilen."
+
+#: templates/customer_car_form.html:8
+msgid "Lookup request failed. Please try again."
+msgstr "Søgningsanmodning mislykkedes. Prøv igen."
+
+#: templates/customer_car_form.html:10 templates/customer_car_form.html:12
+#: templates/customer_car_form.html:48 templates/customer_detail.html:17
+msgid "Add Car"
+msgstr "Tilføj bil"
+
+#: templates/customer_car_form.html:10 templates/customer_car_form.html:12
+#: templates/customer_detail.html:95
+msgid "Edit Car"
+msgstr "Rediger bil"
+
+#: templates/customer_car_form.html:11
+msgid "Vehicles"
+msgstr "Køretøj"
+
+#: templates/customer_car_form.html:13 templates/invoice_email_form.html:7
+#: templates/tire_labels_print.html:100 templates/work_order_detail.html:7
+msgid "Customer:"
+msgstr "Kunde:"
+
+#: templates/customer_car_form.html:15 templates/customer_form.html:10
+#: templates/customer_form.html:12 templates/invoice_detail.html:650
+#: templates/invoice_email_form.html:9 templates/invoice_form.html:15
+#: templates/invoice_price_table.html:37 templates/work_order_detail.html:67
+#: templates/work_order_list_create.html:192
+msgid "Cancel"
+msgstr "Annuller"
+
+#: templates/customer_car_form.html:33
+msgid "Lookup Plate"
+msgstr "Søg nummerplade"
+
+#: templates/customer_car_form.html:35
+msgid "Enter a Danish plate and click \\"
+msgstr ""
+
+#: templates/customer_car_form.html:48
+msgid "Save Car"
+msgstr "Gem bil"
+
+#: templates/customer_detail.html:4 templates/customer_list.html:4
+msgid "Delete this customer and all cars?"
+msgstr "Slet denne kunde og alle biler?"
+
+#: templates/customer_detail.html:5
+msgid "Delete this car?"
+msgstr "Slet denne bil?"
+
+#: templates/customer_detail.html:10
+msgid "Manage customer profile, vehicles, and tire storage for"
+msgstr "Administrer kundeprofiler og deres biler."
+
+#: templates/customer_detail.html:13
+msgid "Back to Customers"
+msgstr "Tilbage til kunder"
+
+#: templates/customer_detail.html:14
+msgid "Edit Customer"
+msgstr "Rediger kunde"
+
+#: templates/customer_detail.html:15
+msgid "Invoice Customer"
+msgstr "Fakturer kunde"
+
+#: templates/customer_detail.html:16 templates/customer_detail.html:97
+#: templates/work_order_list_create.html:191
+#, fuzzy
+#| msgid "Create Orders"
+msgid "Create Work Order"
+msgstr "Opret ordrer"
+
+#: templates/customer_detail.html:20
+msgid "Delete Customer"
+msgstr "Slet kunde"
+
+#: templates/customer_detail.html:27
+msgid "Customer Details"
+msgstr "Kundeoplysninger"
+
+#: templates/customer_detail.html:29
+msgid "Cars linked:"
+msgstr "Tilknyttede biler:"
+
+#: templates/customer_detail.html:36
+msgid "Payment due condition"
+msgstr "Betalingsbetingelse"
+
+#: templates/customer_detail.html:39 templates/customer_detail.html:84
+msgid "Notes:"
+msgstr "Noter:"
+
+#: templates/customer_detail.html:43
+msgid "Cars"
+msgstr "Biler"
+
+#: templates/customer_detail.html:51 templates/customer_detail.html:80
+msgid "Tire Storage"
+msgstr "Dækhotel"
+
+#: templates/customer_detail.html:53
+#, fuzzy
+#| msgid "Vehicle"
+msgid "Standard Vehicle"
+msgstr "Køretøj"
+
+#: templates/customer_detail.html:59 templates/work_order_detail.html:94
+msgid "Vehicle"
+msgstr "Køretøj"
+
+#: templates/customer_detail.html:60 templates/tire_labels_print.html:102
+msgid "Plate:"
+msgstr "Nummerplade:"
+
+#: templates/customer_detail.html:61
+msgid "VIN:"
+msgstr "Stelnummer:"
+
+#: templates/customer_detail.html:62
+msgid "Color:"
+msgstr "Farve:"
+
+#: templates/customer_detail.html:67
+msgid "Inspection"
+msgstr "Syn"
+
+#: templates/customer_detail.html:68
+msgid "Type:"
+msgstr "Type:"
+
+#: templates/customer_detail.html:69
+msgid "Date:"
+msgstr "Dato:"
+
+#: templates/customer_detail.html:70
+msgid "Result:"
+msgstr "Resultat:"
+
+#: templates/customer_detail.html:71 templates/invoice_print.html:173
+#, fuzzy
+#| msgid "Status"
+msgid "Status:"
+msgstr "Status"
+
+#: templates/customer_detail.html:72
+msgid "Status Date:"
+msgstr "Statusdato:"
+
+#: templates/customer_detail.html:73
+msgid "Mileage:"
+msgstr "Kilometertal:"
+
+#: templates/customer_detail.html:74
+msgid "Next:"
+msgstr "Næste:"
+
+#: templates/customer_detail.html:82 templates/tire_labels_print.html:104
+msgid "Location:"
+msgstr "Placering:"
+
+#: templates/customer_detail.html:83 templates/tire_labels_print.html:75
+msgid "Labels:"
+msgstr "Etiketter:"
+
+#: templates/customer_detail.html:96
+msgid "Invoice This Car"
+msgstr "Fakturer denne bil"
+
+#: templates/customer_detail.html:99
+msgid "Print Tire Labels"
+msgstr "Udskriv dæketiketter"
+
+#: templates/customer_detail.html:100
+msgid "Print A4 2x7"
+msgstr "Udskriv A4 2x7"
+
+#: templates/customer_detail.html:101
+msgid "Print Zebra 100x50"
+msgstr ""
+
+#: templates/customer_detail.html:105
+msgid "Delete Car"
+msgstr "Slet bil"
+
+#: templates/customer_detail.html:112
+msgid "No cars saved yet for this customer."
+msgstr "Ingen biler er gemt for denne kunde endnu."
+
+#: templates/customer_form.html:7
+#, fuzzy
+#| msgid "Customer Details"
+msgid "Manage customer details for"
+msgstr "Kundeoplysninger"
+
+#: templates/customer_list.html:8
+msgid "Customer Directory"
+msgstr "Kundekartotek"
+
+#: templates/customer_list.html:9
+msgid "Search, open, and manage customers for"
+msgstr "Søg, åbn og administrer kunder for"
+
+#: templates/customer_list.html:11
+msgid "Add Customer"
+msgstr "Tilføj kunde"
+
+#: templates/customer_list.html:16 templates/customer_list.html:25
+msgid "Search"
+msgstr "Søg"
+
+#: templates/customer_list.html:20
+msgid "Search name"
+msgstr "Søg navn"
+
+#: templates/customer_list.html:21
+msgid "Type customer name"
+msgstr "Indtast kundenavn"
+
+#: templates/customer_list.html:27
+msgid "Clear"
+msgstr "Ryd"
+
+#: templates/customer_list.html:42 templates/invoice_price_table.html:54
+#: templates/shop_list.html:23
+msgid "Actions"
+msgstr "Handlinger"
+
+#: templates/customer_list.html:53 templates/invoice_list.html:40
+#: templates/shop_dashboard.html:35 templates/shop_dashboard.html:45
+#: templates/shop_dashboard.html:55 templates/shop_dashboard.html:65
+#: templates/shop_dashboard.html:75 templates/shop_dashboard.html:85
+#: templates/shop_dashboard.html:95
+msgid "Open"
+msgstr "Åbn"
+
+#: templates/customer_list.html:54 templates/invoice_detail.html:586
+#: templates/invoice_price_table.html:68 templates/shop_list.html:49
+#: templates/work_order_detail.html:66
+msgid "Edit"
+msgstr "Rediger"
+
+#: templates/customer_list.html:57 templates/invoice_detail.html:592
+#: templates/invoice_price_table.html:73 templates/work_order_detail.html:220
+#: templates/work_order_detail.html:289
+msgid "Delete"
+msgstr "Slet"
+
+#: templates/customer_list.html:66
+msgid "No customers found."
+msgstr "Ingen kunder fundet."
+
+#: templates/edit_shop.html:6
+#, fuzzy
+#| msgid "Edit"
+msgid "Edit Shop"
+msgstr "Rediger"
+
+#: templates/edit_shop.html:8
+#, fuzzy, python-format
+#| msgid "Users and Rights: %(shop_name)s"
+msgid "Edit %(shop_name)s"
+msgstr "Brugere og rettigheder: %(shop_name)s"
+
+#: templates/edit_shop.html:9
+msgid "Update shop settings, owner access, and enabled modules."
+msgstr ""
+
+#: templates/edit_shop.html:11 templates/shop_list.html:50
+msgid "Users & Rights"
+msgstr "Brugere og rettigheder"
+
+#: templates/edit_shop.html:12
+msgid "Back to Shop List"
+msgstr "Tilbage til værkstedsliste"
+
+#: templates/edit_shop.html:18
+msgid "Temporary password reset"
+msgstr "Midlertidig nulstilling af adgangskode"
+
+#: templates/edit_shop.html:88 templates/work_order_detail.html:242
+#: templates/work_order_detail.html:311
+msgid "Save Changes"
+msgstr "Gem ændringer"
+
+#: templates/edit_shop_user_rights.html:4
+#, fuzzy
+#| msgid "Edit Rights"
+msgid "Edit User Rights"
+msgstr "Rediger rettigheder"
+
+#: templates/edit_shop_user_rights.html:6
+#, python-format
+msgid "Edit Rights: %(username)s"
+msgstr "Rediger rettigheder: %(username)s"
+
+#: templates/edit_shop_user_rights.html:9
+msgid "Back to Users"
+msgstr "Tilbage til brugere"
+
+#: templates/edit_shop_user_rights.html:63
+msgid "Save Rights"
+msgstr "Gem rettigheder"
+
+#: templates/emails/invoice_email.html:13 templates/invoice_detail.html:469
+#: templates/invoice_print.html:4 templates/invoice_print.html:137
+#: templates/work_order_detail.html:102
+#: templates/work_order_list_create.html:234
+msgid "Invoice"
+msgstr "Faktura"
+
+#: templates/emails/invoice_email.html:14 templates/emails/invoice_email.txt:5
+#: templates/invoice_print.html:171
+msgid "Issue Date:"
+msgstr "Fakturadato:"
+
+#: templates/emails/invoice_email.html:15 templates/emails/invoice_email.txt:6
+#: templates/invoice_print.html:172
+msgid "Due Date:"
+msgstr "Forfaldsdato:"
+
+#: templates/emails/invoice_email.html:16 templates/emails/invoice_email.txt:7
+msgid "Total (incl VAT):"
+msgstr "Total (inkl. moms):"
+
+#: templates/emails/invoice_email.html:19
+msgid "View / print invoice"
+msgstr "Se / udskriv faktura"
+
+#: templates/emails/invoice_email.html:23 templates/emails/invoice_email.txt:12
+#, fuzzy
+#| msgid "From"
+msgid "From:"
+msgstr "Fra"
+
+#: templates/emails/invoice_email.html:30 templates/emails/invoice_email.txt:18
+#: templates/invoice_print.html:152 templates/invoice_print.html:164
+msgid "Phone:"
+msgstr "Telefon:"
+
+#: templates/emails/invoice_email.html:31 templates/emails/invoice_email.txt:19
+#: templates/invoice_print.html:153 templates/invoice_print.html:165
+msgid "Email:"
+msgstr "E-mail:"
+
+#: templates/emails/invoice_email.txt:4
+msgid "Invoice Number:"
+msgstr "Fakturanummer:"
+
+#: templates/emails/invoice_email.txt:9
+msgid "View / print invoice:"
+msgstr "Se / udskriv faktura:"
+
+#: templates/includes/back_to_dashboard_button.html:2
+msgid "Back to Dashboard"
+msgstr "Tilbage til dashboard"
+
+#: templates/invoice_detail.html:7
+msgid "Edit the invoice header at the top and manage detail lines below."
+msgstr "Rediger fakturahovedet øverst og administrer linjerne nedenfor."
+
+#: templates/invoice_detail.html:10 templates/invoice_masterdata.html:9
+#: templates/invoice_price_table.html:11
+msgid "Back to Invoices"
+msgstr "Tilbage til fakturaer"
+
+#: templates/invoice_detail.html:11 templates/invoice_list.html:10
+msgid "Price Table"
+msgstr "Pristabel"
+
+#: templates/invoice_detail.html:12
+msgid "Masterdata"
+msgstr "Masterdata"
+
+#: templates/invoice_detail.html:13 templates/invoice_email_form.html:4
+#: templates/invoice_email_form.html:6
+msgid "Email Invoice"
+msgstr "Send faktura"
+
+#: templates/invoice_detail.html:14
+msgid "Print / PDF"
+msgstr "Udskriv / PDF"
+
+#: templates/invoice_detail.html:458
+msgid "Delete this line?"
+msgstr "Slet denne linje?"
+
+#: templates/invoice_detail.html:471
+msgid "Edit the header here, then continue with the lines below."
+msgstr "Rediger hovedet her, og fortsæt derefter med linjerne nedenfor."
+
+#: templates/invoice_detail.html:481
+msgid "Change status"
+msgstr "Skift status"
+
+#: templates/invoice_detail.html:487 templates/tire_labels_print.html:85
+msgid "Apply"
+msgstr "Anvend"
+
+#: templates/invoice_detail.html:498
+msgid "Invoice Header"
+msgstr "Fakturahoved"
+
+#: templates/invoice_detail.html:499
+msgid "Customer, dates, status, rebate, and notes."
+msgstr "Kunde, datoer, status, rabat og noter."
+
+#: templates/invoice_detail.html:503 templates/work_order_detail.html:109
+msgid "Locked:"
+msgstr "Låst:"
+
+#: templates/invoice_detail.html:503
+msgid "This invoice is not draft and cannot be edited."
+msgstr "Denne faktura er ikke et kladdeudkast og kan ikke redigeres."
+
+#: templates/invoice_detail.html:519 templates/invoice_detail.html:849
+msgid "Hide notes"
+msgstr "Skjul noter"
+
+#: templates/invoice_detail.html:519 templates/invoice_detail.html:849
+msgid "Show notes"
+msgstr "Vis noter"
+
+#: templates/invoice_detail.html:537
+msgid "Update Invoice Header"
+msgstr "Opdater fakturahoved"
+
+#: templates/invoice_detail.html:547
+msgid "Invoice Lines"
+msgstr "Fakturalinjer"
+
+#: templates/invoice_detail.html:548
+msgid "Detail lines follow the header, similar to the PDF structure."
+msgstr "Her indtastes faktura linier."
+
+#: templates/invoice_detail.html:550 templates/invoice_detail.html:651
+msgid "Add Line"
+msgstr "Tilføj linje"
+
+#: templates/invoice_detail.html:558 templates/invoice_price_table.html:52
+#: templates/invoice_print.html:183 templates/work_order_detail.html:198
+#: templates/work_order_detail.html:267
+#, fuzzy, python-format
+#| msgid "VAT %"
+msgid "VAT %%"
+msgstr "Moms %"
+
+#: templates/invoice_detail.html:559 templates/invoice_print.html:211
+msgid "Line Rebate"
+msgstr "Linjerabat"
+
+#: templates/invoice_detail.html:560 templates/work_order_detail.html:199
+#: templates/work_order_detail.html:268
+msgid "Line Total"
+msgstr "Linjetotal"
+
+#: templates/invoice_detail.html:561 templates/invoice_print.html:154
+msgid "VAT"
+msgstr "Moms"
+
+#: templates/invoice_detail.html:562 templates/invoice_list.html:28
+#: templates/manage_shop_users.html:138 templates/work_order_detail.html:201
+#: templates/work_order_detail.html:270
+msgid "Action"
+msgstr "Handling"
+
+#: templates/invoice_detail.html:598
+msgid "No lines added yet."
+msgstr "Ingen linjer tilføjet endnu."
+
+#: templates/invoice_detail.html:604 templates/work_order_detail.html:173
+msgid "Subtotal:"
+msgstr "Delsum:"
+
+#: templates/invoice_detail.html:606
+msgid "Line Rebate:"
+msgstr "Linjerabat:"
+
+#: templates/invoice_detail.html:609
+msgid "Invoice Rebate:"
+msgstr "Fakturarabat:"
+
+#: templates/invoice_detail.html:611
+msgid "Total Rebate:"
+msgstr "Samlet rabat:"
+
+#: templates/invoice_detail.html:612
+msgid "Total ex VAT:"
+msgstr "Total ekskl. moms:"
+
+#: templates/invoice_detail.html:613 templates/work_order_detail.html:174
+msgid "VAT Total:"
+msgstr "Moms total:"
+
+#: templates/invoice_detail.html:614
+msgid "Grand Total incl VAT:"
+msgstr "Total inkl. moms:"
+
+#: templates/invoice_detail.html:622
+msgid "Edit Invoice Line"
+msgstr "Rediger fakturalinje"
+
+#: templates/invoice_detail.html:622
+msgid "Add Invoice Line"
+msgstr "Tilføj fakturalinje"
+
+#: templates/invoice_detail.html:625
+msgid "Update this line and return to the invoice overview."
+msgstr "Opdater denne linje og returner til fakturaoversigten."
+
+#: templates/invoice_detail.html:627
+msgid ""
+"Use this smaller line-entry window and return to the invoice automatically "
+"after adding the line."
+msgstr ""
+"Brug dette mindre vindue til linjeindtastning, og vend automatisk tilbage "
+"til fakturaen efter tilføjelse af linjen."
+
+#: templates/invoice_detail.html:631
+msgid "Close"
+msgstr "Luk"
+
+#: templates/invoice_detail.html:651
+msgid "Update Line"
+msgstr "Opdater linje"
+
+#: templates/invoice_email_form.html:15 templates/invoice_email_form.html:21
+msgid "Development email mode"
+msgstr ""
+
+#: templates/invoice_email_form.html:16
+msgid "Emails are written to local files instead of being delivered."
+msgstr ""
+
+#: templates/invoice_email_form.html:22
+msgid "Emails are written to the runserver console instead of being delivered."
+msgstr ""
+
+#: templates/invoice_email_form.html:39
+msgid "Send Email"
+msgstr "Send e-mail"
+
+#: templates/invoice_form.html:13
+msgid "Create and edit invoices using the shared invoice form for"
+msgstr ""
+
+#: templates/invoice_list.html:6
+#, fuzzy
+#| msgid "Workspace"
+msgid "Invoice Workspace"
+msgstr "Arbejdsområde"
+
+#: templates/invoice_list.html:7
+msgid "Track billing, invoice totals, and pricing data for"
+msgstr ""
+
+#: templates/invoice_list.html:11 templates/invoice_masterdata.html:4
+#: templates/invoice_masterdata.html:6
+msgid "Invoice Masterdata"
+msgstr "Faktura masterdata"
+
+#: templates/invoice_list.html:12
+msgid "New Invoice"
+msgstr "Ny faktura"
+
+#: templates/invoice_list.html:22
+msgid "Invoice #"
+msgstr "Faktura #"
+
+#: templates/invoice_list.html:23
+msgid "Date"
+msgstr "Dato"
+
+#: templates/invoice_list.html:27
+msgid "Total"
+msgstr "Total"
+
+#: templates/invoice_list.html:43
+msgid "No invoices yet."
+msgstr "Ingen fakturaer endnu."
+
+#: templates/invoice_masterdata.html:7
+msgid "Maintain sender details, logo, and invoice identity for"
+msgstr ""
+
+#: templates/invoice_masterdata.html:26
+msgid "Save Masterdata"
+msgstr "Gem masterdata"
+
+#: templates/invoice_price_table.html:4
+#, fuzzy
+#| msgid "Delete this line?"
+msgid "Delete this price item?"
+msgstr "Slet denne linje?"
+
+#: templates/invoice_price_table.html:6 templates/invoice_price_table.html:8
+#, fuzzy
+#| msgid "Price Table"
+msgid "Invoice Price Table"
+msgstr "Pristabel"
+
+#: templates/invoice_price_table.html:9
+msgid "Manage reusable service and part pricing for"
+msgstr "Administrer genanvendelige service- og reservedelspriser for"
+
+#: templates/invoice_price_table.html:16
+msgid "Edit Price Item"
+msgstr "Rediger prislinje"
+
+#: templates/invoice_price_table.html:16
+msgid "Add Price Item"
+msgstr "Tilføj prislinje"
+
+#: templates/invoice_price_table.html:35
+msgid "Update Item"
+msgstr "Opdater linje"
+
+#: templates/invoice_price_table.html:35
+msgid "Save Item"
+msgstr "Gem vare"
+
+#: templates/invoice_price_table.html:44
+msgid "Current Items"
+msgstr "Nuværende varer"
+
+#: templates/invoice_price_table.html:65 templates/manage_shop_users.html:147
+#: templates/manage_shop_users.html:148 templates/manage_shop_users.html:149
+#: templates/manage_shop_users.html:150
+msgid "Yes"
+msgstr "Ja"
+
+#: templates/invoice_price_table.html:65 templates/manage_shop_users.html:147
+#: templates/manage_shop_users.html:148 templates/manage_shop_users.html:149
+#: templates/manage_shop_users.html:150
+msgid "No"
+msgstr "Nej"
+
+#: templates/invoice_price_table.html:79
+msgid "No price items yet."
+msgstr "Ingen prislinjer endnu."
+
+#: templates/invoice_print.html:6
+msgid "Print Invoice"
+msgstr "Udskriv faktura"
+
+#: templates/invoice_print.html:7
+msgid "Generate a print-friendly invoice view for"
+msgstr "Generer en udskriftsvenlig fakturavisning for"
+
+#: templates/invoice_print.html:10
+msgid "Back to Invoice"
+msgstr "Tilbage til faktura"
+
+#: templates/invoice_print.html:11
+msgid "Print / Save PDF"
+msgstr "Udskriv / gem PDF"
+
+#: templates/invoice_print.html:141
+msgid "From"
+msgstr "Fra"
+
+#: templates/invoice_print.html:155 templates/tire_labels_print.html:106
+msgid "Printed:"
+msgstr "Udskrevet:"
+
+#: templates/invoice_print.html:159
+msgid "To"
+msgstr "Til"
+
+#: templates/invoice_print.html:166 templates/tire_labels_print.html:101
+msgid "Car:"
+msgstr "Bil:"
+
+#: templates/invoice_print.html:182
+msgid "Unit"
+msgstr "Enhed"
+
+#: templates/invoice_print.html:184
+msgid "Rebate"
+msgstr "Rabat"
+
+#: templates/invoice_print.html:185 templates/invoice_print.html:217
+msgid "Total ex VAT"
+msgstr "Total ekskl. moms"
+
+#: templates/invoice_print.html:203
+msgid "No lines."
+msgstr "Ingen linjer."
+
+#: templates/invoice_print.html:209
+msgid "Subtotal"
+msgstr "Delsum"
+
+#: templates/invoice_print.html:214
+msgid "Invoice Rebate"
+msgstr "Fakturarabat"
+
+#: templates/invoice_print.html:216
+msgid "Total Rebate"
+msgstr "Samlet rabat"
+
+#: templates/invoice_print.html:218
+msgid "VAT Total"
+msgstr "Moms total"
+
+#: templates/invoice_print.html:219
+msgid "Grand Total incl VAT"
+msgstr "Total inkl. moms"
+
+#: templates/landing.html:150
+msgid "RepairShop Cloud"
+msgstr "RepairShop Cloud"
+
+#: templates/landing.html:151
+msgid "Every Garage,"
+msgstr "Ethvert værksted,"
+
+#: templates/landing.html:151
+msgid "Own Data"
+msgstr ""
+
+#: templates/landing.html:151
+msgid "One Fast Workflow."
+msgstr "Et hurtigt workflow."
+
+#: templates/landing.html:153
+msgid ""
+"Run estimates, jobs, and customer records per shop with isolated databases."
+msgstr ""
+"Håndter tilbud, opgaver og kundedata per værksted med isolerede databaser."
+
+#: templates/landing.html:154
+msgid ""
+"Sign in to access your shop-specific dashboard and daily repair operations."
+msgstr ""
+"Log ind for at åbne dit værkstedsspecifikke dashboard og daglige opgaver."
+
+#: templates/landing.html:159
+msgid "Open My Shop Functions"
+msgstr "Åbn mine værkstedsfunktioner"
+
+#: templates/landing.html:169
+msgid "Log in to My Shop"
+msgstr "Log ind på mit værksted"
+
+#: templates/landing.html:170
+msgid "Admin Access"
+msgstr "Admin-adgang"
+
+#: templates/landing.html:176
+msgid "Tenant Isolation"
+msgstr "Tenant-isolation"
+
+#: templates/landing.html:177
+msgid "Shop data routed to its own database."
+msgstr "Værkstedsdata sendes til sin egen database."
+
+#: templates/landing.html:180
+msgid "Secure Access"
+msgstr "Sikker adgang"
+
+#: templates/landing.html:181
+msgid "Users only open their shop workspace."
+msgstr "Brugere kan kun åbne deres eget værkstedsarbejdsområde."
+
+#: templates/landing.html:184
+msgid "Cloud Ready"
+msgstr "Cloud-klar"
+
+#: templates/landing.html:185
+msgid "PythonAnywhere deployment compatible."
+msgstr ""
+
+#: templates/manage_shop_users.html:6
+#, fuzzy
+#| msgid "Users & Rights"
+msgid "Users and Rights"
+msgstr "Brugere og rettigheder"
+
+#: templates/manage_shop_users.html:8
+#, python-format
+msgid "Users and Rights: %(shop_name)s"
+msgstr "Brugere og rettigheder: %(shop_name)s"
+
+#: templates/manage_shop_users.html:9
+msgid "Database alias:"
+msgstr "Database-alias:"
+
+#: templates/manage_shop_users.html:12
+msgid "Back to Shops"
+msgstr "Tilbage til værksteder"
+
+#: templates/manage_shop_users.html:19
+msgid "New user credentials"
+msgstr "Nye brugeroplysninger"
+
+#: templates/manage_shop_users.html:28
+msgid "Add User to Shop"
+msgstr "Tilføj bruger til værksted"
+
+#: templates/manage_shop_users.html:120
+msgid "Add or Update Access"
+msgstr ""
+
+#: templates/manage_shop_users.html:126
+msgid "Current Users"
+msgstr "Nuværende brugere"
+
+#: templates/manage_shop_users.html:130
+msgid "User"
+msgstr "Bruger"
+
+#: templates/manage_shop_users.html:132
+msgid "Language"
+msgstr "Sprog"
+
+#: templates/manage_shop_users.html:133
+msgid "Manage Users"
+msgstr "Administrer brugere"
+
+#: templates/manage_shop_users.html:134
+msgid "Create Orders"
+msgstr "Opret ordrer"
+
+#: templates/manage_shop_users.html:151 templates/shop_list.html:44
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#: templates/manage_shop_users.html:152
+msgid "Edit Rights"
+msgstr "Rediger rettigheder"
+
+#: templates/manage_shop_users.html:155
+msgid "No users assigned to this shop yet."
+msgstr "Ingen brugere er endnu tildelt dette værksted."
+
+#: templates/registration/login.html:107
+msgid "Log in to your shop"
+msgstr "Log ind på dit værksted"
+
+#: templates/registration/login.html:108
+msgid "Use your RepairShop account to open shop-specific functions."
+msgstr "Brug din RepairShop-konto til at åbne værkstedsspecifikke funktioner."
+
+#: templates/registration/login.html:115
+#, fuzzy
+#| msgid "Username:"
+msgid "Username"
+msgstr "Brugernavn:"
+
+#: templates/registration/login.html:124
+msgid "Continue"
+msgstr "Fortsæt"
+
+#: templates/registration/login.html:127
+msgid "Back to landing page"
+msgstr "Tilbage til forsiden"
+
+#: templates/shop_dashboard.html:4 templates/shop_dashboard.html:6
+msgid "Shop Functions"
+msgstr "Værkstedsfunktioner"
+
+#: templates/shop_dashboard.html:8
+#, python-format
+msgid "Welcome, %(username)s."
+msgstr "Velkommen, %(username)s."
+
+#: templates/shop_dashboard.html:10
+#, python-format
+msgid "Active shop: <strong>%(shop_name)s</strong>"
+msgstr "Aktivt værksted: <strong>%(shop_name)s</strong>"
+
+#: templates/shop_dashboard.html:25
+msgid "Operations"
+msgstr "Operationer"
+
+#: templates/shop_dashboard.html:26
+msgid ""
+"Only paid functions with matching user rights are visible in the dashboard."
+msgstr ""
+"Kun betalte funktioner med tilhørende brugerrettigheder er synlige i "
+"dashboardet."
+
+#: templates/shop_dashboard.html:33 templates/shop_dashboard.html:43
+#: templates/shop_dashboard.html:53 templates/shop_dashboard.html:63
+#: templates/shop_dashboard.html:73 templates/shop_dashboard.html:83
+#: templates/shop_dashboard.html:93
+msgid "Allowed"
+msgstr "Tilladt"
+
+#: templates/shop_dashboard.html:34
+msgid "Create and assign repair work orders."
+msgstr "Opret og tildel reparationsordrer."
+
+#: templates/shop_dashboard.html:44
+msgid "Plan incoming inspections and workload."
+msgstr "Planlæg kommende syn og arbejdsbelastning."
+
+#: templates/shop_dashboard.html:54
+msgid "Track stock, receiving, and part usage."
+msgstr "Spor lager, modtagelse og reservedelsforbrug."
+
+#: templates/shop_dashboard.html:64
+msgid "Open business and performance reports."
+msgstr "Åbn virksomheds- og performance-rapporter."
+
+#: templates/shop_dashboard.html:74
+msgid "Create invoices from price table items or manual lines."
+msgstr "Opret fakturaer fra pristabellen eller manuelle linjer."
+
+#: templates/shop_dashboard.html:84
+msgid "Manage customer profiles and their vehicles."
+msgstr "Administrer kundeprofiler og deres biler."
+
+#: templates/shop_dashboard.html:93
+msgid "Manage Shop Users"
+msgstr "Administrer værkstedsbrugere"
+
+#: templates/shop_dashboard.html:94
+msgid "Add staff and configure role-based rights."
+msgstr "Tilføj medarbejdere og konfigurer rollebaserede rettigheder."
+
+#: templates/shop_dashboard.html:102
+msgid "No active shop"
+msgstr "Intet aktivt værksted"
+
+#: templates/shop_dashboard.html:102
+msgid "Unavailable"
+msgstr "Ikke tilgængelig"
+
+#: templates/shop_dashboard.html:103
+#, fuzzy
+#| msgid "Your account does not include this right."
+msgid "Your account does not currently have an active shop context."
+msgstr "Din konto har ikke denne rettighed."
+
+#: templates/shop_list.html:7
+msgid "Review tenant shops, access status, and login ownership."
+msgstr ""
+
+#: templates/shop_list.html:17
+#, fuzzy
+#| msgid "Shop:"
+msgid "Shop"
+msgstr "Værksted:"
+
+#: templates/shop_list.html:18
+msgid "Logo"
+msgstr "Logo"
+
+#: templates/shop_list.html:19
 msgid "Login Username"
 msgstr "Login-brugernavn"
 
+#: templates/shop_list.html:20
+msgid "Database Alias"
+msgstr "Database-alias"
+
+#: templates/shop_list.html:21
+msgid "Paid Functions"
+msgstr "Betalte funktioner"
+
+#: templates/shop_list.html:54
+msgid "Deactivate"
+msgstr "Deaktiver"
+
+#: templates/shop_list.html:56
+msgid "Activate"
+msgstr "Aktiver"
+
+#: templates/shop_list.html:63
+msgid "No shops yet. Create your first one."
+msgstr "Ingen værksteder endnu. Opret din første."
+
+#: templates/shop_operation.html:60
+msgid ""
+"Feature scaffold is ready. Plug your domain models and workflows into this "
+"page."
+msgstr ""
+"Funktionsskabelon er klar. Tilslut dine domanemodeller og workflows pa denne "
+"side."
+
+#: templates/tire_labels_print.html:72
+msgid "Print"
+msgstr "Udskriv"
+
+#: templates/tire_labels_print.html:73
+msgid "Back to Customer"
+msgstr "Tilbage til kunde"
+
+#: templates/tire_labels_print.html:74
+msgid "Format:"
+msgstr "Format:"
+
+#: templates/tire_labels_print.html:77
+msgid "Preset"
+msgstr "Forvalg"
+
+#: templates/tire_labels_print.html:83
+msgid "Count"
+msgstr "Antal"
+
+#: templates/tire_labels_print.html:97
+msgid "Tire Hotel"
+msgstr "Dækhotel"
+
+#: templates/tire_labels_print.html:99
+msgid "Label"
+msgstr "Etiket"
+
+#: templates/work_order_detail.html:4 templates/work_order_detail.html:6
+#, fuzzy
+#| msgid "Work Order Details"
+msgid "Work Order"
+msgstr "Reparationsordredetaljer"
+
+#: templates/work_order_detail.html:9
+#, fuzzy
+#| msgid "Back to Users"
+msgid "Back to Work Orders"
+msgstr "Tilbage til brugere"
+
+#: templates/work_order_detail.html:11
+#: templates/work_order_list_create.html:241
+#, fuzzy
+#| msgid "New Invoice"
+msgid "Open Invoice"
+msgstr "Ny faktura"
+
+#: templates/work_order_detail.html:65
+#, fuzzy
+#| msgid "Delete this line?"
+msgid "Delete this line item?"
+msgstr "Slet denne linje?"
+
+#: templates/work_order_detail.html:68 templates/work_order_detail.html:150
+#, fuzzy
+#| msgid "Labor, diagnostics, and workshop tasks."
+msgid "Add labor, diagnostics, or workshop tasks here."
+msgstr "Arbejde, diagnostik og værkstedsopgaver."
+
+#: templates/work_order_detail.html:69
+#, fuzzy
+#| msgid "Spare parts, materials, and consumables."
+msgid "Add spare parts, materials, or consumables here."
+msgstr "Reservedele, materialer og forbrugsvarer."
+
+#: templates/work_order_detail.html:78
+msgid "Due"
+msgstr ""
+
+#: templates/work_order_detail.html:109
+msgid ""
+"This work order has already created an invoice. Header fields and line items "
+"are read-only to keep the invoice aligned with the recorded work."
+msgstr ""
+
+#: templates/work_order_detail.html:115
+msgid "Status Actions"
+msgstr "Statushandlinger"
+
+#: templates/work_order_detail.html:122
+msgid "Set"
+msgstr "Sæt"
+
+#: templates/work_order_detail.html:131
+msgid "Work Order Details"
+msgstr "Reparationsordredetaljer"
+
+#: templates/work_order_detail.html:142
+#, fuzzy
+#| msgid "Update Invoice Header"
+msgid "Update Work Order"
+msgstr "Opdater fakturahoved"
+
+#: templates/work_order_detail.html:149 templates/work_order_detail.html:167
+#: templates/work_order_detail.html:388 templates/work_order_detail.html:390
+msgid "Add Service Item"
+msgstr "Tilføj servicelinje"
+
+#: templates/work_order_detail.html:171
+msgid "Services:"
+msgstr "Service:"
+
+#: templates/work_order_detail.html:172
+msgid "Parts:"
+msgstr "Reservedele:"
+
+#: templates/work_order_detail.html:181
+msgid "Create Invoice From Work Order"
+msgstr "Opret faktura fra reparationsordre"
+
+#: templates/work_order_detail.html:189
+#, fuzzy
+#| msgid "Invoice Lines"
+msgid "Service Lines"
+msgstr "Fakturalinjer"
+
+#: templates/work_order_detail.html:190
+msgid "Labor, diagnostics, and workshop tasks."
+msgstr "Arbejde, diagnostik og værkstedsopgaver."
+
+#: templates/work_order_detail.html:250
+msgid "No service lines added yet."
+msgstr "Ingen servicelinjer tilføjet endnu."
+
+#: templates/work_order_detail.html:258
+#, fuzzy
+#| msgid "Update Line"
+msgid "Part Lines"
+msgstr "Opdater linje"
+
+#: templates/work_order_detail.html:259
 msgid "Spare parts, materials, and consumables."
 msgstr "Reservedele, materialer og forbrugsvarer."
+
+#: templates/work_order_detail.html:319
+msgid "No part lines added yet."
+msgstr "Ingen reservedelslinjer tilføjet endnu."
+
+#: templates/work_order_detail.html:388 templates/work_order_detail.html:390
+msgid "Add Part Item"
+msgstr "Tilføj reservedel"
+
+#: templates/work_order_list_create.html:120
+msgid "Workshop Queue"
+msgstr "Værkstedskø"
+
+#: templates/work_order_list_create.html:123
+msgid "Track services and parts in one work order"
+msgstr "Spor service og reservedele i én reparationsordre"
+
+#: templates/work_order_list_create.html:124
+msgid "Ready for invoice after at least one line item"
+msgstr "Klar til fakturering efter mindst én linje"
+
+#: templates/work_order_list_create.html:134
+msgid "New Work Order"
+msgstr "Ny reparationsordre"
+
+#: templates/work_order_list_create.html:135
+msgid "Status is managed from the work-order detail page after creation."
+msgstr "Status styres fra reparationsordredetaljesiden efter oprettelse."
+
+#: templates/work_order_list_create.html:198
+msgid "Existing Work Orders"
+msgstr "Eksisterende reparationsordrer"
+
+#: templates/work_order_list_create.html:209
+msgid "Invoice ready"
+msgstr "Faktura klar"
+
+#: templates/work_order_list_create.html:213
+msgid "Created"
+msgstr "Oprettet"
+
+#: templates/work_order_list_create.html:229
+msgid "Unassigned"
+msgstr "Ikke tildelt"
+
+#: templates/work_order_list_create.html:232
+msgid "Line items"
+msgstr "Linjer"
+
+#: templates/work_order_list_create.html:236
+msgid "Created by"
+msgstr "Oprettet af"
+
+#: templates/work_order_list_create.html:239
+msgid "Open Work Order"
+msgstr "Åbn reparationsordre"
+
+#: templates/work_order_list_create.html:246
+msgid "No work orders yet."
+msgstr "Ingen reparationsordrer endnu."
+
+#~ msgid "Active shop: <b>%(shop_name)s</b>"
+#~ msgstr "Aktivt værksted: <b>%(shop_name)s</b>"
+
+#~ msgid "Locked"
+#~ msgstr "Låst"
+
+#~ msgid "Back to Shop"
+#~ msgstr "Tilbage til værksted"
+
+#~ msgid "Back to My Shop"
+#~ msgstr "Tilbage til mit værksted"
+
+#~ msgid "Update Invoice"
+#~ msgstr "Opdater faktura"

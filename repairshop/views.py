@@ -548,6 +548,7 @@ def invoice_detail(request, invoice_id):
         Invoice.STATUS_PAID: [],
         Invoice.STATUS_CANCELLED: [Invoice.STATUS_DRAFT],
     }
+    status_labels = dict(Invoice.STATUS_CHOICES)
 
     if request.method == "POST":
         action = request.POST.get("action", "").strip()
@@ -651,7 +652,13 @@ def invoice_detail(request, invoice_id):
             "line_form": line_form,
             "active_edit_line_id": active_edit_line_id,
             "is_locked": invoice.status != Invoice.STATUS_DRAFT,
-            "available_status_targets": transition_map.get(invoice.status, []),
+            "available_status_targets": [
+                {
+                    "value": status,
+                    "label": str(status_labels.get(status, status)),
+                }
+                for status in transition_map.get(invoice.status, [])
+            ],
             "customer_cars_json": customer_cars,
             "customer_payment_terms_json": customer_payment_terms,
             "invoice_price_items_json": invoice_price_items,

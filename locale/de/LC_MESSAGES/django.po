@@ -1,933 +1,2052 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: RepairShop\n"
-"POT-Creation-Date: 2026-03-09 09:40+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-13 04:55+0000\n"
 "PO-Revision-Date: 2026-03-09 09:40+0000\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Shop Functions"
-msgstr "Werkstattfunktionen"
-
-msgid "Welcome, %(username)s."
-msgstr "Willkommen, %(username)s."
-
-msgid "Active shop: <b>%(shop_name)s</b>"
-msgstr "Aktive Werkstatt: <b>%(shop_name)s</b>"
-
-msgid "Manage Shops"
-msgstr "Werkstätten verwalten"
-
-msgid "Add New Shop"
-msgstr "Neue Werkstatt hinzufügen"
-
-msgid "Log out"
-msgstr "Abmelden"
-
-msgid "Operations"
-msgstr "Vorgänge"
-
+#: repairshop/views.py:218 templates/shop_dashboard.html:33
 msgid "Create Repair Order"
 msgstr "Reparaturauftrag erstellen"
 
-msgid "Create and assign repair work orders."
-msgstr "Reparaturaufträge erstellen und zuweisen."
-
-msgid "Allowed"
-msgstr "Erlaubt"
-
-msgid "Your account does not include this right."
-msgstr "Ihr Konto hat dieses Recht nicht."
-
-msgid "Locked"
-msgstr "Gesperrt"
-
-msgid "Schedule Vehicle Inspection"
-msgstr "Fahrzeugprüfung planen"
-
-msgid "Plan incoming inspections and workload."
-msgstr "Eingehende Prüfungen und Auslastung planen."
-
-msgid "Manage Parts Inventory"
-msgstr "Teilelager verwalten"
-
-msgid "Track stock, receiving, and part usage."
-msgstr "Bestand, Wareneingang und Teileverbrauch verfolgen."
-
-msgid "View Reports"
-msgstr "Berichte anzeigen"
-
-msgid "Open business and performance reports."
-msgstr "Geschäfts- und Leistungsberichte öffnen."
-
-msgid "Invoices"
-msgstr "Rechnungen"
-
-msgid "Create invoices from price table items or manual lines."
-msgstr "Rechnungen aus Preistabelle oder manuellen Positionen erstellen."
-
-msgid "Customers"
-msgstr "Kunden"
-
-msgid "Manage customer profiles and their vehicles."
-msgstr "Kundenprofile und Fahrzeuge verwalten."
-
-msgid "Manage Shop Users"
-msgstr "Werkstattbenutzer verwalten"
-
-msgid "Add staff and configure role-based rights."
-msgstr "Mitarbeiter hinzufügen und rollenbasierte Rechte konfigurieren."
-
-msgid "Shop:"
-msgstr "Werkstatt:"
-
-msgid "Back to Shop"
-msgstr "Zurück zur Werkstatt"
-
-msgid "Price Table"
-msgstr "Preistabelle"
-
-msgid "Invoice Masterdata"
-msgstr "Rechnungsstammdaten"
-
-msgid "New Invoice"
-msgstr "Neue Rechnung"
-
-msgid "Invoice #"
-msgstr "Rechnung #"
-
-msgid "Date"
-msgstr "Datum"
-
-msgid "Customer"
-msgstr "Kunde"
-
-msgid "Car"
-msgstr "Fahrzeug"
-
-msgid "Status"
-msgstr "Status"
-
-msgid "Total"
-msgstr "Gesamt"
-
-msgid "Action"
-msgstr "Aktion"
-
-msgid "Open"
-msgstr "Öffnen"
-
-msgid "No invoices yet."
-msgstr "Noch keine Rechnungen."
-
-msgid "Back to Dashboard"
-msgstr "Zurück zum Dashboard"
-
-msgid "Add Customer"
-msgstr "Kunde hinzufügen"
-
-msgid "Search name:"
-msgstr "Name suchen:"
-
-msgid "Type customer name"
-msgstr "Kundennamen eingeben"
-
-msgid "Search"
-msgstr "Suchen"
-
-msgid "Clear"
-msgstr "Leeren"
-
-msgid "Name"
-msgstr "Name"
-
-msgid "Phone"
-msgstr "Telefon"
-
-msgid "Email"
-msgstr "E-Mail"
-
-msgid "Actions"
-msgstr "Aktionen"
-
-msgid "Edit"
-msgstr "Bearbeiten"
-
-msgid "Delete"
-msgstr "Löschen"
-
-msgid "Delete this customer and all cars?"
-msgstr "Diesen Kunden und alle Fahrzeuge löschen?"
-
-msgid "No customers found."
-msgstr "Keine Kunden gefunden."
-
-msgid "Users and Rights: %(shop_name)s"
-msgstr "Benutzer und Rechte: %(shop_name)s"
-
-msgid "Database alias:"
-msgstr "Datenbank-Alias:"
-
-msgid "Back to Shops"
-msgstr "Zurück zu Werkstätten"
-
-msgid "Back to My Shop"
-msgstr "Zurück zu meiner Werkstatt"
-
-msgid "New user credentials"
-msgstr "Neue Benutzerdaten"
-
-msgid "Username:"
-msgstr "Benutzername:"
-
-msgid "Password:"
-msgstr "Passwort:"
-
-msgid "Copy Credentials"
-msgstr "Daten kopieren"
-
-msgid "Add User to Shop"
-msgstr "Benutzer zur Werkstatt hinzufügen"
-
-msgid "Preferred language"
-msgstr "Bevorzugte Sprache"
-
-msgid "Current Users"
-msgstr "Aktuelle Benutzer"
-
-msgid "User"
-msgstr "Benutzer"
-
-msgid "Language"
-msgstr "Sprache"
-
-msgid "Manage Users"
-msgstr "Benutzer verwalten"
-
-msgid "Create Orders"
-msgstr "Aufträge erstellen"
-
-msgid "Inventory"
-msgstr "Lager"
-
-msgid "Reports"
-msgstr "Berichte"
-
-msgid "Yes"
-msgstr "Ja"
-
-msgid "No"
-msgstr "Nein"
-
-msgid "Active"
-msgstr "Aktiv"
-
-msgid "Inactive"
-msgstr "Inaktiv"
-
-msgid "Edit Rights"
-msgstr "Rechte bearbeiten"
-
-msgid "No users assigned to this shop yet."
-msgstr "Dieser Werkstatt wurden noch keine Benutzer zugewiesen."
-
-msgid "Credentials copied to clipboard."
-msgstr "Daten in die Zwischenablage kopiert."
-
-msgid "Edit Rights: %(username)s"
-msgstr "Rechte bearbeiten: %(username)s"
-
-msgid "Back to Users"
-msgstr "Zurück zu Benutzern"
-
-msgid "Save Rights"
-msgstr "Rechte speichern"
-
-msgid "Back to Customers"
-msgstr "Zurück zu Kunden"
-
-msgid "Edit Customer"
-msgstr "Kunde bearbeiten"
-
-msgid "Invoice Customer"
-msgstr "Kunde abrechnen"
-
-msgid "Delete Customer"
-msgstr "Kunde löschen"
-
-msgid "Customer Details"
-msgstr "Kundendetails"
-
-msgid "Cars linked:"
-msgstr "Verknupfte Fahrzeuge:"
-
-msgid "Address"
-msgstr "Adresse"
-
-msgid "Notes:"
-msgstr "Notizen:"
-
-msgid "Cars"
-msgstr "Fahrzeuge"
-
-msgid "Plate:"
-msgstr "Kennzeichen:"
-
-msgid "VIN:"
-msgstr "VIN:"
-
-msgid "Color:"
-msgstr "Farbe:"
-
-msgid "Inspection"
-msgstr "Inspektion"
-
-msgid "Type:"
-msgstr "Typ:"
-
-msgid "Result:"
-msgstr "Ergebnis:"
-
-msgid "Status Date:"
-msgstr "Statusdatum:"
-
-msgid "Mileage:"
-msgstr "Kilometerstand:"
-
-msgid "Next:"
-msgstr "Nachste:"
-
-msgid "Tire Hotel"
-msgstr "Reifenhotel"
-
-msgid "Location:"
-msgstr "Ort:"
-
-msgid "Labels:"
-msgstr "Etiketten:"
-
-msgid "Edit Car"
-msgstr "Fahrzeug bearbeiten"
-
-msgid "Invoice This Car"
-msgstr "Dieses Fahrzeug abrechnen"
-
-msgid "Print Tire Labels"
-msgstr "Reifenetiketten drucken"
-
-msgid "Delete Car"
-msgstr "Fahrzeug löschen"
-
-msgid "Delete this car?"
-msgstr "Dieses Fahrzeug löschen?"
-
-msgid "No cars saved yet for this customer."
-msgstr "Für diesen Kunden sind noch keine Fahrzeuge gespeichert."
-
-msgid "Cancel"
-msgstr "Abbrechen"
-
-msgid "Lookup Plate"
-msgstr "Kennzeichen suchen"
-
-msgid "Save Car"
-msgstr "Fahrzeug speichern"
-
-msgid "Enter a plate before lookup."
-msgstr "Bitte zuerst ein Kennzeichen eingeben."
-
-msgid "Looking up vehicle data..."
-msgstr "Fahrzeugdaten werden gesucht..."
-
-msgid "Lookup failed."
-msgstr "Suche fehlgeschlagen."
-
-msgid "Vehicle data loaded. Review and save the car."
-msgstr "Fahrzeugdaten geladen. Bitte prüfen und speichern."
-
-msgid "Lookup request failed. Please try again."
-msgstr "Anfrage fehlgeschlagen. Bitte erneut versuchen."
-
-msgid "Back to Invoices"
-msgstr "Zurück zu Rechnungen"
-
-msgid "Masterdata"
-msgstr "Stammdaten"
-
-msgid "Email Invoice"
-msgstr "Rechnung per E-Mail"
-
-msgid "Print / PDF"
-msgstr "Drucken / PDF"
-
-msgid "Status Actions"
-msgstr "Statusaktionen"
-
-msgid "Set"
-msgstr "Setzen"
-
-msgid "Invoice Header"
-msgstr "Rechnungskopf"
-
-msgid "Locked:"
-msgstr "Gesperrt:"
-
-msgid "This invoice is not draft and cannot be edited."
-msgstr "Diese Rechnung ist kein Entwurf und kann nicht bearbeitet werden."
-
-msgid "Update Invoice"
-msgstr "Rechnung aktualisieren"
-
-msgid "Add Invoice Line"
-msgstr "Rechnungszeile hinzufügen"
-
-msgid "Add Line"
-msgstr "Zeile hinzufügen"
-
-msgid "Invoice Lines"
-msgstr "Rechnungszeilen"
-
-msgid "Description"
-msgstr "Beschreibung"
-
-msgid "Qty"
-msgstr "Menge"
-
-msgid "Line Rebate"
-msgstr "Zeilenrabatt"
-
-msgid "Line Total"
-msgstr "Zeilensumme"
-
-msgid "Delete this line?"
-msgstr "Diese Zeile löschen?"
-
-msgid "No lines added yet."
-msgstr "Noch keine Zeilen hinzugefugt."
-
-msgid "Subtotal:"
-msgstr "Zwischensumme:"
-
-msgid "Total Rebate:"
-msgstr "Gesamtrabatt:"
-
-msgid "Total ex VAT:"
-msgstr "Gesamt exkl. MwSt:"
-
-msgid "VAT Total:"
-msgstr "MwSt gesamt:"
-
-msgid "Grand Total incl VAT:"
-msgstr "Gesamt inkl. MwSt:"
-
-msgid "Add Price Item"
-msgstr "Preisposition hinzufügen"
-
-msgid "Save Item"
-msgstr "Position speichern"
-
-msgid "Current Items"
-msgstr "Aktuelle Positionen"
-
-msgid "Type"
-msgstr "Typ"
-
-msgid "Code"
-msgstr "Code"
-
-msgid "No price items yet."
-msgstr "Noch keine Preispositionen."
-
-msgid "Save Masterdata"
-msgstr "Stammdaten speichern"
-
-msgid "Send Email"
-msgstr "E-Mail senden"
-
-msgid "Feature scaffold is ready. Plug your domain models and workflows into this page."
-msgstr "Das Gerust ist bereit. Binden Sie Ihre Modelle und Workflows auf dieser Seite ein."
-
+#: repairshop/views.py:219
 msgid "This is where you create and dispatch repair orders."
 msgstr "Hier erstellen und disponieren Sie Reparaturaufträge."
 
+#: repairshop/views.py:418 templates/shop_dashboard.html:43
+msgid "Schedule Vehicle Inspection"
+msgstr "Fahrzeugprüfung planen"
+
+#: repairshop/views.py:419
 msgid "This is where your team can schedule and track inspections."
 msgstr "Hier kann Ihr Team Inspektionen planen und verfolgen."
 
+#: repairshop/views.py:431 templates/shop_dashboard.html:53
+msgid "Manage Parts Inventory"
+msgstr "Teilelager verwalten"
+
+#: repairshop/views.py:432
 msgid "This is where stock movements and part catalogs are managed."
 msgstr "Hier werden Lagerbewegungen und Teilekataloge verwaltet."
 
-msgid "This is where KPI, revenue, and technician productivity reports are shown."
+#: repairshop/views.py:444 templates/shop_dashboard.html:63
+msgid "View Reports"
+msgstr "Berichte anzeigen"
+
+#: repairshop/views.py:445
+msgid ""
+"This is where KPI, revenue, and technician productivity reports are shown."
 msgstr "Hier werden KPI-, Umsatz- und Produktivitatsberichte angezeigt."
 
-msgid "Logo"
-msgstr "Logo"
-
-msgid "Database Alias"
-msgstr "Datenbank-Alias"
-
-msgid "Users & Rights"
-msgstr "Benutzer & Rechte"
-
-msgid "Deactivate"
-msgstr "Deaktivieren"
-
-msgid "Activate"
-msgstr "Aktivieren"
-
-msgid "No shops yet. Create your first one."
-msgstr "Noch keine Werkstätten. Erstellen Sie Ihre erste."
-
-msgid "RepairShop Cloud"
-msgstr "RepairShop Cloud"
-
-msgid "Every Garage,"
-msgstr "Jede Werkstatt,"
-
-msgid "One Fast Workflow."
-msgstr "Ein schneller Workflow."
-
-msgid "Run estimates, jobs, and customer records per shop with isolated databases."
-msgstr "Angebote, Aufträge und Kundendaten je Werkstatt mit isolierten Datenbanken verwalten."
-
-msgid "Sign in to access your shop-specific dashboard and daily repair operations."
-msgstr "Melden Sie sich an, um Ihr werkstattspezifisches Dashboard und die täglichen Reparaturabläufe zu nutzen."
-
-msgid "Open My Shop Functions"
-msgstr "Meine Werkstattfunktionen öffnen"
-
-msgid "Log in to My Shop"
-msgstr "Bei meiner Werkstatt anmelden"
-
-msgid "Admin Access"
-msgstr "Admin-Zugriff"
-
-msgid "Tenant Isolation"
-msgstr "Tenant-Isolation"
-
-msgid "Shop data routed to its own database."
-msgstr "Werkstattdaten werden in die eigene Datenbank geleitet."
-
-msgid "Secure Access"
-msgstr "Sicherer Zugriff"
-
-msgid "Users only open their shop workspace."
-msgstr "Benutzer öffnen nur ihren eigenen Werkstattarbeitsbereich."
-
-msgid "Cloud Ready"
-msgstr "Cloud-bereit"
-
-msgid "Log in to your shop"
-msgstr "Bei Ihrer Werkstatt anmelden"
-
-msgid "Use your RepairShop account to open shop-specific functions."
-msgstr "Nutzen Sie Ihr RepairShop-Konto, um werkstattspezifische Funktionen zu öffnen."
-
-msgid "Continue"
-msgstr "Weiter"
-
-msgid "Back to landing page"
-msgstr "Zurück zur Startseite"
-
-msgid "Print / Save PDF"
-msgstr "Drucken / PDF speichern"
-
-msgid "From"
-msgstr "Von"
-
-msgid "To"
-msgstr "An"
-
-msgid "Unit"
-msgstr "Einheit"
-
-msgid "Rebate"
-msgstr "Rabatt"
-
-msgid "No lines."
-msgstr "Keine Zeilen."
-
-msgid "Subtotal"
-msgstr "Zwischensumme"
-
-msgid "Total Rebate"
-msgstr "Gesamtrabatt"
-
-msgid "VAT Total"
-msgstr "MwSt gesamt"
-
-msgid "Grand Total incl VAT"
-msgstr "Gesamt inkl. MwSt"
-
-msgid "Notes"
-msgstr "Notizen"
-
-msgid "Print"
-msgstr "Drucken"
-
-msgid "Back to Customer"
-msgstr "Zurück zum Kunden"
-
-msgid "Format:"
-msgstr "Format:"
-
-msgid "Preset"
-msgstr "Voreinstellung"
-
-msgid "Count"
-msgstr "Anzahl"
-
-msgid "Apply"
-msgstr "Anwenden"
-
-msgid "Label"
-msgstr "Etikett"
-
-msgid "Invoice Number:"
-msgstr "Rechnungsnummer:"
-
-msgid "Total (incl VAT):"
-msgstr "Gesamt (inkl. MwSt):"
-
-msgid "View / print invoice"
-msgstr "Rechnung ansehen / drucken"
-
-msgid "View / print invoice:"
-msgstr "Rechnung ansehen / drucken:"
-
-msgid "Create a shop account, login user, and tenant database alias."
-msgstr "Werkstattkonto, Login-Benutzer und Tenant-Datenbankalias erstellen."
-
-msgid "New Shop Credentials"
-msgstr "Neue Werkstatt-Zugangsdaten"
-
-msgid "Database:"
-msgstr "Datenbank:"
-
-msgid "Shop name"
-msgstr "Werkstattname"
-
-msgid "Login username"
-msgstr "Login-Benutzername"
-
-msgid "Email (optional)"
-msgstr "E-Mail (optional)"
-
-msgid "Database alias (optional)"
-msgstr "Datenbank-Alias (optional)"
-
-msgid "Generate strong password automatically"
-msgstr "Starkes Passwort automatisch erzeugen"
-
-msgid "Temporary password"
-msgstr "Temporäres Passwort"
-
-msgid "Confirm password"
-msgstr "Passwort bestätigen"
-
-msgid "Create Shop"
-msgstr "Werkstatt erstellen"
-
+#: repairshop/views.py:512 repairshop/views.py:513
 msgid "Create Invoice"
 msgstr "Rechnung erstellen"
 
-msgid "Back to Shop List"
-msgstr "Zurück zur Werkstattliste"
-
-msgid "Temporary password reset"
-msgstr "Temporäres Passwort zurückgesetzt"
-
-msgid "Database alias"
-msgstr "Datenbank-Alias"
-
-msgid "Shop is active"
-msgstr "Werkstatt ist aktiv"
-
-msgid "Owner user is active"
-msgstr "Eigentümer-Benutzer ist aktiv"
-
-msgid "Reset password to a new random value"
-msgstr "Passwort auf einen neuen Zufallswert zurücksetzen"
-
-msgid "Save Changes"
-msgstr "Änderungen speichern"
-
-msgid "New username"
-msgstr "Neuer Benutzername"
-
-msgid "New user email"
-msgstr "Neue Benutzer-E-Mail"
-
-msgid "Generate password"
-msgstr "Passwort generieren"
-
-msgid "Create new user account"
-msgstr "Neues Benutzerkonto erstellen"
-
-msgid "Existing user"
-msgstr "Vorhandener Benutzer"
-
-msgid "Choose an existing user when not creating a new account."
-msgstr "Wählen Sie einen vorhandenen Benutzer, wenn kein neues Konto erstellt wird."
-
-msgid "Enter a username for the new user."
-msgstr "Benutzernamen für den neuen Benutzer eingeben."
-
-msgid "Select an existing user or create a new one."
-msgstr "Einen vorhandenen Benutzer wählen oder einen neuen erstellen."
-
-msgid "Make"
-msgstr "Marke"
-
-msgid "Model"
-msgstr "Modell"
-
-msgid "Year"
-msgstr "Jahr"
-
-msgid "Plate number"
-msgstr "Kennzeichen"
-
-msgid "Tire hotel enabled"
-msgstr "Reifenhotel aktiviert"
-
-msgid "Tire hotel location"
-msgstr "Reifenhotel Standort"
-
-msgid "Tire hotel notes"
-msgstr "Reifenhotel Notizen"
-
-msgid "Tire label count"
-msgstr "Anzahl Reifenetiketten"
-
-msgid "Inspection type"
-msgstr "Prüfungsart"
-
-msgid "Inspection date"
-msgstr "Prüfungsdatum"
-
-msgid "Inspection result"
-msgstr "Prüfungsergebnis"
-
-msgid "Inspection status"
-msgstr "Prüfungsstatus"
-
-msgid "Inspection status date"
-msgstr "Prüfungsstatusdatum"
-
-msgid "Inspection mileage"
-msgstr "Kilometerstand bei Prüfung"
-
-msgid "Next inspection date"
-msgstr "Nächstes Prüfungsdatum"
-
-msgid "Total rebate type"
-msgstr "Gesamtrabatt Typ"
-
-msgid "Total rebate value"
-msgstr "Gesamtrabatt Wert"
-
-msgid "Selected car does not belong to this shop."
-msgstr "Das gewählte Fahrzeug gehört nicht zu dieser Werkstatt."
-
-msgid "Selected customer does not belong to this shop."
-msgstr "Der gewählte Kunde gehört nicht zu dieser Werkstatt."
-
-msgid "Selected car does not belong to the chosen customer."
-msgstr "Das gewählte Fahrzeug gehört nicht zum ausgewählten Kunden."
-
-msgid "Price item"
-msgstr "Preisposition"
-
-msgid "Rebate type"
-msgstr "Rabatttyp"
-
-msgid "Rebate value"
-msgstr "Rabattwert"
-
-msgid "Selected price item does not belong to this shop."
-msgstr "Die gewählte Preisposition gehört nicht zu dieser Werkstatt."
-
-msgid "Provide a manual description or choose a price item."
-msgstr "Manuelle Beschreibung angeben oder Preisposition auswählen."
-
-msgid "Provide a unit price for manual lines."
-msgstr "Bitte einen Einzelpreis für manuelle Zeilen angeben."
-
-msgid "Legal name"
-msgstr "Rechtlicher Name"
-
-msgid "Address line 1"
-msgstr "Adresszeile 1"
-
-msgid "Address line 2"
-msgstr "Adresszeile 2"
-
-msgid "Postal code"
-msgstr "Postleitzahl"
-
-msgid "City"
-msgstr "Stadt"
-
-msgid "Country"
-msgstr "Land"
-
-msgid "VAT number"
-msgstr "USt-IdNr"
-
-msgid "Company logo"
-msgstr "Firmenlogo"
-
-msgid "Recipient email"
-msgstr "Empfänger-E-Mail"
-
-msgid "Subject"
-msgstr "Betreff"
-
-msgid "Message"
-msgstr "Nachricht"
-
-msgid "Active shop: <strong>%(shop_name)s</strong>"
-msgstr "Aktive Werkstatt: <strong>%(shop_name)s</strong>"
-
-msgid "Administration workspace"
-msgstr "Administrationsbereich"
-
-msgid "Back to Invoice"
-msgstr "Zurück zur Rechnung"
-
-msgid "Change status"
-msgstr "Status ändern"
-
-msgid "Create Invoice From Work Order"
-msgstr "Rechnung aus Reparaturauftrag erstellen"
-
-msgid "Customer, dates, status, rebate, and notes."
-msgstr "Kunde, Daten, Status, Rabatt und Notizen."
-
-msgid "Dashboard"
-msgstr "Dashboard"
-
-msgid "Edit Invoice Line"
-msgstr "Rechnungszeile bearbeiten"
-
-msgid "Edit Price Item"
-msgstr "Preisposition bearbeiten"
-
-msgid "Edit the header here, then continue with the lines below."
-msgstr "Bearbeiten Sie hier den Kopf und fahren Sie dann mit den Positionen unten fort."
-
-msgid "Generate a print-friendly invoice view for"
-msgstr "Eine druckfreundliche Rechnungsansicht erstellen für"
-
-msgid "Invoice ready"
-msgstr "Rechnung bereit"
-
-msgid "Labor, diagnostics, and workshop tasks."
-msgstr "Arbeitszeit, Diagnose und Werkstattaufgaben."
-
-msgid "Line items"
-msgstr "Positionen"
-
-msgid "Manage reusable service and part pricing for"
-msgstr "Wiederverwendbare Service- und Teilepreise verwalten für"
-
-msgid "No active shop"
-msgstr "Keine aktive Werkstatt"
-
-msgid "No part lines added yet."
-msgstr "Noch keine Teilepositionen hinzugefügt."
-
-msgid "No service lines added yet."
-msgstr "Noch keine Servicepositionen hinzugefügt."
-
-msgid "Paid Functions"
-msgstr "Bezahlte Funktionen"
-
-msgid "Paid functions"
-msgstr "Bezahlte Funktionen"
-
-msgid "Part"
-msgstr "Teil"
-
-msgid "Parts:"
-msgstr "Teile:"
-
-msgid "Payment due condition"
-msgstr "Fälligkeitsbedingung"
-
-msgid "Payment due days"
-msgstr "Fälligkeitstage"
-
-msgid "Print A4 2x7"
-msgstr "A4 2x7 drucken"
-
-msgid "Print Invoice"
-msgstr "Rechnung drucken"
-
-msgid "Priority"
-msgstr "Priorität"
-
-msgid "Repair Orders"
-msgstr "Reparaturaufträge"
-
-msgid "Role"
-msgstr "Rolle"
-
+#: repairshop/views.py:815
+#, python-format
+msgid "Price item '%(description)s' deleted."
+msgstr ""
+
+#: repairshop/views.py:826
+#, python-format
+msgid "Price item '%(description)s' updated."
+msgstr ""
+
+#: repairshop/views.py:828
+#, python-format
+msgid "Price item '%(description)s' saved."
+msgstr ""
+
+#: shops/forms.py:29 templates/work_order_detail.html:70
+#: templates/work_order_detail.html:153
 msgid "Service"
 msgstr "Service"
 
-msgid "Services:"
-msgstr "Service:"
+#: shops/forms.py:29 templates/work_order_detail.html:71
+#: templates/work_order_detail.html:154
+msgid "Part"
+msgstr "Teil"
 
-msgid "Shop Users"
-msgstr "Werkstattbenutzer"
+#: shops/forms.py:40 shops/forms.py:338 templates/add_shop.html:34
+#: templates/edit_shop.html:33
+msgid "Shop name"
+msgstr "Werkstattname"
 
-msgid "Unit Price"
-msgstr "Einzelpreis"
+#: shops/forms.py:41 shops/forms.py:318 templates/add_shop.html:40
+#: templates/edit_shop.html:45
+msgid "Login username"
+msgstr "Login-Benutzername"
 
-msgid "Unassigned"
+#: shops/forms.py:42 shops/forms.py:319 shops/forms.py:517 shops/forms.py:752
+#: templates/customer_detail.html:34 templates/customer_list.html:41
+#: templates/edit_shop.html:51
+msgid "Email"
+msgstr "E-Mail"
+
+#: shops/forms.py:48 shops/forms.py:324 shops/forms.py:341
+#: templates/add_shop.html:52 templates/edit_shop.html:69
+msgid "Paid functions"
+msgstr "Bezahlte Funktionen"
+
+#: shops/forms.py:49 shops/forms.py:325
+msgid "Only selected functions will be visible and usable for this shop."
+msgstr ""
+
+#: shops/forms.py:54 templates/add_shop.html:70
+msgid "Generate strong password automatically"
+msgstr "Starkes Passwort automatisch erzeugen"
+
+#: shops/forms.py:55
+msgid "If checked, the system generates a strong temporary password."
+msgstr ""
+
+#: shops/forms.py:57 templates/add_shop.html:77
+msgid "Temporary password"
+msgstr "Temporäres Passwort"
+
+#: shops/forms.py:58 shops/forms.py:399 templates/add_shop.html:83
+#: templates/manage_shop_users.html:71
+msgid "Confirm password"
+msgstr "Passwort bestätigen"
+
+#: shops/forms.py:62 templates/add_shop.html:63
+msgid "Database alias (optional)"
+msgstr "Datenbank-Alias (optional)"
+
+#: shops/forms.py:63
+msgid "Optional alias, for example: downtown_db. Leave blank to auto-generate."
+msgstr ""
+
+#: shops/forms.py:70 shops/forms.py:357 shops/forms.py:419
+msgid "This username already exists."
+msgstr ""
+
+#: shops/forms.py:86 shops/forms.py:440
+msgid "Enter a password or enable auto-generation."
+msgstr ""
+
+#: shops/forms.py:88 shops/forms.py:442
+msgid "Use at least 8 characters."
+msgstr ""
+
+#: shops/forms.py:90 shops/forms.py:444
+msgid "Passwords do not match."
+msgstr ""
+
+#: shops/forms.py:101 shops/forms.py:363
+msgid "This database alias is already in use."
+msgstr ""
+
+#: shops/forms.py:179 shops/forms.py:611 templates/customer_detail.html:8
+#: templates/invoice_list.html:24 templates/work_order_detail.html:90
+#: templates/work_order_list_create.html:218
+msgid "Customer"
+msgstr "Kunde"
+
+#: shops/forms.py:180 shops/forms.py:612 templates/invoice_list.html:25
+#: templates/work_order_list_create.html:221
+msgid "Car"
+msgstr "Fahrzeug"
+
+#: shops/forms.py:181 shops/forms.py:586 shops/forms.py:691
+#: templates/invoice_detail.html:555 templates/invoice_price_table.html:50
+#: templates/invoice_print.html:180 templates/work_order_detail.html:195
+#: templates/work_order_detail.html:264
+msgid "Description"
+msgstr "Beschreibung"
+
+#: shops/forms.py:182
+msgid "Mechanic notes"
+msgstr ""
+
+#: shops/forms.py:183 templates/work_order_detail.html:98
+#: templates/work_order_list_create.html:225
+#, fuzzy
+#| msgid "Unassigned"
+msgid "Assigned to"
 msgstr "Nicht zugewiesen"
 
-msgid "Unavailable"
-msgstr "Nicht verfügbar"
+#: shops/forms.py:184 templates/work_order_detail.html:77
+msgid "Priority"
+msgstr "Priorität"
 
-msgid "Update Invoice Header"
-msgstr "Rechnungskopf aktualisieren"
+#: shops/forms.py:185 templates/work_order_list_create.html:223
+msgid "Due date"
+msgstr ""
 
-msgid "Update Item"
-msgstr "Position aktualisieren"
+#: shops/forms.py:241 shops/forms.py:669
+msgid "Selected car does not belong to the chosen customer."
+msgstr "Das gewählte Fahrzeug gehört nicht zum ausgewählten Kunden."
 
-msgid "Update Line"
-msgstr "Zeile aktualisieren"
+#: shops/forms.py:269
+#, fuzzy
+#| msgid "Line items"
+msgid "Line type"
+msgstr "Positionen"
 
+#: shops/forms.py:270 shops/forms.py:288 shops/forms.py:690
+msgid "Price item"
+msgstr "Preisposition"
+
+#: shops/forms.py:271
+#, fuzzy
+#| msgid "Description"
+msgid "Line description"
+msgstr "Beschreibung"
+
+#: shops/forms.py:272
+msgid "Quantity"
+msgstr ""
+
+#: shops/forms.py:273
+#, fuzzy
+#| msgid "Unit Price"
+msgid "Unit price"
+msgstr "Einzelpreis"
+
+#: shops/forms.py:274 shops/forms.py:588 shops/forms.py:694
 msgid "VAT %"
 msgstr "MwSt. %"
 
-msgid "Vehicle"
-msgstr "Fahrzeug"
+#: shops/forms.py:291
+#, fuzzy
+#| msgid "No price items yet."
+msgid "Choose a price item"
+msgstr "Noch keine Preispositionen."
 
-msgid "Work Order Details"
-msgstr "Reparaturauftragsdetails"
+#: shops/forms.py:309
+#, fuzzy
+#| msgid "Provide a manual description or choose a price item."
+msgid "Enter a description or choose a price item."
+msgstr "Manuelle Beschreibung angeben oder Preisposition auswählen."
 
-msgid "Workspace"
-msgstr "Arbeitsbereich"
+#: shops/forms.py:311
+#, fuzzy
+#| msgid "Provide a manual description or choose a price item."
+msgid "Enter a unit price or choose a price item."
+msgstr "Manuelle Beschreibung angeben oder Preisposition auswählen."
 
+#: shops/forms.py:327 templates/edit_shop.html:63
+msgid "Owner user is active"
+msgstr "Eigentümer-Benutzer ist aktiv"
+
+#: shops/forms.py:330 templates/edit_shop.html:80
+msgid "Reset password to a new random value"
+msgstr "Passwort auf einen neuen Zufallswert zurücksetzen"
+
+#: shops/forms.py:331
+msgid "Generate a new temporary password for this shop user."
+msgstr ""
+
+#: shops/forms.py:339 templates/edit_shop.html:39
+msgid "Database alias"
+msgstr "Datenbank-Alias"
+
+#: shops/forms.py:340 templates/edit_shop.html:57
+msgid "Shop is active"
+msgstr "Werkstatt ist aktiv"
+
+#: shops/forms.py:388 templates/manage_shop_users.html:35
+msgid "Create new user account"
+msgstr "Neues Benutzerkonto erstellen"
+
+#: shops/forms.py:392 templates/manage_shop_users.html:41
+msgid "Existing user"
+msgstr "Vorhandener Benutzer"
+
+#: shops/forms.py:393
+msgid "Choose an existing user when not creating a new account."
+msgstr ""
+"Wählen Sie einen vorhandenen Benutzer, wenn kein neues Konto erstellt wird."
+
+#: shops/forms.py:395 templates/manage_shop_users.html:47
+msgid "New username"
+msgstr "Neuer Benutzername"
+
+#: shops/forms.py:396 templates/manage_shop_users.html:53
+msgid "New user email"
+msgstr "Neue Benutzer-E-Mail"
+
+#: shops/forms.py:397 templates/manage_shop_users.html:59
+msgid "Generate password"
+msgstr "Passwort generieren"
+
+#: shops/forms.py:398 templates/manage_shop_users.html:65
+#: templates/registration/login.html:120
+#, fuzzy
+#| msgid "Password:"
+msgid "Password"
+msgstr "Passwort:"
+
+#: shops/forms.py:400 shops/forms.py:497
+#: templates/edit_shop_user_rights.html:20 templates/manage_shop_users.html:77
+#: templates/manage_shop_users.html:131
+msgid "Role"
+msgstr "Rolle"
+
+#: shops/forms.py:401 shops/forms.py:498
+#: templates/edit_shop_user_rights.html:26 templates/manage_shop_users.html:83
+msgid "Preferred language"
+msgstr "Bevorzugte Sprache"
+
+#: shops/forms.py:402 shops/forms.py:499
+#: templates/edit_shop_user_rights.html:32 templates/manage_shop_users.html:89
+#, fuzzy
+#| msgid "Manage Users"
+msgid "Can manage users"
+msgstr "Benutzer verwalten"
+
+#: shops/forms.py:403 shops/forms.py:500
+#: templates/edit_shop_user_rights.html:38 templates/manage_shop_users.html:95
+#, fuzzy
+#| msgid "Create Repair Order"
+msgid "Can create repair orders"
+msgstr "Reparaturauftrag erstellen"
+
+#: shops/forms.py:404 shops/forms.py:501
+#: templates/edit_shop_user_rights.html:44 templates/manage_shop_users.html:101
+#, fuzzy
+#| msgid "Manage Parts Inventory"
+msgid "Can manage inventory"
+msgstr "Teilelager verwalten"
+
+#: shops/forms.py:405 shops/forms.py:502
+#: templates/edit_shop_user_rights.html:50 templates/manage_shop_users.html:107
+#, fuzzy
+#| msgid "View Reports"
+msgid "Can view reports"
+msgstr "Berichte anzeigen"
+
+#: shops/forms.py:406 shops/forms.py:503
+#: templates/edit_shop_user_rights.html:56 templates/manage_shop_users.html:113
+#, fuzzy
+#| msgid "Active"
+msgid "Access active"
+msgstr "Aktiv"
+
+#: shops/forms.py:417
+msgid "Enter a username for the new user."
+msgstr "Benutzernamen für den neuen Benutzer eingeben."
+
+#: shops/forms.py:427
+msgid "Select an existing user or create a new one."
+msgstr "Einen vorhandenen Benutzer wählen oder einen neuen erstellen."
+
+#: shops/forms.py:515 templates/customer_list.html:39
+msgid "Name"
+msgstr "Name"
+
+#: shops/forms.py:516 shops/forms.py:751 templates/customer_detail.html:33
+#: templates/customer_list.html:40
+msgid "Phone"
+msgstr "Telefon"
+
+#: shops/forms.py:518 templates/customer_detail.html:35
+msgid "Address"
+msgstr "Adresse"
+
+#: shops/forms.py:519
+msgid "Payment due date condition"
+msgstr "Fälligkeitsbedingung"
+
+#: shops/forms.py:520 templates/customer_detail.html:37
+msgid "Payment due days"
+msgstr "Fälligkeitstage"
+
+#: shops/forms.py:521 shops/forms.py:564 shops/forms.py:618
+#: templates/invoice_print.html:225
+msgid "Notes"
+msgstr "Notizen"
+
+#: shops/forms.py:558
+msgid "Make"
+msgstr "Marke"
+
+#: shops/forms.py:559
+msgid "Model"
+msgstr "Modell"
+
+#: shops/forms.py:560
+msgid "Year"
+msgstr "Jahr"
+
+#: shops/forms.py:561
+msgid "Plate number"
+msgstr "Kennzeichen"
+
+#: shops/forms.py:562
+#, fuzzy
+#| msgid "VIN:"
+msgid "VIN"
+msgstr "VIN:"
+
+#: shops/forms.py:563
+#, fuzzy
+#| msgid "Color:"
+msgid "Color"
+msgstr "Farbe:"
+
+#: shops/forms.py:565
+msgid "Tire hotel enabled"
+msgstr "Reifenhotel aktiviert"
+
+#: shops/forms.py:566
+msgid "Tire hotel location"
+msgstr "Reifenhotel Standort"
+
+#: shops/forms.py:567
+msgid "Tire hotel notes"
+msgstr "Reifenhotel Notizen"
+
+#: shops/forms.py:568
+msgid "Tire label count"
+msgstr "Anzahl Reifenetiketten"
+
+#: shops/forms.py:569
+msgid "Inspection type"
+msgstr "Prüfungsart"
+
+#: shops/forms.py:570
+msgid "Inspection date"
+msgstr "Prüfungsdatum"
+
+#: shops/forms.py:571
+msgid "Inspection result"
+msgstr "Prüfungsergebnis"
+
+#: shops/forms.py:572
+msgid "Inspection status"
+msgstr "Prüfungsstatus"
+
+#: shops/forms.py:573
+msgid "Inspection status date"
+msgstr "Prüfungsstatusdatum"
+
+#: shops/forms.py:574
+msgid "Inspection mileage"
+msgstr "Kilometerstand bei Prüfung"
+
+#: shops/forms.py:575
+msgid "Next inspection date"
+msgstr "Nächstes Prüfungsdatum"
+
+#: shops/forms.py:584 templates/invoice_price_table.html:48
+msgid "Type"
+msgstr "Typ"
+
+#: shops/forms.py:585 templates/invoice_price_table.html:49
+msgid "Code"
+msgstr "Code"
+
+#: shops/forms.py:587 shops/forms.py:693 templates/invoice_detail.html:557
+#: templates/invoice_price_table.html:51 templates/work_order_detail.html:197
+#: templates/work_order_detail.html:266
+msgid "Unit Price"
+msgstr "Einzelpreis"
+
+#: shops/forms.py:589 templates/invoice_price_table.html:53
+#: templates/manage_shop_users.html:151 templates/shop_list.html:42
+msgid "Active"
+msgstr "Aktiv"
+
+#: shops/forms.py:613
+msgid "Issue Date"
+msgstr ""
+
+#: shops/forms.py:614
+#, fuzzy
+#| msgid "Date"
+msgid "Due Date"
+msgstr "Datum"
+
+#: shops/forms.py:615 templates/invoice_detail.html:475
+#: templates/invoice_list.html:26 templates/manage_shop_users.html:137
+#: templates/shop_list.html:22 templates/work_order_detail.html:76
+msgid "Status"
+msgstr "Status"
+
+#: shops/forms.py:616
+msgid "Total rebate type"
+msgstr "Gesamtrabatt Typ"
+
+#: shops/forms.py:617
+msgid "Total rebate value"
+msgstr "Gesamtrabatt Wert"
+
+#: shops/forms.py:658
+msgid "Selected car does not belong to this shop."
+msgstr "Das gewählte Fahrzeug gehört nicht zu dieser Werkstatt."
+
+#: shops/forms.py:667
+msgid "Selected customer does not belong to this shop."
+msgstr "Der gewählte Kunde gehört nicht zu dieser Werkstatt."
+
+#: shops/forms.py:692 templates/invoice_detail.html:556
+#: templates/invoice_print.html:181 templates/work_order_detail.html:196
+#: templates/work_order_detail.html:265
+msgid "Qty"
+msgstr "Menge"
+
+#: shops/forms.py:695
+msgid "Rebate type"
+msgstr "Rabatttyp"
+
+#: shops/forms.py:696
+msgid "Rebate value"
+msgstr "Rabattwert"
+
+#: shops/forms.py:715
+msgid "Selected price item does not belong to this shop."
+msgstr "Die gewählte Preisposition gehört nicht zu dieser Werkstatt."
+
+#: shops/forms.py:718
+msgid "Provide a manual description or choose a price item."
+msgstr "Manuelle Beschreibung angeben oder Preisposition auswählen."
+
+#: shops/forms.py:721
+msgid "Provide a unit price for manual lines."
+msgstr "Bitte einen Einzelpreis für manuelle Zeilen angeben."
+
+#: shops/forms.py:745
+msgid "Legal name"
+msgstr "Rechtlicher Name"
+
+#: shops/forms.py:746
+msgid "Address line 1"
+msgstr "Adresszeile 1"
+
+#: shops/forms.py:747
+msgid "Address line 2"
+msgstr "Adresszeile 2"
+
+#: shops/forms.py:748
+msgid "Postal code"
+msgstr "Postleitzahl"
+
+#: shops/forms.py:749
+msgid "City"
+msgstr "Stadt"
+
+#: shops/forms.py:750
+msgid "Country"
+msgstr "Land"
+
+#: shops/forms.py:753
+msgid "VAT number"
+msgstr "USt-IdNr"
+
+#: shops/forms.py:754
+msgid "Company logo"
+msgstr "Firmenlogo"
+
+#: shops/forms.py:759
+msgid "Recipient email"
+msgstr "Empfänger-E-Mail"
+
+#: shops/forms.py:760
+msgid "Subject"
+msgstr "Betreff"
+
+#: shops/forms.py:761
+msgid "Message"
+msgstr "Nachricht"
+
+#: shops/models.py:39 templates/base_shop.html:48
+#: templates/work_order_detail.html:5 templates/work_order_list_create.html:5
+msgid "Repair Orders"
+msgstr "Reparaturaufträge"
+
+#: shops/models.py:40
+#, fuzzy
+#| msgid "Schedule Vehicle Inspection"
+msgid "Vehicle Inspections"
+msgstr "Fahrzeugprüfung planen"
+
+#: shops/models.py:41
+#, fuzzy
+#| msgid "Inventory"
+msgid "Inventory Management"
+msgstr "Lager"
+
+#: shops/models.py:42 templates/base_shop.html:60
+#: templates/manage_shop_users.html:136
+msgid "Reports"
+msgstr "Berichte"
+
+#: shops/models.py:43 templates/base_shop.html:42
+#: templates/invoice_detail.html:5 templates/invoice_email_form.html:5
+#: templates/invoice_form.html:11 templates/invoice_list.html:4
+#: templates/invoice_list.html:5 templates/invoice_list.html:18
+#: templates/invoice_masterdata.html:5 templates/invoice_price_table.html:7
+#: templates/invoice_print.html:5 templates/shop_dashboard.html:73
+msgid "Invoices"
+msgstr "Rechnungen"
+
+#: shops/models.py:44
+#, fuzzy
+#| msgid "Customer Details"
+msgid "Customers & Vehicles"
+msgstr "Kundendetails"
+
+#: shops/models.py:45
+#, fuzzy
+#| msgid "Shop name"
+msgid "Shop User Management"
+msgstr "Werkstattname"
+
+#: shops/models.py:329
+msgid "No automatic due date"
+msgstr "Kein automatisches Fälligkeitsdatum"
+
+#: shops/models.py:330
+msgid "+day"
+msgstr "+Tag"
+
+#: shops/models.py:331
+msgid "running week"
+msgstr "laufende Woche"
+
+#: shops/models.py:332
+msgid "running month"
+msgstr "laufender Monat"
+
+#: shops/models.py:333
+msgid "running week + days"
+msgstr "laufende Woche + Tage"
+
+#: shops/models.py:334
+msgid "running month + days"
+msgstr "laufender Monat + Tage"
+
+#: shops/models.py:488 shops/models.py:591
+#, fuzzy
+#| msgid "Rebate"
+msgid "No rebate"
+msgstr "Rabatt"
+
+#: shops/models.py:489 shops/models.py:592
+msgid "Percent (%)"
+msgstr ""
+
+#: shops/models.py:490 shops/models.py:593
+msgid "Fixed amount"
+msgstr ""
+
+#: shops/models.py:498
+msgid "Draft"
+msgstr ""
+
+#: shops/models.py:499
+msgid "Issued"
+msgstr ""
+
+#: shops/models.py:500
+msgid "Paid"
+msgstr ""
+
+#: shops/models.py:501
+#, fuzzy
+#| msgid "Cancel"
+msgid "Cancelled"
+msgstr "Abbrechen"
+
+#: templates/add_shop.html:4 templates/edit_shop.html:4
+#: templates/manage_shop_users.html:4
+msgid "Credentials copied to clipboard."
+msgstr "Daten in die Zwischenablage kopiert."
+
+#: templates/add_shop.html:6
+#, fuzzy
+#| msgid "Add New Shop"
+msgid "Add Shop"
+msgstr "Neue Werkstatt hinzufügen"
+
+#: templates/add_shop.html:7 templates/edit_shop.html:7
+#: templates/shop_list.html:5
+#, fuzzy
+#| msgid "Administration workspace"
+msgid "Administration"
+msgstr "Administrationsbereich"
+
+#: templates/add_shop.html:8 templates/landing.html:162
+#: templates/shop_dashboard.html:17 templates/shop_list.html:9
+msgid "Add New Shop"
+msgstr "Neue Werkstatt hinzufügen"
+
+#: templates/add_shop.html:9
+msgid "Create a shop account, login user, and tenant database alias."
+msgstr "Werkstattkonto, Login-Benutzer und Tenant-Datenbankalias erstellen."
+
+#: templates/add_shop.html:11 templates/base_shop.html:31
+#: templates/landing.html:161 templates/shop_dashboard.html:16
+#: templates/shop_list.html:4 templates/shop_list.html:6
+msgid "Manage Shops"
+msgstr "Werkstätten verwalten"
+
+#: templates/add_shop.html:17
+msgid "New Shop Credentials"
+msgstr "Neue Werkstatt-Zugangsdaten"
+
+#: templates/add_shop.html:18 templates/base_shop.html:82
+#: templates/customer_car_form.html:13 templates/edit_shop_user_rights.html:7
+#: templates/invoice_email_form.html:7 templates/manage_shop_users.html:20
+#: templates/shop_operation.html:53 templates/work_order_list_create.html:121
+msgid "Shop:"
+msgstr "Werkstatt:"
+
+#: templates/add_shop.html:19 templates/edit_shop.html:19
+#: templates/manage_shop_users.html:21
+msgid "Username:"
+msgstr "Benutzername:"
+
+#: templates/add_shop.html:20 templates/edit_shop.html:20
+#: templates/manage_shop_users.html:22
+msgid "Password:"
+msgstr "Passwort:"
+
+#: templates/add_shop.html:21
+msgid "Database:"
+msgstr "Datenbank:"
+
+#: templates/add_shop.html:22 templates/edit_shop.html:21
+#: templates/manage_shop_users.html:23
+msgid "Copy Credentials"
+msgstr "Daten kopieren"
+
+#: templates/add_shop.html:46
+msgid "Email (optional)"
+msgstr "E-Mail (optional)"
+
+#: templates/add_shop.html:90
+msgid "Create Shop"
+msgstr "Werkstatt erstellen"
+
+#: templates/base_shop.html:19
+#, fuzzy
+#| msgid "RepairShop Cloud"
+msgid "RepairShop"
+msgstr "RepairShop Cloud"
+
+#: templates/base_shop.html:21
 msgid "Workspace navigation and shared shop styling."
 msgstr "Arbeitsbereichsnavigation und gemeinsames Werkstattdesign."
 
-msgid "Workshop Queue"
-msgstr "Werkstattwarteschlange"
+#: templates/base_shop.html:27
+#, fuzzy
+#| msgid "Shop Functions"
+msgid "Shop navigation"
+msgstr "Werkstattfunktionen"
 
-msgid "Add Service Item"
-msgstr "Serviceposition hinzufügen"
+#: templates/base_shop.html:28 templates/shop_dashboard.html:5
+#: templates/work_order_list_create.html:9
+msgid "Dashboard"
+msgstr "Dashboard"
 
-msgid "Only paid functions with matching user rights are visible in the dashboard."
-msgstr "Nur bezahlte Funktionen mit passenden Benutzerrechten sind im Dashboard sichtbar."
+#: templates/base_shop.html:36 templates/customer_form.html:5
+#: templates/customer_list.html:6 templates/customer_list.html:7
+#: templates/customer_list.html:34 templates/shop_dashboard.html:83
+msgid "Customers"
+msgstr "Kunden"
 
+#: templates/base_shop.html:54 templates/manage_shop_users.html:135
+msgid "Inventory"
+msgstr "Lager"
+
+#: templates/base_shop.html:66 templates/edit_shop_user_rights.html:5
+#: templates/manage_shop_users.html:7
+msgid "Shop Users"
+msgstr "Werkstattbenutzer"
+
+#: templates/base_shop.html:73 templates/landing.html:166
+msgid "Log out"
+msgstr "Abmelden"
+
+#: templates/base_shop.html:80
+msgid "Workspace"
+msgstr "Arbeitsbereich"
+
+#: templates/base_shop.html:82
+msgid "Administration workspace"
+msgstr "Administrationsbereich"
+
+#: templates/base_shop.html:90
+#, fuzzy
+#| msgid "Location:"
+msgid "Notifications"
+msgstr "Ort:"
+
+#: templates/customer_car_form.html:4
+msgid "Enter a plate before lookup."
+msgstr "Bitte zuerst ein Kennzeichen eingeben."
+
+#: templates/customer_car_form.html:5
+msgid "Looking up vehicle data..."
+msgstr "Fahrzeugdaten werden gesucht..."
+
+#: templates/customer_car_form.html:6
+msgid "Lookup failed."
+msgstr "Suche fehlgeschlagen."
+
+#: templates/customer_car_form.html:7
+msgid "Vehicle data loaded. Review and save the car."
+msgstr "Fahrzeugdaten geladen. Bitte prüfen und speichern."
+
+#: templates/customer_car_form.html:8
+msgid "Lookup request failed. Please try again."
+msgstr "Anfrage fehlgeschlagen. Bitte erneut versuchen."
+
+#: templates/customer_car_form.html:10 templates/customer_car_form.html:12
+#: templates/customer_car_form.html:48 templates/customer_detail.html:17
+#, fuzzy
+#| msgid "Edit Car"
+msgid "Add Car"
+msgstr "Fahrzeug bearbeiten"
+
+#: templates/customer_car_form.html:10 templates/customer_car_form.html:12
+#: templates/customer_detail.html:95
+msgid "Edit Car"
+msgstr "Fahrzeug bearbeiten"
+
+#: templates/customer_car_form.html:11
+#, fuzzy
+#| msgid "Vehicle"
+msgid "Vehicles"
+msgstr "Fahrzeug"
+
+#: templates/customer_car_form.html:13 templates/invoice_email_form.html:7
+#: templates/tire_labels_print.html:100 templates/work_order_detail.html:7
+#, fuzzy
+#| msgid "Customer"
+msgid "Customer:"
+msgstr "Kunde"
+
+#: templates/customer_car_form.html:15 templates/customer_form.html:10
+#: templates/customer_form.html:12 templates/invoice_detail.html:650
+#: templates/invoice_email_form.html:9 templates/invoice_form.html:15
+#: templates/invoice_price_table.html:37 templates/work_order_detail.html:67
+#: templates/work_order_list_create.html:192
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: templates/customer_car_form.html:33
+msgid "Lookup Plate"
+msgstr "Kennzeichen suchen"
+
+#: templates/customer_car_form.html:35
+msgid "Enter a Danish plate and click \\"
+msgstr ""
+
+#: templates/customer_car_form.html:48
+msgid "Save Car"
+msgstr "Fahrzeug speichern"
+
+#: templates/customer_detail.html:4 templates/customer_list.html:4
+msgid "Delete this customer and all cars?"
+msgstr "Diesen Kunden und alle Fahrzeuge löschen?"
+
+#: templates/customer_detail.html:5
+msgid "Delete this car?"
+msgstr "Dieses Fahrzeug löschen?"
+
+#: templates/customer_detail.html:10
+#, fuzzy
+#| msgid "Manage customer profiles and their vehicles."
+msgid "Manage customer profile, vehicles, and tire storage for"
+msgstr "Kundenprofile und Fahrzeuge verwalten."
+
+#: templates/customer_detail.html:13
+msgid "Back to Customers"
+msgstr "Zurück zu Kunden"
+
+#: templates/customer_detail.html:14
+msgid "Edit Customer"
+msgstr "Kunde bearbeiten"
+
+#: templates/customer_detail.html:15
+msgid "Invoice Customer"
+msgstr "Kunde abrechnen"
+
+#: templates/customer_detail.html:16 templates/customer_detail.html:97
+#: templates/work_order_list_create.html:191
+#, fuzzy
+#| msgid "Create Orders"
+msgid "Create Work Order"
+msgstr "Aufträge erstellen"
+
+#: templates/customer_detail.html:20
+msgid "Delete Customer"
+msgstr "Kunde löschen"
+
+#: templates/customer_detail.html:27
+msgid "Customer Details"
+msgstr "Kundendetails"
+
+#: templates/customer_detail.html:29
+msgid "Cars linked:"
+msgstr "Verknupfte Fahrzeuge:"
+
+#: templates/customer_detail.html:36
+msgid "Payment due condition"
+msgstr "Fälligkeitsbedingung"
+
+#: templates/customer_detail.html:39 templates/customer_detail.html:84
+msgid "Notes:"
+msgstr "Notizen:"
+
+#: templates/customer_detail.html:43
+msgid "Cars"
+msgstr "Fahrzeuge"
+
+#: templates/customer_detail.html:51 templates/customer_detail.html:80
+msgid "Tire Storage"
+msgstr "Reifenhotel"
+
+#: templates/customer_detail.html:53
+#, fuzzy
+#| msgid "Vehicle"
+msgid "Standard Vehicle"
+msgstr "Fahrzeug"
+
+#: templates/customer_detail.html:59 templates/work_order_detail.html:94
+msgid "Vehicle"
+msgstr "Fahrzeug"
+
+#: templates/customer_detail.html:60 templates/tire_labels_print.html:102
+msgid "Plate:"
+msgstr "Kennzeichen:"
+
+#: templates/customer_detail.html:61
+msgid "VIN:"
+msgstr "VIN:"
+
+#: templates/customer_detail.html:62
+msgid "Color:"
+msgstr "Farbe:"
+
+#: templates/customer_detail.html:67
+msgid "Inspection"
+msgstr "Inspektion"
+
+#: templates/customer_detail.html:68
+msgid "Type:"
+msgstr "Typ:"
+
+#: templates/customer_detail.html:69
+#, fuzzy
+#| msgid "Date"
+msgid "Date:"
+msgstr "Datum"
+
+#: templates/customer_detail.html:70
+msgid "Result:"
+msgstr "Ergebnis:"
+
+#: templates/customer_detail.html:71 templates/invoice_print.html:173
+#, fuzzy
+#| msgid "Status"
+msgid "Status:"
+msgstr "Status"
+
+#: templates/customer_detail.html:72
+msgid "Status Date:"
+msgstr "Statusdatum:"
+
+#: templates/customer_detail.html:73
+msgid "Mileage:"
+msgstr "Kilometerstand:"
+
+#: templates/customer_detail.html:74
+msgid "Next:"
+msgstr "Nachste:"
+
+#: templates/customer_detail.html:82 templates/tire_labels_print.html:104
+msgid "Location:"
+msgstr "Ort:"
+
+#: templates/customer_detail.html:83 templates/tire_labels_print.html:75
+msgid "Labels:"
+msgstr "Etiketten:"
+
+#: templates/customer_detail.html:96
+msgid "Invoice This Car"
+msgstr "Dieses Fahrzeug abrechnen"
+
+#: templates/customer_detail.html:99
+msgid "Print Tire Labels"
+msgstr "Reifenetiketten drucken"
+
+#: templates/customer_detail.html:100
+msgid "Print A4 2x7"
+msgstr "A4 2x7 drucken"
+
+#: templates/customer_detail.html:101
+msgid "Print Zebra 100x50"
+msgstr ""
+
+#: templates/customer_detail.html:105
+msgid "Delete Car"
+msgstr "Fahrzeug löschen"
+
+#: templates/customer_detail.html:112
+msgid "No cars saved yet for this customer."
+msgstr "Für diesen Kunden sind noch keine Fahrzeuge gespeichert."
+
+#: templates/customer_form.html:7
+#, fuzzy
+#| msgid "Customer Details"
+msgid "Manage customer details for"
+msgstr "Kundendetails"
+
+#: templates/customer_list.html:8
+#, fuzzy
+#| msgid "Customer Details"
+msgid "Customer Directory"
+msgstr "Kundendetails"
+
+#: templates/customer_list.html:9
+msgid "Search, open, and manage customers for"
+msgstr ""
+
+#: templates/customer_list.html:11
+msgid "Add Customer"
+msgstr "Kunde hinzufügen"
+
+#: templates/customer_list.html:16 templates/customer_list.html:25
+msgid "Search"
+msgstr "Suchen"
+
+#: templates/customer_list.html:20
+#, fuzzy
+#| msgid "Search name:"
+msgid "Search name"
+msgstr "Name suchen:"
+
+#: templates/customer_list.html:21
+msgid "Type customer name"
+msgstr "Kundennamen eingeben"
+
+#: templates/customer_list.html:27
+msgid "Clear"
+msgstr "Leeren"
+
+#: templates/customer_list.html:42 templates/invoice_price_table.html:54
+#: templates/shop_list.html:23
+msgid "Actions"
+msgstr "Aktionen"
+
+#: templates/customer_list.html:53 templates/invoice_list.html:40
+#: templates/shop_dashboard.html:35 templates/shop_dashboard.html:45
+#: templates/shop_dashboard.html:55 templates/shop_dashboard.html:65
+#: templates/shop_dashboard.html:75 templates/shop_dashboard.html:85
+#: templates/shop_dashboard.html:95
+msgid "Open"
+msgstr "Öffnen"
+
+#: templates/customer_list.html:54 templates/invoice_detail.html:586
+#: templates/invoice_price_table.html:68 templates/shop_list.html:49
+#: templates/work_order_detail.html:66
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: templates/customer_list.html:57 templates/invoice_detail.html:592
+#: templates/invoice_price_table.html:73 templates/work_order_detail.html:220
+#: templates/work_order_detail.html:289
+msgid "Delete"
+msgstr "Löschen"
+
+#: templates/customer_list.html:66
+msgid "No customers found."
+msgstr "Keine Kunden gefunden."
+
+#: templates/edit_shop.html:6
+#, fuzzy
+#| msgid "Edit"
+msgid "Edit Shop"
+msgstr "Bearbeiten"
+
+#: templates/edit_shop.html:8
+#, fuzzy, python-format
+#| msgid "Users and Rights: %(shop_name)s"
+msgid "Edit %(shop_name)s"
+msgstr "Benutzer und Rechte: %(shop_name)s"
+
+#: templates/edit_shop.html:9
+msgid "Update shop settings, owner access, and enabled modules."
+msgstr ""
+
+#: templates/edit_shop.html:11 templates/shop_list.html:50
+msgid "Users & Rights"
+msgstr "Benutzer & Rechte"
+
+#: templates/edit_shop.html:12
+msgid "Back to Shop List"
+msgstr "Zurück zur Werkstattliste"
+
+#: templates/edit_shop.html:18
+msgid "Temporary password reset"
+msgstr "Temporäres Passwort zurückgesetzt"
+
+#: templates/edit_shop.html:88 templates/work_order_detail.html:242
+#: templates/work_order_detail.html:311
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#: templates/edit_shop_user_rights.html:4
+#, fuzzy
+#| msgid "Edit Rights"
+msgid "Edit User Rights"
+msgstr "Rechte bearbeiten"
+
+#: templates/edit_shop_user_rights.html:6
+#, python-format
+msgid "Edit Rights: %(username)s"
+msgstr "Rechte bearbeiten: %(username)s"
+
+#: templates/edit_shop_user_rights.html:9
+msgid "Back to Users"
+msgstr "Zurück zu Benutzern"
+
+#: templates/edit_shop_user_rights.html:63
+msgid "Save Rights"
+msgstr "Rechte speichern"
+
+#: templates/emails/invoice_email.html:13 templates/invoice_detail.html:469
+#: templates/invoice_print.html:4 templates/invoice_print.html:137
+#: templates/work_order_detail.html:102
+#: templates/work_order_list_create.html:234
+#, fuzzy
+#| msgid "Invoices"
+msgid "Invoice"
+msgstr "Rechnungen"
+
+#: templates/emails/invoice_email.html:14 templates/emails/invoice_email.txt:5
+#: templates/invoice_print.html:171
+#, fuzzy
+#| msgid "Status Date:"
+msgid "Issue Date:"
+msgstr "Statusdatum:"
+
+#: templates/emails/invoice_email.html:15 templates/emails/invoice_email.txt:6
+#: templates/invoice_print.html:172
+#, fuzzy
+#| msgid "Status Date:"
+msgid "Due Date:"
+msgstr "Statusdatum:"
+
+#: templates/emails/invoice_email.html:16 templates/emails/invoice_email.txt:7
+msgid "Total (incl VAT):"
+msgstr "Gesamt (inkl. MwSt):"
+
+#: templates/emails/invoice_email.html:19
+msgid "View / print invoice"
+msgstr "Rechnung ansehen / drucken"
+
+#: templates/emails/invoice_email.html:23 templates/emails/invoice_email.txt:12
+#, fuzzy
+#| msgid "From"
+msgid "From:"
+msgstr "Von"
+
+#: templates/emails/invoice_email.html:30 templates/emails/invoice_email.txt:18
+#: templates/invoice_print.html:152 templates/invoice_print.html:164
+#, fuzzy
+#| msgid "Phone"
+msgid "Phone:"
+msgstr "Telefon"
+
+#: templates/emails/invoice_email.html:31 templates/emails/invoice_email.txt:19
+#: templates/invoice_print.html:153 templates/invoice_print.html:165
+#, fuzzy
+#| msgid "Email"
+msgid "Email:"
+msgstr "E-Mail"
+
+#: templates/emails/invoice_email.txt:4
+msgid "Invoice Number:"
+msgstr "Rechnungsnummer:"
+
+#: templates/emails/invoice_email.txt:9
+msgid "View / print invoice:"
+msgstr "Rechnung ansehen / drucken:"
+
+#: templates/includes/back_to_dashboard_button.html:2
+msgid "Back to Dashboard"
+msgstr "Zurück zum Dashboard"
+
+#: templates/invoice_detail.html:7
+#, fuzzy
+#| msgid "Edit the header here, then continue with the lines below."
+msgid "Edit the invoice header at the top and manage detail lines below."
+msgstr ""
+"Bearbeiten Sie hier den Kopf und fahren Sie dann mit den Positionen unten "
+"fort."
+
+#: templates/invoice_detail.html:10 templates/invoice_masterdata.html:9
+#: templates/invoice_price_table.html:11
+msgid "Back to Invoices"
+msgstr "Zurück zu Rechnungen"
+
+#: templates/invoice_detail.html:11 templates/invoice_list.html:10
+msgid "Price Table"
+msgstr "Preistabelle"
+
+#: templates/invoice_detail.html:12
+msgid "Masterdata"
+msgstr "Stammdaten"
+
+#: templates/invoice_detail.html:13 templates/invoice_email_form.html:4
+#: templates/invoice_email_form.html:6
+msgid "Email Invoice"
+msgstr "Rechnung per E-Mail"
+
+#: templates/invoice_detail.html:14
+msgid "Print / PDF"
+msgstr "Drucken / PDF"
+
+#: templates/invoice_detail.html:458
+msgid "Delete this line?"
+msgstr "Diese Zeile löschen?"
+
+#: templates/invoice_detail.html:471
+msgid "Edit the header here, then continue with the lines below."
+msgstr ""
+"Bearbeiten Sie hier den Kopf und fahren Sie dann mit den Positionen unten "
+"fort."
+
+#: templates/invoice_detail.html:481
+msgid "Change status"
+msgstr "Status ändern"
+
+#: templates/invoice_detail.html:487 templates/tire_labels_print.html:85
+msgid "Apply"
+msgstr "Anwenden"
+
+#: templates/invoice_detail.html:498
+msgid "Invoice Header"
+msgstr "Rechnungskopf"
+
+#: templates/invoice_detail.html:499
+msgid "Customer, dates, status, rebate, and notes."
+msgstr "Kunde, Daten, Status, Rabatt und Notizen."
+
+#: templates/invoice_detail.html:503 templates/work_order_detail.html:109
+msgid "Locked:"
+msgstr "Gesperrt:"
+
+#: templates/invoice_detail.html:503
+msgid "This invoice is not draft and cannot be edited."
+msgstr "Diese Rechnung ist kein Entwurf und kann nicht bearbeitet werden."
+
+#: templates/invoice_detail.html:519 templates/invoice_detail.html:849
+#, fuzzy
+#| msgid "Tire hotel notes"
+msgid "Hide notes"
+msgstr "Reifenhotel Notizen"
+
+#: templates/invoice_detail.html:519 templates/invoice_detail.html:849
+#, fuzzy
+#| msgid "Tire hotel notes"
+msgid "Show notes"
+msgstr "Reifenhotel Notizen"
+
+#: templates/invoice_detail.html:537
+msgid "Update Invoice Header"
+msgstr "Rechnungskopf aktualisieren"
+
+#: templates/invoice_detail.html:547
+msgid "Invoice Lines"
+msgstr "Rechnungszeilen"
+
+#: templates/invoice_detail.html:548
+msgid "Detail lines follow the header, similar to the PDF structure."
+msgstr ""
+
+#: templates/invoice_detail.html:550 templates/invoice_detail.html:651
+msgid "Add Line"
+msgstr "Zeile hinzufügen"
+
+#: templates/invoice_detail.html:558 templates/invoice_price_table.html:52
+#: templates/invoice_print.html:183 templates/work_order_detail.html:198
+#: templates/work_order_detail.html:267
+#, fuzzy, python-format
+#| msgid "VAT %"
+msgid "VAT %%"
+msgstr "MwSt. %"
+
+#: templates/invoice_detail.html:559 templates/invoice_print.html:211
+msgid "Line Rebate"
+msgstr "Zeilenrabatt"
+
+#: templates/invoice_detail.html:560 templates/work_order_detail.html:199
+#: templates/work_order_detail.html:268
+msgid "Line Total"
+msgstr "Zeilensumme"
+
+#: templates/invoice_detail.html:561 templates/invoice_print.html:154
+#, fuzzy
+#| msgid "VAT %"
+msgid "VAT"
+msgstr "MwSt. %"
+
+#: templates/invoice_detail.html:562 templates/invoice_list.html:28
+#: templates/manage_shop_users.html:138 templates/work_order_detail.html:201
+#: templates/work_order_detail.html:270
+msgid "Action"
+msgstr "Aktion"
+
+#: templates/invoice_detail.html:598
+msgid "No lines added yet."
+msgstr "Noch keine Zeilen hinzugefugt."
+
+#: templates/invoice_detail.html:604 templates/work_order_detail.html:173
+msgid "Subtotal:"
+msgstr "Zwischensumme:"
+
+#: templates/invoice_detail.html:606
+#, fuzzy
+#| msgid "Line Rebate"
+msgid "Line Rebate:"
+msgstr "Zeilenrabatt"
+
+#: templates/invoice_detail.html:609
+#, fuzzy
+#| msgid "Invoice Header"
+msgid "Invoice Rebate:"
+msgstr "Rechnungskopf"
+
+#: templates/invoice_detail.html:611
+msgid "Total Rebate:"
+msgstr "Gesamtrabatt:"
+
+#: templates/invoice_detail.html:612
+msgid "Total ex VAT:"
+msgstr "Gesamt exkl. MwSt:"
+
+#: templates/invoice_detail.html:613 templates/work_order_detail.html:174
+msgid "VAT Total:"
+msgstr "MwSt gesamt:"
+
+#: templates/invoice_detail.html:614
+msgid "Grand Total incl VAT:"
+msgstr "Gesamt inkl. MwSt:"
+
+#: templates/invoice_detail.html:622
+msgid "Edit Invoice Line"
+msgstr "Rechnungszeile bearbeiten"
+
+#: templates/invoice_detail.html:622
+msgid "Add Invoice Line"
+msgstr "Rechnungszeile hinzufügen"
+
+#: templates/invoice_detail.html:625
+msgid "Update this line and return to the invoice overview."
+msgstr ""
+
+#: templates/invoice_detail.html:627
+msgid ""
+"Use this smaller line-entry window and return to the invoice automatically "
+"after adding the line."
+msgstr ""
+
+#: templates/invoice_detail.html:631
+msgid "Close"
+msgstr ""
+
+#: templates/invoice_detail.html:651
+msgid "Update Line"
+msgstr "Zeile aktualisieren"
+
+#: templates/invoice_email_form.html:15 templates/invoice_email_form.html:21
+msgid "Development email mode"
+msgstr ""
+
+#: templates/invoice_email_form.html:16
+msgid "Emails are written to local files instead of being delivered."
+msgstr ""
+
+#: templates/invoice_email_form.html:22
+msgid "Emails are written to the runserver console instead of being delivered."
+msgstr ""
+
+#: templates/invoice_email_form.html:39
+msgid "Send Email"
+msgstr "E-Mail senden"
+
+#: templates/invoice_form.html:13
+msgid "Create and edit invoices using the shared invoice form for"
+msgstr ""
+
+#: templates/invoice_list.html:6
+#, fuzzy
+#| msgid "Workspace"
+msgid "Invoice Workspace"
+msgstr "Arbeitsbereich"
+
+#: templates/invoice_list.html:7
+msgid "Track billing, invoice totals, and pricing data for"
+msgstr ""
+
+#: templates/invoice_list.html:11 templates/invoice_masterdata.html:4
+#: templates/invoice_masterdata.html:6
+msgid "Invoice Masterdata"
+msgstr "Rechnungsstammdaten"
+
+#: templates/invoice_list.html:12
+msgid "New Invoice"
+msgstr "Neue Rechnung"
+
+#: templates/invoice_list.html:22
+msgid "Invoice #"
+msgstr "Rechnung #"
+
+#: templates/invoice_list.html:23
+msgid "Date"
+msgstr "Datum"
+
+#: templates/invoice_list.html:27
+msgid "Total"
+msgstr "Gesamt"
+
+#: templates/invoice_list.html:43
+msgid "No invoices yet."
+msgstr "Noch keine Rechnungen."
+
+#: templates/invoice_masterdata.html:7
+msgid "Maintain sender details, logo, and invoice identity for"
+msgstr ""
+
+#: templates/invoice_masterdata.html:26
+msgid "Save Masterdata"
+msgstr "Stammdaten speichern"
+
+#: templates/invoice_price_table.html:4
+#, fuzzy
+#| msgid "Delete this line?"
+msgid "Delete this price item?"
+msgstr "Diese Zeile löschen?"
+
+#: templates/invoice_price_table.html:6 templates/invoice_price_table.html:8
+#, fuzzy
+#| msgid "Price Table"
+msgid "Invoice Price Table"
+msgstr "Preistabelle"
+
+#: templates/invoice_price_table.html:9
+msgid "Manage reusable service and part pricing for"
+msgstr "Wiederverwendbare Service- und Teilepreise verwalten für"
+
+#: templates/invoice_price_table.html:16
+msgid "Edit Price Item"
+msgstr "Preisposition bearbeiten"
+
+#: templates/invoice_price_table.html:16
+msgid "Add Price Item"
+msgstr "Preisposition hinzufügen"
+
+#: templates/invoice_price_table.html:35
+msgid "Update Item"
+msgstr "Position aktualisieren"
+
+#: templates/invoice_price_table.html:35
+msgid "Save Item"
+msgstr "Position speichern"
+
+#: templates/invoice_price_table.html:44
+msgid "Current Items"
+msgstr "Aktuelle Positionen"
+
+#: templates/invoice_price_table.html:65 templates/manage_shop_users.html:147
+#: templates/manage_shop_users.html:148 templates/manage_shop_users.html:149
+#: templates/manage_shop_users.html:150
+msgid "Yes"
+msgstr "Ja"
+
+#: templates/invoice_price_table.html:65 templates/manage_shop_users.html:147
+#: templates/manage_shop_users.html:148 templates/manage_shop_users.html:149
+#: templates/manage_shop_users.html:150
+msgid "No"
+msgstr "Nein"
+
+#: templates/invoice_price_table.html:79
+msgid "No price items yet."
+msgstr "Noch keine Preispositionen."
+
+#: templates/invoice_print.html:6
+msgid "Print Invoice"
+msgstr "Rechnung drucken"
+
+#: templates/invoice_print.html:7
+msgid "Generate a print-friendly invoice view for"
+msgstr "Eine druckfreundliche Rechnungsansicht erstellen für"
+
+#: templates/invoice_print.html:10
+msgid "Back to Invoice"
+msgstr "Zurück zur Rechnung"
+
+#: templates/invoice_print.html:11
+msgid "Print / Save PDF"
+msgstr "Drucken / PDF speichern"
+
+#: templates/invoice_print.html:141
+msgid "From"
+msgstr "Von"
+
+#: templates/invoice_print.html:155 templates/tire_labels_print.html:106
+#, fuzzy
+#| msgid "Print"
+msgid "Printed:"
+msgstr "Drucken"
+
+#: templates/invoice_print.html:159
+msgid "To"
+msgstr "An"
+
+#: templates/invoice_print.html:166 templates/tire_labels_print.html:101
+msgid "Car:"
+msgstr ""
+
+#: templates/invoice_print.html:182
+msgid "Unit"
+msgstr "Einheit"
+
+#: templates/invoice_print.html:184
+msgid "Rebate"
+msgstr "Rabatt"
+
+#: templates/invoice_print.html:185 templates/invoice_print.html:217
+#, fuzzy
+#| msgid "Total ex VAT:"
+msgid "Total ex VAT"
+msgstr "Gesamt exkl. MwSt:"
+
+#: templates/invoice_print.html:203
+msgid "No lines."
+msgstr "Keine Zeilen."
+
+#: templates/invoice_print.html:209
+msgid "Subtotal"
+msgstr "Zwischensumme"
+
+#: templates/invoice_print.html:214
+#, fuzzy
+#| msgid "Invoice Header"
+msgid "Invoice Rebate"
+msgstr "Rechnungskopf"
+
+#: templates/invoice_print.html:216
+msgid "Total Rebate"
+msgstr "Gesamtrabatt"
+
+#: templates/invoice_print.html:218
+msgid "VAT Total"
+msgstr "MwSt gesamt"
+
+#: templates/invoice_print.html:219
+msgid "Grand Total incl VAT"
+msgstr "Gesamt inkl. MwSt"
+
+#: templates/landing.html:150
+msgid "RepairShop Cloud"
+msgstr "RepairShop Cloud"
+
+#: templates/landing.html:151
+msgid "Every Garage,"
+msgstr "Jede Werkstatt,"
+
+#: templates/landing.html:151
+msgid "Own Data"
+msgstr ""
+
+#: templates/landing.html:151
+msgid "One Fast Workflow."
+msgstr "Ein schneller Workflow."
+
+#: templates/landing.html:153
+msgid ""
+"Run estimates, jobs, and customer records per shop with isolated databases."
+msgstr ""
+"Angebote, Aufträge und Kundendaten je Werkstatt mit isolierten Datenbanken "
+"verwalten."
+
+#: templates/landing.html:154
+msgid ""
+"Sign in to access your shop-specific dashboard and daily repair operations."
+msgstr ""
+"Melden Sie sich an, um Ihr werkstattspezifisches Dashboard und die täglichen "
+"Reparaturabläufe zu nutzen."
+
+#: templates/landing.html:159
+msgid "Open My Shop Functions"
+msgstr "Meine Werkstattfunktionen öffnen"
+
+#: templates/landing.html:169
+msgid "Log in to My Shop"
+msgstr "Bei meiner Werkstatt anmelden"
+
+#: templates/landing.html:170
+msgid "Admin Access"
+msgstr "Admin-Zugriff"
+
+#: templates/landing.html:176
+msgid "Tenant Isolation"
+msgstr "Tenant-Isolation"
+
+#: templates/landing.html:177
+msgid "Shop data routed to its own database."
+msgstr "Werkstattdaten werden in die eigene Datenbank geleitet."
+
+#: templates/landing.html:180
+msgid "Secure Access"
+msgstr "Sicherer Zugriff"
+
+#: templates/landing.html:181
+msgid "Users only open their shop workspace."
+msgstr "Benutzer öffnen nur ihren eigenen Werkstattarbeitsbereich."
+
+#: templates/landing.html:184
+msgid "Cloud Ready"
+msgstr "Cloud-bereit"
+
+#: templates/landing.html:185
+msgid "PythonAnywhere deployment compatible."
+msgstr ""
+
+#: templates/manage_shop_users.html:6
+#, fuzzy
+#| msgid "Users & Rights"
+msgid "Users and Rights"
+msgstr "Benutzer & Rechte"
+
+#: templates/manage_shop_users.html:8
+#, python-format
+msgid "Users and Rights: %(shop_name)s"
+msgstr "Benutzer und Rechte: %(shop_name)s"
+
+#: templates/manage_shop_users.html:9
+msgid "Database alias:"
+msgstr "Datenbank-Alias:"
+
+#: templates/manage_shop_users.html:12
+msgid "Back to Shops"
+msgstr "Zurück zu Werkstätten"
+
+#: templates/manage_shop_users.html:19
+msgid "New user credentials"
+msgstr "Neue Benutzerdaten"
+
+#: templates/manage_shop_users.html:28
+msgid "Add User to Shop"
+msgstr "Benutzer zur Werkstatt hinzufügen"
+
+#: templates/manage_shop_users.html:120
+msgid "Add or Update Access"
+msgstr ""
+
+#: templates/manage_shop_users.html:126
+msgid "Current Users"
+msgstr "Aktuelle Benutzer"
+
+#: templates/manage_shop_users.html:130
+msgid "User"
+msgstr "Benutzer"
+
+#: templates/manage_shop_users.html:132
+msgid "Language"
+msgstr "Sprache"
+
+#: templates/manage_shop_users.html:133
+msgid "Manage Users"
+msgstr "Benutzer verwalten"
+
+#: templates/manage_shop_users.html:134
+msgid "Create Orders"
+msgstr "Aufträge erstellen"
+
+#: templates/manage_shop_users.html:151 templates/shop_list.html:44
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#: templates/manage_shop_users.html:152
+msgid "Edit Rights"
+msgstr "Rechte bearbeiten"
+
+#: templates/manage_shop_users.html:155
+msgid "No users assigned to this shop yet."
+msgstr "Dieser Werkstatt wurden noch keine Benutzer zugewiesen."
+
+#: templates/registration/login.html:107
+msgid "Log in to your shop"
+msgstr "Bei Ihrer Werkstatt anmelden"
+
+#: templates/registration/login.html:108
+msgid "Use your RepairShop account to open shop-specific functions."
+msgstr ""
+"Nutzen Sie Ihr RepairShop-Konto, um werkstattspezifische Funktionen zu "
+"öffnen."
+
+#: templates/registration/login.html:115
+#, fuzzy
+#| msgid "Username:"
+msgid "Username"
+msgstr "Benutzername:"
+
+#: templates/registration/login.html:124
+msgid "Continue"
+msgstr "Weiter"
+
+#: templates/registration/login.html:127
+msgid "Back to landing page"
+msgstr "Zurück zur Startseite"
+
+#: templates/shop_dashboard.html:4 templates/shop_dashboard.html:6
+msgid "Shop Functions"
+msgstr "Werkstattfunktionen"
+
+#: templates/shop_dashboard.html:8
+#, python-format
+msgid "Welcome, %(username)s."
+msgstr "Willkommen, %(username)s."
+
+#: templates/shop_dashboard.html:10
+#, python-format
+msgid "Active shop: <strong>%(shop_name)s</strong>"
+msgstr "Aktive Werkstatt: <strong>%(shop_name)s</strong>"
+
+#: templates/shop_dashboard.html:25
+msgid "Operations"
+msgstr "Vorgänge"
+
+#: templates/shop_dashboard.html:26
+msgid ""
+"Only paid functions with matching user rights are visible in the dashboard."
+msgstr ""
+"Nur bezahlte Funktionen mit passenden Benutzerrechten sind im Dashboard "
+"sichtbar."
+
+#: templates/shop_dashboard.html:33 templates/shop_dashboard.html:43
+#: templates/shop_dashboard.html:53 templates/shop_dashboard.html:63
+#: templates/shop_dashboard.html:73 templates/shop_dashboard.html:83
+#: templates/shop_dashboard.html:93
+msgid "Allowed"
+msgstr "Erlaubt"
+
+#: templates/shop_dashboard.html:34
+msgid "Create and assign repair work orders."
+msgstr "Reparaturaufträge erstellen und zuweisen."
+
+#: templates/shop_dashboard.html:44
+msgid "Plan incoming inspections and workload."
+msgstr "Eingehende Prüfungen und Auslastung planen."
+
+#: templates/shop_dashboard.html:54
+msgid "Track stock, receiving, and part usage."
+msgstr "Bestand, Wareneingang und Teileverbrauch verfolgen."
+
+#: templates/shop_dashboard.html:64
+msgid "Open business and performance reports."
+msgstr "Geschäfts- und Leistungsberichte öffnen."
+
+#: templates/shop_dashboard.html:74
+msgid "Create invoices from price table items or manual lines."
+msgstr "Rechnungen aus Preistabelle oder manuellen Positionen erstellen."
+
+#: templates/shop_dashboard.html:84
+msgid "Manage customer profiles and their vehicles."
+msgstr "Kundenprofile und Fahrzeuge verwalten."
+
+#: templates/shop_dashboard.html:93
+msgid "Manage Shop Users"
+msgstr "Werkstattbenutzer verwalten"
+
+#: templates/shop_dashboard.html:94
+msgid "Add staff and configure role-based rights."
+msgstr "Mitarbeiter hinzufügen und rollenbasierte Rechte konfigurieren."
+
+#: templates/shop_dashboard.html:102
+msgid "No active shop"
+msgstr "Keine aktive Werkstatt"
+
+#: templates/shop_dashboard.html:102
+msgid "Unavailable"
+msgstr "Nicht verfügbar"
+
+#: templates/shop_dashboard.html:103
+#, fuzzy
+#| msgid "Your account does not include this right."
+msgid "Your account does not currently have an active shop context."
+msgstr "Ihr Konto hat dieses Recht nicht."
+
+#: templates/shop_list.html:7
+msgid "Review tenant shops, access status, and login ownership."
+msgstr ""
+
+#: templates/shop_list.html:17
+#, fuzzy
+#| msgid "Shop:"
+msgid "Shop"
+msgstr "Werkstatt:"
+
+#: templates/shop_list.html:18
+msgid "Logo"
+msgstr "Logo"
+
+#: templates/shop_list.html:19
 msgid "Login Username"
 msgstr "Login-Benutzername"
 
+#: templates/shop_list.html:20
+msgid "Database Alias"
+msgstr "Datenbank-Alias"
+
+#: templates/shop_list.html:21
+msgid "Paid Functions"
+msgstr "Bezahlte Funktionen"
+
+#: templates/shop_list.html:54
+msgid "Deactivate"
+msgstr "Deaktivieren"
+
+#: templates/shop_list.html:56
+msgid "Activate"
+msgstr "Aktivieren"
+
+#: templates/shop_list.html:63
+msgid "No shops yet. Create your first one."
+msgstr "Noch keine Werkstätten. Erstellen Sie Ihre erste."
+
+#: templates/shop_operation.html:60
+msgid ""
+"Feature scaffold is ready. Plug your domain models and workflows into this "
+"page."
+msgstr ""
+"Das Gerust ist bereit. Binden Sie Ihre Modelle und Workflows auf dieser "
+"Seite ein."
+
+#: templates/tire_labels_print.html:72
+msgid "Print"
+msgstr "Drucken"
+
+#: templates/tire_labels_print.html:73
+msgid "Back to Customer"
+msgstr "Zurück zum Kunden"
+
+#: templates/tire_labels_print.html:74
+msgid "Format:"
+msgstr "Format:"
+
+#: templates/tire_labels_print.html:77
+msgid "Preset"
+msgstr "Voreinstellung"
+
+#: templates/tire_labels_print.html:83
+msgid "Count"
+msgstr "Anzahl"
+
+#: templates/tire_labels_print.html:97
+msgid "Tire Hotel"
+msgstr "Reifenhotel"
+
+#: templates/tire_labels_print.html:99
+msgid "Label"
+msgstr "Etikett"
+
+#: templates/work_order_detail.html:4 templates/work_order_detail.html:6
+#, fuzzy
+#| msgid "Work Order Details"
+msgid "Work Order"
+msgstr "Reparaturauftragsdetails"
+
+#: templates/work_order_detail.html:9
+#, fuzzy
+#| msgid "Back to Users"
+msgid "Back to Work Orders"
+msgstr "Zurück zu Benutzern"
+
+#: templates/work_order_detail.html:11
+#: templates/work_order_list_create.html:241
+#, fuzzy
+#| msgid "New Invoice"
+msgid "Open Invoice"
+msgstr "Neue Rechnung"
+
+#: templates/work_order_detail.html:65
+#, fuzzy
+#| msgid "Delete this line?"
+msgid "Delete this line item?"
+msgstr "Diese Zeile löschen?"
+
+#: templates/work_order_detail.html:68 templates/work_order_detail.html:150
+#, fuzzy
+#| msgid "Labor, diagnostics, and workshop tasks."
+msgid "Add labor, diagnostics, or workshop tasks here."
+msgstr "Arbeitszeit, Diagnose und Werkstattaufgaben."
+
+#: templates/work_order_detail.html:69
+#, fuzzy
+#| msgid "Spare parts, materials, and consumables."
+msgid "Add spare parts, materials, or consumables here."
+msgstr "Ersatzteile, Materialien und Verbrauchsartikel."
+
+#: templates/work_order_detail.html:78
+msgid "Due"
+msgstr ""
+
+#: templates/work_order_detail.html:109
+msgid ""
+"This work order has already created an invoice. Header fields and line items "
+"are read-only to keep the invoice aligned with the recorded work."
+msgstr ""
+
+#: templates/work_order_detail.html:115
+msgid "Status Actions"
+msgstr "Statusaktionen"
+
+#: templates/work_order_detail.html:122
+msgid "Set"
+msgstr "Setzen"
+
+#: templates/work_order_detail.html:131
+msgid "Work Order Details"
+msgstr "Reparaturauftragsdetails"
+
+#: templates/work_order_detail.html:142
+#, fuzzy
+#| msgid "Update Invoice Header"
+msgid "Update Work Order"
+msgstr "Rechnungskopf aktualisieren"
+
+#: templates/work_order_detail.html:149 templates/work_order_detail.html:167
+#: templates/work_order_detail.html:388 templates/work_order_detail.html:390
+msgid "Add Service Item"
+msgstr "Serviceposition hinzufügen"
+
+#: templates/work_order_detail.html:171
+msgid "Services:"
+msgstr "Service:"
+
+#: templates/work_order_detail.html:172
+msgid "Parts:"
+msgstr "Teile:"
+
+#: templates/work_order_detail.html:181
+msgid "Create Invoice From Work Order"
+msgstr "Rechnung aus Reparaturauftrag erstellen"
+
+#: templates/work_order_detail.html:189
+#, fuzzy
+#| msgid "Invoice Lines"
+msgid "Service Lines"
+msgstr "Rechnungszeilen"
+
+#: templates/work_order_detail.html:190
+msgid "Labor, diagnostics, and workshop tasks."
+msgstr "Arbeitszeit, Diagnose und Werkstattaufgaben."
+
+#: templates/work_order_detail.html:250
+msgid "No service lines added yet."
+msgstr "Noch keine Servicepositionen hinzugefügt."
+
+#: templates/work_order_detail.html:258
+#, fuzzy
+#| msgid "Update Line"
+msgid "Part Lines"
+msgstr "Zeile aktualisieren"
+
+#: templates/work_order_detail.html:259
 msgid "Spare parts, materials, and consumables."
 msgstr "Ersatzteile, Materialien und Verbrauchsartikel."
+
+#: templates/work_order_detail.html:319
+msgid "No part lines added yet."
+msgstr "Noch keine Teilepositionen hinzugefügt."
+
+#: templates/work_order_detail.html:388 templates/work_order_detail.html:390
+#, fuzzy
+#| msgid "Add Price Item"
+msgid "Add Part Item"
+msgstr "Preisposition hinzufügen"
+
+#: templates/work_order_list_create.html:120
+msgid "Workshop Queue"
+msgstr "Werkstattwarteschlange"
+
+#: templates/work_order_list_create.html:123
+#, fuzzy
+#| msgid "Create and assign repair work orders."
+msgid "Track services and parts in one work order"
+msgstr "Reparaturaufträge erstellen und zuweisen."
+
+#: templates/work_order_list_create.html:124
+msgid "Ready for invoice after at least one line item"
+msgstr ""
+
+#: templates/work_order_list_create.html:134
+#, fuzzy
+#| msgid "Work Order Details"
+msgid "New Work Order"
+msgstr "Reparaturauftragsdetails"
+
+#: templates/work_order_list_create.html:135
+msgid "Status is managed from the work-order detail page after creation."
+msgstr ""
+
+#: templates/work_order_list_create.html:198
+#, fuzzy
+#| msgid "Existing user"
+msgid "Existing Work Orders"
+msgstr "Vorhandener Benutzer"
+
+#: templates/work_order_list_create.html:209
+msgid "Invoice ready"
+msgstr "Rechnung bereit"
+
+#: templates/work_order_list_create.html:213
+#, fuzzy
+#| msgid "Create Orders"
+msgid "Created"
+msgstr "Aufträge erstellen"
+
+#: templates/work_order_list_create.html:229
+msgid "Unassigned"
+msgstr "Nicht zugewiesen"
+
+#: templates/work_order_list_create.html:232
+msgid "Line items"
+msgstr "Positionen"
+
+#: templates/work_order_list_create.html:236
+#, fuzzy
+#| msgid "Create Shop"
+msgid "Created by"
+msgstr "Werkstatt erstellen"
+
+#: templates/work_order_list_create.html:239
+#, fuzzy
+#| msgid "Work Order Details"
+msgid "Open Work Order"
+msgstr "Reparaturauftragsdetails"
+
+#: templates/work_order_list_create.html:246
+#, fuzzy
+#| msgid "No price items yet."
+msgid "No work orders yet."
+msgstr "Noch keine Preispositionen."
+
+#~ msgid "Active shop: <b>%(shop_name)s</b>"
+#~ msgstr "Aktive Werkstatt: <b>%(shop_name)s</b>"
+
+#~ msgid "Locked"
+#~ msgstr "Gesperrt"
+
+#~ msgid "Back to Shop"
+#~ msgstr "Zurück zur Werkstatt"
+
+#~ msgid "Back to My Shop"
+#~ msgstr "Zurück zu meiner Werkstatt"
+
+#~ msgid "Update Invoice"
+#~ msgstr "Rechnung aktualisieren"

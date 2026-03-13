@@ -481,7 +481,7 @@
                                 <label for="target-status-select">{% trans "Change status" %}</label>
                                 <select id="target-status-select" name="target_status">
                                     {% for status in available_status_targets %}
-                                        <option value="{{ status }}">{{ status|title }}</option>
+                                        <option value="{{ status.value }}">{{ status.label }}</option>
                                     {% endfor %}
                                 </select>
                                 <button class="btn btn-soft" type="submit">{% trans "Apply" %}</button>
@@ -558,7 +558,7 @@
                         <th class="numeric">{% trans "VAT %" %}</th>
                         <th class="numeric">{% trans "Line Rebate" %}</th>
                         <th class="numeric">{% trans "Line Total" %}</th>
-                        <th class="numeric">VAT</th>
+                        <th class="numeric">{% trans "VAT" %}</th>
                         <th>{% trans "Action" %}</th>
                     </tr>
                 </thead>
