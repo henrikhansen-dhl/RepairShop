@@ -57,8 +57,29 @@ def _load_public_invoice_token(token: str) -> dict:
     )
 
 
-def _generate_invoice_pdf_bytes(*, shop, master_data, invoice, lines, printed_at):
+def _generate_invoice_pdf_bytes(*, request, shop, master_data, invoice, lines, printed_at):
     """Build a styled A4 invoice PDF in memory for email attachment."""
+    # Preferred path: render HTML/CSS to PDF for near-identical visual output.
+    try:
+        from weasyprint import HTML
+
+        html = render_to_string(
+            "invoice_public.html",
+            {
+                "shop": shop,
+                "master_data": master_data,
+                "invoice": invoice,
+                "lines": lines,
+                "printed_at": printed_at,
+            },
+            request=request,
+        )
+        base_url = request.build_absolute_uri("/") if request else None
+        return HTML(string=html, base_url=base_url).write_pdf()
+    except Exception:
+        # Fallback path: ReportLab PDF if WeasyPrint or system libs are unavailable.
+        pass
+
     try:
         from reportlab.lib import colors
         from reportlab.lib.enums import TA_RIGHT
@@ -993,6 +1014,7 @@ def invoice_email(request, invoice_id):
             if attach_pdf:
                 try:
                     pdf_bytes = _generate_invoice_pdf_bytes(
+                        request=request,
                         shop=shop,
                         master_data=master_data,
                         invoice=invoice,
